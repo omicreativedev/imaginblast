@@ -27,6 +27,9 @@ public class Creature {
 		img = image;
 	}
 	
+	public Shot shoot() {
+		return new Shot(posX + size / 2 - Shot.size / 2, posY - Shot.size);
+	}
 
 	public void update() {
 		if(exploding) explosionStep++;
