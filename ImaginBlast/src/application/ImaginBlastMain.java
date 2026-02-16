@@ -1,7 +1,9 @@
 package application;
-//Icon made by Freepik from www.flaticon.com
-//visit: https://www.youtube.com/user/CbX397/
-
+/* Much of this code was started from this tutorial, and this github page:
+Gaspared. (2019, November 29). Gaspared/space-invaders: A simple space invaders game in javafx. for more information visit my YouTube channel. GitHub. https://github.com/Gaspared/Space-Invaders 
+Tutorial Part 1: https://www.youtube.com/watch?v=0szmaHH1hno
+Tutorial Part 2: https://www.youtube.com/watch?v=dzcQgv9hqXI&t=87s
+*/
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
