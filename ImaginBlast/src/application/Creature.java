@@ -20,6 +20,7 @@ public class Creature {
 	Image img;
 	int explosionStep = 0;
 	
+	// constructor
 	public Creature(int posX, int posY, int size,  Image image) {
 		this.posX = posX;
 		this.posY = posY;
@@ -27,12 +28,15 @@ public class Creature {
 		img = image;
 	}
 	
-
+	// Explosion functionality:
+	
+	// check to see if exploding, or destroyed
 	public void update() {
 		if(exploding) explosionStep++;
 		destroyed = explosionStep > EXPLOSION_STEPS;
 	}
 	
+	//if exploding: go through the explosion steps. Otherwise, draw image at location.
 	public void draw(GraphicsContext gc) {
 		if(exploding) {
 			gc.drawImage(EXPLOSION_IMG, explosionStep % EXPLOSION_COL * EXPLOSION_W, (explosionStep / EXPLOSION_ROWS) * EXPLOSION_H + 1,
@@ -44,6 +48,7 @@ public class Creature {
 		}
 	}
 	
+	// begin explosion sequence
 	public void explode() {
 		exploding = true;
 		explosionStep = -1;
