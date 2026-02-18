@@ -1,10 +1,9 @@
 package application;
-
 /* Much of this code was started from this tutorial, and this github page:
 Gaspared. (2019, November 29). Gaspared/space-invaders: A simple space invaders game in javafx. for more information visit my YouTube channel. GitHub. https://github.com/Gaspared/Space-Invaders 
 Tutorial Part 1: https://www.youtube.com/watch?v=0szmaHH1hno
 Tutorial Part 2: https://www.youtube.com/watch?v=dzcQgv9hqXI&t=87s
-*/ 
+*/
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +20,6 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.ImagePattern;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
@@ -34,37 +32,31 @@ public class ImaginBlastMain extends Application {
 	public static final int WIDTH = 800;
 	public static final int HEIGHT = 600;
 	private static final int PLAYER_SIZE = 60;
-	
-	// Images
-	static final Image BG_IMG = new Image("800x600_bg.png"); 
 	static final Image PLAYER_IMG = new Image("frog_player_128x128.png"); 
 	static final Image SQUIRREL_IMG = new Image("squirrel_enemy_front_128x128.png");
 	static final Image EXPLOSION_IMG = new Image("explosion.png");
-	static final Image ACORN_IMG = new Image("acorn_cap_64x64.png");
-	
-	//explosion animation things
 	static final int EXPLOSION_W = 128;
 	static final int EXPLOSION_ROWS = 3;
 	static final int EXPLOSION_COL = 3;
 	static final int EXPLOSION_H = 128;
 	static final int EXPLOSION_STEPS = 15;
+	
 
-	//stream and game variables
-	final int MAX_ENEMIES = 10,  MAX_SHOTS = MAX_ENEMIES * 2;
-	final int MAX_ITEMS = 3;
+
+	
+	final int MAX_BOMBS = 10,  MAX_SHOTS = MAX_BOMBS * 2;
 	boolean gameOver = false;
-	boolean levelComplete = false;
 	public GraphicsContext gc;
 	
-	PlayerClass player;
+	Creature player;
 	List<Shot> shots;
-	List<Enemy> squirrels;
-	List<Item> acornCaps;
+	List<Universe> univ;
+	List<Enemy> Squirrels;
 	
 	public double mouseX;
 	public int score;
 
-	//startup
+	//start
 	public void start(Stage stage) throws Exception {
 		Canvas canvas = new Canvas(WIDTH, HEIGHT);	
 		gc = canvas.getGraphicsContext2D();
@@ -79,11 +71,6 @@ public class ImaginBlastMain extends Application {
 				gameOver = false;
 				setup();
 			}
-			// making sure levelComplete works
-			if(levelComplete) { 
-				levelComplete = false;
-				setup();
-			}
 		});
 		
 		setup();
@@ -94,33 +81,24 @@ public class ImaginBlastMain extends Application {
 
 	//setup the game
 	private void setup() {
+		univ = new ArrayList<>();
 		shots = new ArrayList<>();
-		squirrels = new ArrayList<>();
-		acornCaps = new ArrayList<>();
-		player = new PlayerClass(WIDTH / 2, HEIGHT - PLAYER_SIZE, PLAYER_SIZE, PLAYER_IMG);
+		Squirrels = new ArrayList<>();
+		player = new Creature(WIDTH / 2, HEIGHT - PLAYER_SIZE, PLAYER_SIZE, PLAYER_IMG);
 		score = 0;
-		IntStream.range(0, MAX_ENEMIES).mapToObj(i -> this.newSquirrel()).forEach(squirrels::add);
-		IntStream.range(0, MAX_ITEMS).mapToObj(i -> this.newAcorn()).forEach(acornCaps::add);
+		IntStream.range(0, MAX_BOMBS).mapToObj(i -> this.newSquirrel()).forEach(Squirrels::add);
 	}
 
 	
 	//shot collision
-	public boolean shot_colide(Shot shot, Creature enemy) {
+	public boolean shot_colide(Shot shot, Creature Rocket) {
 		int distance = distance(shot.posX + Shot.size / 2, shot.posY + Shot.size / 2, 
-				enemy.posX + enemy.size / 2, enemy.posY + enemy.size / 2);
-		return distance  < enemy.size / 2 + enemy.size / 2;
+				Rocket.posX + Rocket.size / 2, Rocket.posY + Rocket.size / 2);
+		return distance  < Rocket.size / 2 + Rocket.size / 2;
 	} 
 	
-	//Player collision
-	public boolean player_colide(PlayerClass player, Creature other) {
-		int d;
-		d = distance(player.posX + player.size / 2, player.posY + player.size /2, 
-							other.posX + other.size / 2, other.posY + other.size / 2);
-		return d < other.size / 2 + player.size / 2 ;
-	}
-	
-	//Item collision
-	public boolean item_colide(PlayerClass player, Item other) {
+	//bomb collision
+	public boolean player_colide(Creature player, Creature other) {
 		int d;
 		d = distance(player.posX + player.size / 2, player.posY + player.size /2, 
 							other.posX + other.size / 2, other.posY + other.size / 2);
@@ -131,76 +109,35 @@ public class ImaginBlastMain extends Application {
 	
 	//run Graphics
 	private void run(GraphicsContext gc) {
-		// background
-		gc.setFill(new ImagePattern(BG_IMG));
+		gc.setFill(Color.FORESTGREEN);
 		gc.fillRect(0, 0, WIDTH, HEIGHT);
-		
-		// score text
 		gc.setTextAlign(TextAlignment.CENTER);
 		gc.setFont(Font.font(20));
 		gc.setFill(Color.WHITE);
 		gc.fillText("Score: " + score, 60,  20);
-		
-		// health text
-		gc.setTextAlign(TextAlignment.CENTER);
-		gc.setFont(Font.font(20));
-		gc.setFill(Color.RED);
-		gc.fillText("Health: " + player.hp, 180,  20);
-		
-		// acorn caps text
-		gc.setTextAlign(TextAlignment.CENTER);
-		gc.setFont(Font.font(20));
-		gc.setFill(Color.BROWN);
-		gc.fillText("Acorns: " + player.col_items, 280,  20);
 	
-		// game over screen
+		
 		if(gameOver) {
 			gc.setFont(Font.font(35));
 			gc.setFill(Color.YELLOW);
 			gc.fillText("Game Over \n Your Score is: " + score + " \n Click to play again", WIDTH / 2, HEIGHT /2.5);
 		//	return;
 		}
-		
-		// run the player and let it move
+		univ.forEach(Universe::draw);
+	
 		player.update();
 		player.draw(gc);
 		player.posX = (int) mouseX;
 		
-		// Stream of enemy squirrels
-		squirrels.stream().peek(Enemy::update).forEach(e -> {
-			//make the enemies move
+		Squirrels.stream().peek(Creature::update).forEach(e -> { // removed ahead of the forEach .peek(Rocket::draw)
 			e.draw(gc);
 			e.update(gc);
-			
-			//if they bump the player
-			if((player_colide(player, e) && !e.hitPlayer)&& !gameOver) {
-				player.hp -=10;
-				e.hitPlayer = true;
-				
-				//if they do so and the player dies
-				if(player.hp<=0) {
-					player.explode();
-				}
-			}
-			
-		});
-
-		
-
-		// Stream of acorn caps
-		acornCaps.stream().forEach(i -> { // check if peek is necessary
-			i.draw(gc);
-			i.update(gc);
-			
-			//if the player collects the item
-			if((item_colide(player, i) && !i.collected)&& !gameOver) {
-				player.col_items++;
-				i.collected = true;
+			if(player_colide(player, e) && !player.exploding) {
+				player.explode();
 			}
 		});
-
 		
-		// draw shots unless they go off screen
+		
 		for (int i = shots.size() - 1; i >=0 ; i--) {
 			Shot shot = shots.get(i);
 			if(shot.posY < 0 || shot.toRemove)  { 
@@ -209,9 +146,7 @@ public class ImaginBlastMain extends Application {
 			}
 			shot.update();
 			shot.draw(gc);
-			
-			// if a shot hits a squirrel, increase score
-			for (Enemy squirrel : squirrels) {
+			for (Enemy squirrel : Squirrels) {
 				if(shot_colide(shot, squirrel) && !squirrel.exploding) {
 					score++;
 					squirrel.explode();
@@ -220,41 +155,61 @@ public class ImaginBlastMain extends Application {
 			}
 		}
 		
-		
-		// when a squirrel dies, add a new one to replace it
-		for (int i = squirrels.size() - 1; i >= 0; i--){  
-			if(squirrels.get(i).destroyed)  {
-				squirrels.set(i, newSquirrel());
-			}
-		}
-		
-		// when an acorn is collected or goes off screen, add a new one to replace it
-		for (int i = acornCaps.size() - 1; i >= 0; i--){  
-			if(acornCaps.get(i).gone)  {
-				acornCaps.set(i, newAcorn());
+		for (int i = Squirrels.size() - 1; i >= 0; i--){  
+			if(Squirrels.get(i).destroyed)  {
+				Squirrels.set(i, newSquirrel());
 			}
 		}
 	
-	// game end condition
 		gameOver = player.destroyed;
+		if(RAND.nextInt(10) > 2) {
+			univ.add(new Universe());
+		}
+		for (int i = 0; i < univ.size(); i++) {
+			if(univ.get(i).posY > HEIGHT)
+				univ.remove(i);
+		}
+	}
+
+	
+	//environment
+	public class Universe {
+		int posX, posY;
+		private int h, w, r, g, b;
+		private double opacity;
+		
+		public Universe() {
+			posX = RAND.nextInt(WIDTH);
+			posY = 0;
+			w = RAND.nextInt(5) + 1;
+			h =  RAND.nextInt(5) + 1;
+			r = RAND.nextInt(100) + 150;
+			g = RAND.nextInt(100) + 150;
+			b = RAND.nextInt(100) + 150;
+			opacity = RAND.nextFloat();
+			if(opacity < 0) opacity *=-1;
+			if(opacity > 0.5) opacity = 0.5;
+		}
+		
+		public void draw() {
+			if(opacity > 0.8) opacity-=0.01;
+			if(opacity < 0.1) opacity+=0.01;
+			gc.setFill(Color.rgb(r, g, b, opacity));
+			gc.fillOval(posX, posY, w, h);
+			posY+=20;
+		}
 	}
 	
-	// making new squirrels
+	
 	Enemy newSquirrel() {
 		return new Enemy(50 + RAND.nextInt(WIDTH - 100), 0, PLAYER_SIZE, SQUIRREL_IMG);
 	}
 	
-	// making new acorn caps
-	Item newAcorn() {
-		return new Item(50 + RAND.nextInt(WIDTH - 100), 0, PLAYER_SIZE, ACORN_IMG);
-	}
-	
-	// does the math to check for collision
 	int distance(int x1, int y1, int x2, int y2) {
 		return (int) Math.sqrt(Math.pow((x1 - x2), 2) + Math.pow((y1 - y2), 2));
 	}
 	
-	// main
+	
 	public static void main(String[] args) {
 		launch();
 	}
