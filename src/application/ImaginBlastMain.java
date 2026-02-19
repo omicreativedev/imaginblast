@@ -29,8 +29,8 @@ public class ImaginBlastMain extends Application {
 	
 	//variables
 	private static final Random RAND = new Random();
-	public static final int WIDTH = 800;
-	public static final int HEIGHT = 600;
+	public static final int WIDTH = 1280;
+	public static final int HEIGHT = 720;
 	private static final int PLAYER_SIZE = 60;
 	static final Image PLAYER_IMG = new Image("frog_player_128x128.png"); 
 	static final Image SQUIRREL_IMG = new Image("squirrel_enemy_front_128x128.png");
@@ -41,8 +41,6 @@ public class ImaginBlastMain extends Application {
 	static final int EXPLOSION_H = 128;
 	static final int EXPLOSION_STEPS = 15;
 	
-
-
 	
 	final int MAX_BOMBS = 10,  MAX_SHOTS = MAX_BOMBS * 2;
 	boolean gameOver = false;
