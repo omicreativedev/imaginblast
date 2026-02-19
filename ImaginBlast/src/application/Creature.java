@@ -53,5 +53,9 @@ public class Creature {
 		exploding = true;
 		explosionStep = -1;
 	}
+	
+	public Shot shoot() {
+	    return new Shot(posX + size / 2 - Shot.size / 2, posY - Shot.size / 2);
+	}
 
 }
