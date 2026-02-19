@@ -55,6 +55,7 @@ public class Creature {
 	}
 	
 	public Shot shoot() {
+		
 	    return new Shot(posX + size / 2 - Shot.size / 2, posY - Shot.size / 2);
 	}
 
