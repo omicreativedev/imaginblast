@@ -44,6 +44,8 @@ public class ImaginBlastMain extends Application {
 	static final Image PLAYER_IMG = new Image("frog_player_128x128.png");
 	static final Image SQUIRREL_IMG = new Image("squirrel_enemy_front_128x128.png");
 	static final Image EXPLOSION_IMG = new Image("explosion.png");
+	// ADDED: Acorn collectible image
+	static final Image ACORN_IMG = new Image("acorn_cap_64x64.png");
 	
 	// Explosion animation properties
 	static final int EXPLOSION_W = 128;          // Width of explosion sprite
@@ -55,9 +57,13 @@ public class ImaginBlastMain extends Application {
 	// Game balance constants
 	final int MAX_BOMBS = 10;                    // Maximum number of enemies
 	final int MAX_SHOTS = MAX_BOMBS * 2;         // Maximum number of player shots allowed
+	// ADDED: Maximum number of acorns on screen
+	final int MAX_ITEMS = 3;                     // Maximum number of acorns
 	
 	// Game state variables
 	boolean gameOver = false;                    // Flag for game over state
+	// ADDED: Level completion state
+	boolean levelComplete = false;                // Flag for level completion
 	public GraphicsContext gc;                   // Graphics context for drawing
 	
 	// Game objects collections
@@ -65,11 +71,14 @@ public class ImaginBlastMain extends Application {
 	List<Shot> shots;                               // List of player shots
 	List<Universe> univ;                            // Background star/particle effects
 	List<Enemy> Squirrels;                          // List of enemy squirrels
+	// ADDED: List for acorn collectibles
+	List<Item> acornCaps;                           // List of acorn items
 	
 	// Input and score tracking
 	public double mouseX;                           // Mouse X position for player movement
 	public int score;                               // Player's current score
-
+	public int acornCount = 0;                      // ADD THIS: Track acorns collected
+	
 	/**
 	 * START METHOD
 	 * Set up the game window, canvas, input handlers, and animation timeline
@@ -98,6 +107,12 @@ public class ImaginBlastMain extends Application {
 				gameOver = false;
 				setup();                                 // Reset game state
 			}
+			
+			// ADDED: Handle level completion restart
+			if(levelComplete) { 
+				levelComplete = false;
+				setup();                                 // Reset game state
+			}
 		});
 		
 		// Initialize game and set up window
@@ -115,11 +130,16 @@ public class ImaginBlastMain extends Application {
 		univ = new ArrayList<>();                        // New background effects list
 		shots = new ArrayList<>();                       // New player bullets list
 		Squirrels = new ArrayList<>();                   // New enemies list
+		// ADDED: Initialize acorns list
+		acornCaps = new ArrayList<>();                   // New acorns list
 		player = new Creature(WIDTH / 2, HEIGHT - PLAYER_SIZE, PLAYER_SIZE, PLAYER_IMG); // Center player
 		score = 0;                                       // Reset score
 		
 		// Create initial set of enemies
 		IntStream.range(0, MAX_BOMBS).mapToObj(_ -> this.newSquirrel()).forEach(Squirrels::add);
+		
+		// ADDED: Create initial set of acorns
+		IntStream.range(0, MAX_ITEMS).mapToObj(_ -> this.newAcorn()).forEach(acornCaps::add);
 	}
 
 	/**
@@ -152,6 +172,21 @@ public class ImaginBlastMain extends Application {
 	}
 	
 	/**
+	 * ADDED: ITEM COLLISION DETECTION
+	 * Check if player has collected an acorn
+	 */
+	public boolean item_colide(Creature player, Item other) {
+		int d;
+		
+		// Calculate distance between centers of player and acorn
+		d = distance(player.posX + player.size / 2, player.posY + player.size /2, 
+							other.posX + other.size / 2, other.posY + other.size / 2);
+		
+		// Return true if distance is less than sum of radii
+		return d < other.size / 2 + player.size / 2;
+	}
+	
+	/**
 	 * RUN METHOD - Main game loop (called every frame)
 	 * Update game objects, check collisions, and render everything
 	 */
@@ -170,6 +205,10 @@ public class ImaginBlastMain extends Application {
 		// Test Ammo text
 		gc.setFill(Color.WHITE);
 		gc.fillText("Ammo: " + (MAX_SHOTS - shots.size()) + "/" + MAX_SHOTS, 200, 20);
+		
+		// ADDED: Draw acorn count text
+		gc.setFill(Color.BROWN);
+		gc.fillText("Acorns: " + acornCount, 340, 20); // Note: Creature doesn't have col_items field
 	
 		// Game over screen
 		if(gameOver) {
@@ -194,6 +233,20 @@ public class ImaginBlastMain extends Application {
 			// If enemy hits player, trigger explosion
 			if(player_colide(player, e) && !player.exploding) {
 				player.explode();
+			}
+		});
+		
+		// ADDED: Update and draw acorns, check for player collection
+		acornCaps.stream().forEach(i -> {
+			i.draw(gc);
+			i.update(gc);
+			
+			// If player collects acorn, mark as collected
+			// Note: Need to add collection counter to Creature class to track this
+			if(item_colide(player, i) && !i.collected && !gameOver) {
+				acornCount++;  // Increment the counter
+				// Would increment counter here if Creature had one
+				i.collected = true;
 			}
 		});
 		
@@ -222,6 +275,13 @@ public class ImaginBlastMain extends Application {
 		for (int i = Squirrels.size() - 1; i >= 0; i--){  
 			if(Squirrels.get(i).destroyed)  {
 				Squirrels.set(i, newSquirrel());
+			}
+		}
+		
+		// ADDED: Replace collected or off-screen acorns with new ones
+		for (int i = acornCaps.size() - 1; i >= 0; i--){  
+			if(acornCaps.get(i).gone)  {
+				acornCaps.set(i, newAcorn());
 			}
 		}
 	
@@ -282,6 +342,14 @@ public class ImaginBlastMain extends Application {
 	 */
 	Enemy newSquirrel() {
 		return new Enemy(50 + RAND.nextInt(WIDTH - 100), 0, PLAYER_SIZE, SQUIRREL_IMG);
+	}
+	
+	/**
+	 * ADDED: ACORN CREATION METHOD
+	 * Creates a new acorn collectible at a random X position at the top of screen
+	 */
+	Item newAcorn() {
+		return new Item(50 + RAND.nextInt(WIDTH - 100), 0, PLAYER_SIZE, ACORN_IMG);
 	}
 	
 	/**
