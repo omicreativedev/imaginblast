@@ -46,7 +46,6 @@ public class ImaginBlastMain extends Application {
 	static final Image PLAYER_IMG = new Image("frog_player_128x128.png");
 	static final Image SQUIRREL_IMG = new Image("squirrel_enemy_front_128x128.png");
 	static final Image EXPLOSION_IMG = new Image("explosion.png");
-	// ADDED: Acorn collectible image
 	static final Image ACORN_IMG = new Image("acorn_cap_64x64.png");
 	
 	// Explosion animation properties
@@ -59,22 +58,20 @@ public class ImaginBlastMain extends Application {
 	// Game balance constants
 	final int MAX_BOMBS = 10;                    // Maximum number of enemies
 	final int MAX_SHOTS = MAX_BOMBS * 2;         // Maximum number of player shots allowed
-	// ADDED: Maximum number of acorns on screen
 	final int MAX_ITEMS = 3;                     // Maximum number of acorns
 	
 	// Game state variables
 	boolean gameOver = false;                    // Flag for game over state
-	// ADDED: Level completion state
-	boolean levelComplete = false;                // Flag for level completion
+	boolean levelComplete = false;               // Flag for level completion
 	public GraphicsContext gc;                   // Graphics context for drawing
 	
 	// Game objects collections
 	Creature player;                                // The player character
 	List<Shot> shots;                               // List of player shots
-	List<Particles> particles;                            // Background star/particle effects
+	List<Particles> particles;                      // Background star/particle effects
 	List<Enemy> Squirrels;                          // List of enemy squirrels
-	// ADDED: List for acorn collectibles
 	List<Item> acornCaps;                           // List of acorn items
+	GameRenderer renderer;							// Draws game
 	
 	// Input and score tracking
 	public double mouseX;                           // Mouse X position for player movement
@@ -90,6 +87,7 @@ public class ImaginBlastMain extends Application {
 		// Create drawing canvas
 		Canvas canvas = new Canvas(WIDTH, HEIGHT);
 		gc = canvas.getGraphicsContext2D();
+		renderer = new GameRenderer(gc);
 		
 		// Set up game loop animation (100ms intervals = 10 fps)
 		Timeline timeline = new Timeline(new KeyFrame(Duration.millis(100), _ -> run(gc)));
@@ -151,29 +149,14 @@ public class ImaginBlastMain extends Application {
 	 */
 	private void run(GraphicsContext gc) {
 		
-		// Clear screen with forest green background
-		gc.setFill(Color.FORESTGREEN);
-		gc.fillRect(0, 0, WIDTH, HEIGHT);
+		// Rendering code added to GameRenderer.java
 		
-		// Draw score text
-		gc.setTextAlign(TextAlignment.CENTER);
-		gc.setFont(Font.font(20));
-		gc.setFill(Color.WHITE);
-		gc.fillText("Score: " + score, 60,  20);
+		renderer.clearScreen();
 		
-		// Test Ammo text
-		gc.setFill(Color.WHITE);
-		gc.fillText("Ammo: " + (MAX_SHOTS - shots.size()) + "/" + MAX_SHOTS, 200, 20);
+		renderer.drawHUD(score, shots.size(), MAX_SHOTS, acornCount);
 		
-		// ADDED: Draw acorn count text
-		gc.setFill(Color.BROWN);
-		gc.fillText("Acorns: " + acornCount, 340, 20); // Note: Creature doesn't have col_items field
-	
-		// Game over screen
 		if(gameOver) {
-			gc.setFont(Font.font(35));
-			gc.setFill(Color.YELLOW);
-			gc.fillText("Game Over \n Your Score is: " + score + " \n Click to play again", WIDTH / 2, HEIGHT /2.5);
+			renderer.drawGameOver(score);
 		}
 		
 		// Draw background effects
@@ -182,7 +165,7 @@ public class ImaginBlastMain extends Application {
 		// Update and draw player
 		player.update();
 		player.draw(gc);
-		player.posX = (int) mouseX;                     // Move player with mouse
+		player.posX = (int) mouseX;    // Move player with mouse
 		
 		// Update and draw enemies, check collisions with player
 		Squirrels.stream().peek(Creature::update).forEach(e -> {
