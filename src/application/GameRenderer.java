@@ -10,7 +10,6 @@ import javafx.scene.text.TextAlignment;
  * Handles all drawing operations for the game
  * Separates rendering logic from game logic
  */
-
 public class GameRenderer {
     
     private GraphicsContext gc;

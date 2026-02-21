@@ -127,8 +127,6 @@ public class ImaginBlastMain extends Application {
 		                //     musicPlayer.stop();
 		                // }
 		            	
-		            	
-		            	
 		                //System.out.println("Starting game!");
 		                currentState = GameState.PLAYING;
 		                setup(); // Initialize game
