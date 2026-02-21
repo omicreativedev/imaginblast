@@ -54,7 +54,12 @@ public class GameRenderer {
         gc.fillRect(ImaginBlastMain.WIDTH/4, ImaginBlastMain.HEIGHT/4, 
                     ImaginBlastMain.WIDTH/2, ImaginBlastMain.HEIGHT/2);
         
-       
+        // Draw logo.png later
+        // For now, just a placeholder
+        gc.setFill(Color.WHITE);
+        gc.setFont(Font.font(24));
+        gc.fillText("FrogArmy", ImaginBlastMain.WIDTH/2, ImaginBlastMain.HEIGHT/2 - 50);
+        
     }
     
     
