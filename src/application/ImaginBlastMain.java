@@ -9,6 +9,7 @@ package application;
  * Tutorial Part 2: https://www.youtube.com/watch?v=dzcQgv9hqXI&t=87s
  */
 
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -28,6 +29,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+
 
 /**
  * MAIN GAME CLASS
@@ -69,7 +71,7 @@ public class ImaginBlastMain extends Application {
 	// Game objects collections
 	Creature player;                                // The player character
 	List<Shot> shots;                               // List of player shots
-	List<Universe> univ;                            // Background star/particle effects
+	List<Particles> particles;                            // Background star/particle effects
 	List<Enemy> Squirrels;                          // List of enemy squirrels
 	// ADDED: List for acorn collectibles
 	List<Item> acornCaps;                           // List of acorn items
@@ -127,7 +129,7 @@ public class ImaginBlastMain extends Application {
 	 * Create new collections and place initial enemies
 	 */
 	private void setup() {
-		univ = new ArrayList<>();                        // New background effects list
+		particles = new ArrayList<>();                        // New background effects list
 		shots = new ArrayList<>();                       // New player bullets list
 		Squirrels = new ArrayList<>();                   // New enemies list
 		// ADDED: Initialize acorns list
@@ -218,7 +220,7 @@ public class ImaginBlastMain extends Application {
 		}
 		
 		// Draw background effects
-		univ.forEach(Universe::draw);
+		particles.forEach(Particles::draw);
 	
 		// Update and draw player
 		player.update();
@@ -290,51 +292,19 @@ public class ImaginBlastMain extends Application {
 		
 		// Randomly create new background stars/effects
 		if(RAND.nextInt(10) > 2) {
-			univ.add(new Universe());
+			particles.add(new Particles(gc)); // Pass gc when creating
 		}
 		
 		// Remove background effects that have fallen off screen
-		for (int i = 0; i < univ.size(); i++) {
-			if(univ.get(i).posY > HEIGHT)
-				univ.remove(i);
+		for (int i = 0; i < particles.size(); i++) {
+			
+			if(particles.get(i).isOffScreen())
+	     // if(particles.get(i).posY > HEIGHT)
+				particles.remove(i);
 		}
 	}
 
-	/**
-	 * UNIVERSE CLASS - Inner class for background visual effects
-	 * Creates falling stars or particles for atmospheric effect
-	 */
-	public class Universe {
-		int posX, posY;          // Position of particle
-		private int h, w, r, g, b; // Dimensions and color components
-		private double opacity;    // Transparency level
-		
-		// Constructor - creates a random particle
-		public Universe() {
-			posX = RAND.nextInt(WIDTH);               // Random X position
-			posY = 0;                                   // Start at top of screen
-			w = RAND.nextInt(5) + 1;                    // Random width 1-5
-			h =  RAND.nextInt(5) + 1;                    // Random height 1-5
-			r = RAND.nextInt(100) + 150;                 // Random red 150-250
-			g = RAND.nextInt(100) + 150;                 // Random green 150-250
-			b = RAND.nextInt(100) + 150;                 // Random blue 150-250
-			opacity = RAND.nextFloat();                   // Random opacity
-			if(opacity < 0) opacity *=-1;                  // Ensure positive
-			if(opacity > 0.5) opacity = 0.5;                // Cap opacity
-		}
-		
-		// Draw and update the particle
-		public void draw() {
-			// Animate opacity (flickering effect)
-			if(opacity > 0.8) opacity-=0.01;
-			if(opacity < 0.1) opacity+=0.01;
-			
-			// Draw the particle
-			gc.setFill(Color.rgb(r, g, b, opacity));
-			gc.fillOval(posX, posY, w, h);
-			posY+=20;                                     // Move downward
-		}
-	}
+	
 	
 	/**
 	 * ENEMY CREATION METHOD
