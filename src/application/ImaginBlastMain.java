@@ -57,10 +57,19 @@ public class ImaginBlastMain extends Application {
 	final int MAX_SHOTS = MAX_BOMBS * 2;         // Maximum number of player shots allowed
 	final int MAX_ITEMS = 3;                     // Maximum number of acorns
 	
-	// Game state variables
-	boolean gameOver = false;                    // Flag for game over state
-	boolean levelComplete = false;               // Flag for level completion
+	// Game state variables **delete**
+	//boolean gameOver = false;                    // Flag for game over state
+	//boolean levelComplete = false;               // Flag for level completion
 	public GraphicsContext gc;                   // Graphics context for drawing
+	
+	// New Game State System
+	enum GameState {
+	    START_SCREEN,
+	    PLAYING,
+	    GAME_OVER
+	}
+
+	GameState currentState = GameState.START_SCREEN;  // Start at beginning
 	
 	// Game objects collections
 	Creature player;                                // The player character
@@ -69,6 +78,7 @@ public class ImaginBlastMain extends Application {
 	List<Enemy> Squirrels;                          // List of enemy squirrels
 	List<Item> acornCaps;                           // List of acorn items
 	GameRenderer renderer;							// Draws game
+	StartScreen startScreen;						// Draws Start Screen
 	
 	// Input and score tracking
 	public double mouseX;                           // Mouse X position for player movement
@@ -94,23 +104,38 @@ public class ImaginBlastMain extends Application {
 		// Mouse input handling
 		canvas.setCursor(Cursor.MOVE);                   // Change cursor to move cursor
 		canvas.setOnMouseMoved(e -> mouseX = e.getX());  // Track mouse X position
-		canvas.setOnMouseClicked(_ -> {
-			
-			// Shoot if not at max capacity
-			if(shots.size() < MAX_SHOTS) shots.add(player.shoot());
-			
-			// Restart game if game over
-			if(gameOver) { 
-				gameOver = false;
-				setup();                                 // Reset game state
-			}
-			
-			// ADDED: Handle level completion restart
-			if(levelComplete) { 
-				levelComplete = false;
-				setup();                                 // Reset game state
-			}
+		
+		canvas.setOnMouseClicked(e -> {
+		    
+		    double clickX = e.getX();
+		    double clickY = e.getY();
+		    
+		    switch(currentState) {
+		        case START_SCREEN:
+		            // Check if Play button clicked
+		            if(clickX >= WIDTH/2 - 100 && clickX <= WIDTH/2 + 100 &&
+		               clickY >= HEIGHT/2 && clickY <= HEIGHT/2 + 50) {
+		                //System.out.println("Starting game!");
+		                currentState = GameState.PLAYING;
+		                setup(); // Initialize game
+		            }
+		            break;
+		            
+		        case PLAYING:
+		            // Shoot
+		            if(shots.size() < MAX_SHOTS) shots.add(player.shoot());
+		            break;
+		            
+		        case GAME_OVER:
+		            // Click to return to start
+		            currentState = GameState.START_SCREEN;
+		            setup(); // Reset for next game
+		            break;
+		    }
 		});
+			
+			
+	
 		
 		// Initialize game and set up window
 		setup();                                            // Set initial game state
@@ -132,6 +157,10 @@ public class ImaginBlastMain extends Application {
 		player = new Player(WIDTH / 2, HEIGHT - PLAYER_SIZE, PLAYER_SIZE, PLAYER_IMG); // Center player
 		score = 0;                                       // Reset score
 		
+		
+		// Start Screen
+		startScreen = new StartScreen();
+		
 		// Create initial set of enemies
 		IntStream.range(0, MAX_BOMBS).mapToObj(_ -> this.newSquirrel()).forEach(Squirrels::add);
 		
@@ -145,100 +174,101 @@ public class ImaginBlastMain extends Application {
 	 * Update game objects, check collisions, and render everything
 	 */
 	private void run(GraphicsContext gc) {
-		
-		// Rendering code added to GameRenderer.java
-		
-		renderer.clearScreen();
-		
-		renderer.drawHUD(score, shots.size(), MAX_SHOTS, acornCount);
-		
-		if(gameOver) {
-			renderer.drawGameOver(score);
-		}
-		
-		// Draw background effects
-		particles.forEach(Particles::draw);
-	
-		// Update and draw player
-		player.update();
-		player.draw(gc);
-		player.posX = (int) mouseX;    // Move player with mouse
-		
-		// Update and draw enemies, check collisions with player
-		Squirrels.stream().peek(Creature::update).forEach(e -> {
-			e.draw(gc);
-			e.update();
-			
-			// If enemy hits player, trigger explosion
-			if(Collisions.playerCollides(player, e) && !player.exploding) {
-				player.explode();
-			}
-		});
-		
-		// ADDED: Update and draw acorns, check for player collection
-		acornCaps.stream().forEach(i -> {
-			i.draw(gc);
-			i.update(gc);
-			
-			// If player collects acorn, mark as collected
-		
-			if(Collisions.itemCollides(player, i) && !i.collected && !gameOver){
-				acornCount++;  // Increment the counter
-				// Would increment counter here if Creature had one
-				 ((ItemAcorn) i).onCollected();
-			}
-		});
-		
-		// Update and check shots
-		for (int i = shots.size() - 1; i >=0 ; i--) {
-			Shot shot = shots.get(i);
-			// Remove shots that are off screen or marked for removal
-			if(shot.posY < 0 || shot.toRemove)  { 
-				shots.remove(i);
-				continue;
-			}
-			shot.update();
-			shot.draw(gc);
-			
-			// Check collision with each enemy
-			for (Enemy squirrel : Squirrels) {
-				if(Collisions.shotCollides(shot, squirrel) && !squirrel.exploding) {
-					score++;                              // Increase score
-					squirrel.explode();                    // Trigger enemy explosion
-					shot.toRemove = true;                  // Mark shot for removal
-				}
-			}
-		}
-		
-		// Replace destroyed enemies with new ones
-		for (int i = Squirrels.size() - 1; i >= 0; i--){  
-			if(Squirrels.get(i).destroyed)  {
-				Squirrels.set(i, newSquirrel());
-			}
-		}
-		
-		// ADDED: Replace collected or off-screen acorns with new ones
-		for (int i = acornCaps.size() - 1; i >= 0; i--){  
-			if(acornCaps.get(i).gone)  {
-				acornCaps.set(i, newAcorn());
-			}
-		}
-	
-		// Check game over condition
-		gameOver = player.destroyed;
-		
-		// Randomly create new background stars/effects
-		if(RAND.nextInt(10) > 2) {
-			particles.add(new Particles(gc)); // Pass gc when creating
-		}
-		
-		// Remove background effects that have fallen off screen
-		for (int i = 0; i < particles.size(); i++) {
-			
-			if(particles.get(i).isOffScreen())
-	     // if(particles.get(i).posY > HEIGHT)
-				particles.remove(i);
-		}
+	    
+	    switch(currentState) {
+	        case START_SCREEN:
+	            // Only draw start screen
+	            renderer.drawStartScreen(startScreen);
+	            break;
+	            
+	        case PLAYING:
+	            // Full game rendering and logic
+	            renderer.clearScreen();
+	            renderer.drawHUD(score, shots.size(), MAX_SHOTS, acornCount);
+	            
+	            // Draw background effects
+	            particles.forEach(Particles::draw);
+	        
+	            // Update and draw player
+	            player.update();
+	            player.draw(gc);
+	            player.posX = (int) mouseX;
+	            
+	            // Update and draw enemies
+	            Squirrels.stream().peek(Creature::update).forEach(e -> {
+	                e.draw(gc);
+	                e.update();
+	                
+	                if(Collisions.playerCollides(player, e) && !player.exploding) {
+	                    player.explode();
+	                }
+	            });
+	            
+	            // Update and draw acorns
+	            acornCaps.forEach(i -> {
+	                i.draw(gc);
+	                i.update(gc);
+	                
+	                if(Collisions.itemCollides(player, i) && !i.collected) {
+	                    acornCount++;
+	                    ((ItemAcorn) i).onCollected();
+	                }
+	            });
+	            
+	            // Update and check shots
+	            for (int i = shots.size() - 1; i >=0 ; i--) {
+	                Shot shot = shots.get(i);
+	                if(shot.posY < 0 || shot.toRemove) { 
+	                    shots.remove(i);
+	                    continue;
+	                }
+	                shot.update();
+	                shot.draw(gc);
+	                
+	                for (Enemy squirrel : Squirrels) {
+	                    if(Collisions.shotCollides(shot, squirrel) && !squirrel.exploding) {
+	                        score++;
+	                        squirrel.explode();
+	                        shot.toRemove = true;
+	                    }
+	                }
+	            }
+	            
+	            // Replace destroyed enemies
+	            for (int i = Squirrels.size() - 1; i >= 0; i--){  
+	                if(Squirrels.get(i).destroyed) {
+	                    Squirrels.set(i, newSquirrel());
+	                }
+	            }
+	            
+	            // Replace collected acorns
+	            for (int i = acornCaps.size() - 1; i >= 0; i--){  
+	                if(acornCaps.get(i).gone) {
+	                    acornCaps.set(i, newAcorn());
+	                }
+	            }
+	        
+	            // Check game over condition
+	            if(player.destroyed) {
+	                currentState = GameState.GAME_OVER;
+	            }
+	            
+	            // Particles
+	            if(RAND.nextInt(10) > 2) {
+	                particles.add(new Particles(gc));
+	            }
+	            
+	            for (int i = 0; i < particles.size(); i++) {
+	                if(particles.get(i).isOffScreen())
+	                    particles.remove(i);
+	            }
+	            break;
+	            
+	        case GAME_OVER:
+	            // Only draw game over screen
+	            renderer.drawGameOver(score);
+	            break;
+	    }
 	}
 
 	
