@@ -144,49 +144,6 @@ public class ImaginBlastMain extends Application {
 		IntStream.range(0, MAX_ITEMS).mapToObj(_ -> this.newAcorn()).forEach(acornCaps::add);
 	}
 
-	/**
-	 * SHOT COLLISION DETECTION
-	 * Check if a shot has hit an enemy
-	 */
-	public boolean shot_colide(Shot shot, Creature Rocket) {
-		
-		// Calculate distance between centers of shot and enemy
-		int distance = distance(shot.posX + Shot.size / 2, shot.posY + Shot.size / 2, 
-				Rocket.posX + Rocket.size / 2, Rocket.posY + Rocket.size / 2);
-		
-		// Return true if distance is less than sum of radii?
-		return distance  < Rocket.size / 2 + Rocket.size / 2;
-	} 
-	
-	/**
-	 * PLAYER COLLISION DETECTION
-	 * Check if player has collided with an enemy
-	 */
-	public boolean player_colide(Creature player, Creature other) {
-		int d;
-		
-		// Calculate distance between centers of player and enemy
-		d = distance(player.posX + player.size / 2, player.posY + player.size /2, 
-							other.posX + other.size / 2, other.posY + other.size / 2);
-		
-		// Return true if distance is less than sum of radii?
-		return d < other.size / 2 + player.size / 2;
-	}
-	
-	/**
-	 * ADDED: ITEM COLLISION DETECTION
-	 * Check if player has collected an acorn
-	 */
-	public boolean item_colide(Creature player, Item other) {
-		int d;
-		
-		// Calculate distance between centers of player and acorn
-		d = distance(player.posX + player.size / 2, player.posY + player.size /2, 
-							other.posX + other.size / 2, other.posY + other.size / 2);
-		
-		// Return true if distance is less than sum of radii
-		return d < other.size / 2 + player.size / 2;
-	}
 	
 	/**
 	 * RUN METHOD - Main game loop (called every frame)
@@ -233,7 +190,7 @@ public class ImaginBlastMain extends Application {
 			e.update(gc);
 			
 			// If enemy hits player, trigger explosion
-			if(player_colide(player, e) && !player.exploding) {
+			if(Collisions.playerCollides(player, e) && !player.exploding) {
 				player.explode();
 			}
 		});
@@ -245,7 +202,7 @@ public class ImaginBlastMain extends Application {
 			
 			// If player collects acorn, mark as collected
 			// Note: Need to add collection counter to Creature class to track this
-			if(item_colide(player, i) && !i.collected && !gameOver) {
+			if(Collisions.itemCollides(player, i) && !i.collected && !gameOver){
 				acornCount++;  // Increment the counter
 				// Would increment counter here if Creature had one
 				i.collected = true;
@@ -265,7 +222,7 @@ public class ImaginBlastMain extends Application {
 			
 			// Check collision with each enemy
 			for (Enemy squirrel : Squirrels) {
-				if(shot_colide(shot, squirrel) && !squirrel.exploding) {
+				if(Collisions.shotCollides(shot, squirrel) && !squirrel.exploding) {
 					score++;                              // Increase score
 					squirrel.explode();                    // Trigger enemy explosion
 					shot.toRemove = true;                  // Mark shot for removal
@@ -322,14 +279,7 @@ public class ImaginBlastMain extends Application {
 		return new Item(50 + RAND.nextInt(WIDTH - 100), 0, PLAYER_SIZE, ACORN_IMG);
 	}
 	
-	/**
-	 * DISTANCE CALCULATION METHOD
-	 * Calculates distance between two points
-	 */
 	
-	int distance(int x1, int y1, int x2, int y2) {
-		return (int) Math.sqrt(Math.pow((x1 - x2), 2) + Math.pow((y1 - y2), 2));
-	}
 	
 	/**
 	 * MAIN METHOD - Application entry point
