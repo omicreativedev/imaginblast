@@ -60,6 +60,21 @@ public class GameRenderer {
         gc.setFont(Font.font(24));
         gc.fillText("FrogArmy", ImaginBlastMain.WIDTH/2, ImaginBlastMain.HEIGHT/2 - 50);
         
+
+        // Draw PLAY GAME button (green rectangle)
+        gc.setFill(Color.GREEN);
+        gc.fillRect(ImaginBlastMain.WIDTH/2 - 100, ImaginBlastMain.HEIGHT/2, 200, 50);
+        
+        // Button text
+        gc.setFill(Color.BLACK);
+        gc.setFont(Font.font(18));
+        gc.fillText("PLAY", ImaginBlastMain.WIDTH/2, ImaginBlastMain.HEIGHT/2 + 30);
+    
+        // Draw button border to make it obvious
+        gc.setStroke(Color.WHITE);
+        gc.setLineWidth(1);
+        gc.strokeRect(ImaginBlastMain.WIDTH/2 - 100, ImaginBlastMain.HEIGHT/2, 200, 50);
+    
     }
     
     
