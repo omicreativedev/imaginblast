@@ -10,6 +10,9 @@ import javafx.scene.image.Image;
 
 public class ItemAcorn extends Item {
 	
+	// MOVEMENT PROPERTIES
+	int speed = 5;       // Falling speed (pixels per frame)
+	
 	/**
 	 * CONSTRUCTOR
 	 * Create a new acorn item
@@ -23,11 +26,22 @@ public class ItemAcorn extends Item {
 		// Acorn-specific initialization can go here later
 	}
 	
-	// MOVEMENT PROPERTIES
-	int speed = 5;       // Falling speed (pixels per frame)
+
 	
 	// ACORN-SPECIFIC PROPERTIES
 	// Could add pointValue, special effects, etc. later
+	
+	public void onCollected() {
+	    // Mark as collected
+	    this.collected = true;
+	    
+	    // FUTURE: Play sound here
+	    // FUTURE: Add visual effect
+	    // FUTURE: Give bonus points
+	    
+	    // For now, just mark as collected
+	    // The base Item class will handle setting gone = true in update()
+	}
 	
 	/**
 	 * UPDATE METHOD

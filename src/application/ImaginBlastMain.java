@@ -201,11 +201,11 @@ public class ImaginBlastMain extends Application {
 			i.update(gc);
 			
 			// If player collects acorn, mark as collected
-			// Note: Need to add collection counter to Creature class to track this
+		
 			if(Collisions.itemCollides(player, i) && !i.collected && !gameOver){
 				acornCount++;  // Increment the counter
 				// Would increment counter here if Creature had one
-				i.collected = true;
+				 ((ItemAcorn) i).onCollected();
 			}
 		});
 		
