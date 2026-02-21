@@ -45,6 +45,21 @@ public class GameRenderer {
         gc.fillText("Acorns: " + acornCount, 340, 20);
     }
     
+    
+    
+    
+    public void drawStartScreen(StartScreen startScreen) {
+        // Draw black box overlay (50% of screen, centered)
+        gc.setFill(Color.BLACK);
+        gc.fillRect(ImaginBlastMain.WIDTH/4, ImaginBlastMain.HEIGHT/4, 
+                    ImaginBlastMain.WIDTH/2, ImaginBlastMain.HEIGHT/2);
+        
+       
+    }
+    
+    
+    
+    
     /**
      * Draw game over screen
      */
