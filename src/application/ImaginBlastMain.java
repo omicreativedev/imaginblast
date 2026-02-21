@@ -27,6 +27,10 @@ import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
+//Music
+//import javafx.scene.media.Media;
+//import javafx.scene.media.MediaPlayer;
+
 
 /**
  * MAIN GAME CLASS
@@ -79,6 +83,8 @@ public class ImaginBlastMain extends Application {
 	List<Item> acornCaps;                           // List of acorn items
 	GameRenderer renderer;							// Draws game
 	StartScreen startScreen;						// Draws Start Screen
+	// MediaPlayer musicPlayer;						// Music
+	
 	
 	// Input and score tracking
 	public double mouseX;                           // Mouse X position for player movement
@@ -115,6 +121,14 @@ public class ImaginBlastMain extends Application {
 		            // Check if Play button clicked
 		            if(clickX >= WIDTH/2 - 100 && clickX <= WIDTH/2 + 100 &&
 		               clickY >= HEIGHT/2 && clickY <= HEIGHT/2 + 50) {
+		            	
+		                // Stop "start screen" music
+		                // if(musicPlayer != null) {
+		                //     musicPlayer.stop();
+		                // }
+		            	
+		            	
+		            	
 		                //System.out.println("Starting game!");
 		                currentState = GameState.PLAYING;
 		                setup(); // Initialize game
@@ -139,6 +153,13 @@ public class ImaginBlastMain extends Application {
 		
 		// Initialize game and set up window
 		setup();                                            // Set initial game state
+		
+		//Media startMusic = new Media(new File("start.wav").toURI().toString());
+		//musicPlayer = new MediaPlayer(startMusic);
+		//musicPlayer.play();
+		
+		
+		
 		stage.setScene(new Scene(new StackPane(canvas)));   // Add canvas to scene
 		stage.setTitle("ImaginBlast");                      // Set window title
 		stage.show();                                       // Display the window
