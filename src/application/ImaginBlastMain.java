@@ -134,7 +134,7 @@ public class ImaginBlastMain extends Application {
 		Squirrels = new ArrayList<>();                   // New enemies list
 		// ADDED: Initialize acorns list
 		acornCaps = new ArrayList<>();                   // New acorns list
-		player = new Creature(WIDTH / 2, HEIGHT - PLAYER_SIZE, PLAYER_SIZE, PLAYER_IMG); // Center player
+		player = new Player(WIDTH / 2, HEIGHT - PLAYER_SIZE, PLAYER_SIZE, PLAYER_IMG); // Center player
 		score = 0;                                       // Reset score
 		
 		// Create initial set of enemies
@@ -187,7 +187,7 @@ public class ImaginBlastMain extends Application {
 		// Update and draw enemies, check collisions with player
 		Squirrels.stream().peek(Creature::update).forEach(e -> {
 			e.draw(gc);
-			e.update(gc);
+			e.update();
 			
 			// If enemy hits player, trigger explosion
 			if(Collisions.playerCollides(player, e) && !player.exploding) {
@@ -268,7 +268,7 @@ public class ImaginBlastMain extends Application {
 	 * Creates a new enemy squirrel at a random X position at the top of screen
 	 */
 	Enemy newSquirrel() {
-		return new Enemy(50 + RAND.nextInt(WIDTH - 100), 0, PLAYER_SIZE, SQUIRREL_IMG);
+		return new EnemySquirrel(50 + RAND.nextInt(WIDTH - 100), 0, PLAYER_SIZE, SQUIRREL_IMG);
 	}
 	
 	/**
@@ -276,7 +276,7 @@ public class ImaginBlastMain extends Application {
 	 * Creates a new acorn collectible at a random X position at the top of screen
 	 */
 	Item newAcorn() {
-		return new Item(50 + RAND.nextInt(WIDTH - 100), 0, PLAYER_SIZE, ACORN_IMG);
+		return new ItemAcorn(50 + RAND.nextInt(WIDTH - 100), 0, PLAYER_SIZE, ACORN_IMG);
 	}
 	
 	

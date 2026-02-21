@@ -8,7 +8,7 @@ import javafx.scene.image.Image;
  * Extends Creature to inherit basic creature properties and behaviors
  * Adds player-specific attributes like health and item collection tracking
  */
-public class PlayerClass extends Creature {
+public class Player extends Creature {
 	
 	// PLAYER STATS
 	public int hp = 50;           // Player health points
@@ -24,7 +24,7 @@ public class PlayerClass extends Creature {
 	 * @param size Size of the player sprite
 	 * @param image The player's image (frog character)
 	 */
-	public PlayerClass(int posX, int posY, int size, Image image) {
+	public Player(int posX, int posY, int size, Image image) {
 		// Call parent Creature constructor to set up position, size, and image
 		super(posX, posY, size, image);
 		// hp and col_items keep their default values (50 and 0)

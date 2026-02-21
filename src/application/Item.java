@@ -4,9 +4,9 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 
 /**
- * ITEM CLASS - Represents collectible items in the game
+ * ITEM CLASS - Generic base class for all collectible items in the game
  * Items fall from the top of the screen and can be collected by the player
- * Examples could include power-ups, extra points, health, or ammo
+ * Specific item types (Acorn, Carrot, Starfish) extend this class
  */
 public class Item {
 
@@ -15,8 +15,7 @@ public class Item {
 	int size;            // Width and height of the item (square)
 	Image img;           // The item's image/icon
 	
-	// MOVEMENT PROPERTIES
-	int speed = 5;       // Falling speed (pixels per frame)
+
 	
 	// STATE FLAGS
 	boolean collected = false; // True when player picks up the item
@@ -27,7 +26,7 @@ public class Item {
 	 * @param posX Initial X position (usually random across screen width)
 	 * @param posY Initial Y position (usually 0 at top of screen)
 	 * @param size Size of the item sprite
-	 * @param image The item's image (power-up, extra life, etc.)
+	 * @param image The item's image
 	 */
 	public Item(int posX, int posY, int size,  Image image) {
 		this.posX = posX;    // Set X position
@@ -47,27 +46,9 @@ public class Item {
 	
 	/**
 	 * UPDATE METHOD - Called every frame to update item behavior
-	 * Handles movement, collection state, and screen boundaries
-	 * @param gc GraphicsContext (passed for consistency but not used directly)
+	 * Can be overridden by subclasses for different movement patterns
+	 * @param gc GraphicsContext (passed for consistency)
 	 */
 	public void update(GraphicsContext gc) {
-		// COLLECTION HANDLING
-		// If the item has been collected, mark it as gone immediately
-		if(collected == true) {
-			this.gone = true; // Item disappears when collected
-		}
-		
-		// MOVEMENT LOGIC
-		// Only move down if not collected and not already gone
-		if(!collected && !gone) {
-			posY += speed; // Fall downward at specified speed
-		}
-		
-		// SCREEN BOUNDARY CHECK
-		// If item falls past the bottom of the screen
-		if(posY > ImaginBlastMain.HEIGHT) {
-			gone = true; // Mark for removal (missed opportunity)
-			// Note: Item disappears without giving player any benefit
 		}
 	}
-}
