@@ -7,7 +7,7 @@ public class StartScreen {
     private boolean startButtonPressed = false;
     
     public void update() {
-        // Logic for the rest of the start screen will go here
+        // Any logic for the rest of the start screen can  go here
     }
     
     // Is the start button pressed?

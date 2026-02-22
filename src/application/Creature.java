@@ -105,9 +105,6 @@ public class Creature {
 	 * @return A new Shot object positioned at the creature's center
 	 */
 	public Shot shoot() {
-		// Calculate shot position:
-		// X: creature's center (posX + size/2) minus half the shot width
-		// Y: just above the creature (posY - shot height/2)
-	    return new Shot(posX + size / 2 - Shot.size / 2, posY - Shot.size / 2);
+		return null;  // Most creatures don't shoot
 	}
 }

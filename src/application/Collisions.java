@@ -19,8 +19,8 @@ public class Collisions {
         
         // Calculate distance between centers of shot and enemy
         int distance = distance(
-            shot.posX + Shot.size / 2, 
-            shot.posY + Shot.size / 2, 
+            shot.posX + Shot.SIZE / 2, 
+            shot.posY + Shot.SIZE / 2, 
             target.posX + target.size / 2, 
             target.posY + target.size / 2
         );

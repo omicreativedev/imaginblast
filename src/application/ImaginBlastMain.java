@@ -86,8 +86,15 @@ public class ImaginBlastMain extends Application {
 	List<Item> acornCaps;                           // List of acorn items
 	GameRenderer renderer;							// Draws game
 	StartScreen startScreen;						// Draws Start Screen
-	// MediaPlayer musicPlayer;						// Music - Uncomment when ready to add music
 	Quest01 quest01;              					// The quest for level 1
+	
+	// Music
+	// MediaPlayer startMusicPlayer;
+	// MediaPlayer questMusicPlayer;
+	// MediaPlayer levelMusicPlayer;
+	// MediaPlayer bossMusicPlayer;
+	// MediaPlayer winMusicPlayer;
+	// MediaPlayer loseMusicPlayer;
 	
 	boolean questConfirmed = false;					// Track if player has read the quest
 	
@@ -132,8 +139,8 @@ public class ImaginBlastMain extends Application {
 		            if(clickX >= WIDTH/2 - 100 && clickX <= WIDTH/2 + 100 &&
 		               clickY >= HEIGHT/2 && clickY <= HEIGHT/2 + 50) {
 		            	
-		                // Stop "start screen" music
-		                // if(musicPlayer != null) {
+		                // Stop START_SCREEN music
+		                // if(startMusicPlayer != null) {
 		                //     musicPlayer.stop();
 		                // }
 		            	
@@ -144,20 +151,37 @@ public class ImaginBlastMain extends Application {
 		            
 		        case QUEST_SCREEN:
 		            // Check if OK button clicked
-		            // We'll need button coordinates
-		            // x: WIDTH/2-100 to WIDTH/2+100, y: HEIGHT/2+100 to HEIGHT/2+150
+		            // Button coordinates: x: WIDTH/2-100 to WIDTH/2+100, y: HEIGHT/2+100 to HEIGHT/2+150
 		            if(clickX >= WIDTH/2 - 100 && clickX <= WIDTH/2 + 100 &&
 		               clickY >= HEIGHT/2 + 100 && clickY <= HEIGHT/2 + 150) {
-		            	questConfirmed = true;  // Player accepted the quest
-		                currentState = GameState.PLAYING;  // next screen
-		                setup(); // Start the game
+		                
+		                // Stop quest music when leaving the quest screen
+		                // if(questMusicPlayer != null) {
+		                //     questMusicPlayer.stop();
+		                // }
+		                
+		                // Start level music based on which level we're entering
+		                // String levelSong = currentLevel.getLevelNumber() == 1 ? "level1.wav" : "level2.wav";
+		                // Media levelMusic = new Media(new File(levelSong).toURI().toString());
+		                // levelMusicPlayer = new MediaPlayer(levelMusic);
+		                // levelMusicPlayer.setCycleCount(MediaPlayer.INDEFINITE); // Loop while playing
+		                // levelMusicPlayer.play();
+		                
+		                questConfirmed = true;  // Player accepted the quest
+		                currentState = GameState.PLAYING;  // Go to game
+		                setup(); // Initialize the level
 		            }
-		            break;		            
+		            break;            
 		            
 		        case PLAYING:
 		            // Shoot
-		            if(shots.size() < MAX_SHOTS) shots.add(player.shoot());
-		            break;
+		        	 if(shots.size() < MAX_SHOTS) {
+		        	        Shot newShot = player.shoot();
+		        	        if (newShot != null) {
+		        	            shots.add(newShot);
+		        	        }
+		        	    }
+		        	    break;
 		            
 		        case GAME_OVER:
 		            // Click to return to start
