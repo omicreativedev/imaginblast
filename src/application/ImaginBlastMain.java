@@ -61,14 +61,16 @@ public class ImaginBlastMain extends Application {
 	final int MAX_SHOTS = MAX_BOMBS * 2;         // Maximum number of player shots allowed
 	final int MAX_ITEMS = 3;                     // Maximum number of acorns
 	
-	// Game state variables **delete**
-	//boolean gameOver = false;                    // Flag for game over state
-	//boolean levelComplete = false;               // Flag for level completion
+	// Game state variables
+	// boolean gameOver = false;
+	// boolean levelComplete = false;
+	
 	public GraphicsContext gc;                   // Graphics context for drawing
 	
 	// New Game State System
 	enum GameState {
 	    START_SCREEN,
+	    QUEST_SCREEN,
 	    PLAYING,
 	    GAME_OVER
 	}
@@ -84,12 +86,14 @@ public class ImaginBlastMain extends Application {
 	GameRenderer renderer;							// Draws game
 	StartScreen startScreen;						// Draws Start Screen
 	// MediaPlayer musicPlayer;						// Music
+	Quest01 quest01;              					// The quest for level 1
 	
+	boolean questConfirmed = false;					// Track if player has read the quest
 	
 	// Input and score tracking
 	public double mouseX;                           // Mouse X position for player movement
 	public int score;                               // Player's current score
-	public int acornCount = 0;                      // ADD THIS: Track acorns collected
+	public int acornCount = 0;                      // Track acorns collected
 	
 	/**
 	 * START METHOD
@@ -117,6 +121,7 @@ public class ImaginBlastMain extends Application {
 		    double clickY = e.getY();
 		    
 		    switch(currentState) {
+		    
 		        case START_SCREEN:
 		            // Check if Play button clicked
 		            if(clickX >= WIDTH/2 - 100 && clickX <= WIDTH/2 + 100 &&
@@ -127,11 +132,22 @@ public class ImaginBlastMain extends Application {
 		                //     musicPlayer.stop();
 		                // }
 		            	
-		                //System.out.println("Starting game!");
-		                currentState = GameState.PLAYING;
+		                currentState = GameState.QUEST_SCREEN; // next screen
 		                setup(); // Initialize game
 		            }
 		            break;
+		            
+		        case QUEST_SCREEN:
+		            // Check if OK button clicked
+		            // We'll need button coordinates
+		            // x: WIDTH/2-100 to WIDTH/2+100, y: HEIGHT/2+100 to HEIGHT/2+150
+		            if(clickX >= WIDTH/2 - 100 && clickX <= WIDTH/2 + 100 &&
+		               clickY >= HEIGHT/2 + 100 && clickY <= HEIGHT/2 + 150) {
+		            	questConfirmed = true;  // Player accepted the quest
+		                currentState = GameState.PLAYING;  // next screen
+		                setup(); // Start the game
+		            }
+		            break;		            
 		            
 		        case PLAYING:
 		            // Shoot
@@ -140,7 +156,7 @@ public class ImaginBlastMain extends Application {
 		            
 		        case GAME_OVER:
 		            // Click to return to start
-		            currentState = GameState.START_SCREEN;
+		            currentState = GameState.START_SCREEN;  // next screen
 		            setup(); // Reset for next game
 		            break;
 		    }
@@ -179,6 +195,7 @@ public class ImaginBlastMain extends Application {
 		
 		// Start Screen
 		startScreen = new StartScreen();
+		quest01 = new Quest01();
 		
 		// Create initial set of enemies
 		IntStream.range(0, MAX_BOMBS).mapToObj(_ -> this.newSquirrel()).forEach(Squirrels::add);
@@ -198,6 +215,10 @@ public class ImaginBlastMain extends Application {
 	        case START_SCREEN:
 	            // Only draw start screen
 	            renderer.drawStartScreen(startScreen);
+	            break;
+	            
+	        case QUEST_SCREEN:  // ADD THIS
+	            renderer.drawQuestScreen(quest01);
 	            break;
 	            
 	        case PLAYING:
