@@ -29,7 +29,7 @@ public class GameRenderer {
      * Draw score, ammo, acorns
      */
     public void drawHUD(int score, int shotsSize, int maxShots, int acornCount) {
-        gc.setTextAlign(TextAlignment.CENTER);
+        gc.setTextAlign(TextAlignment.LEFT);
         gc.setFont(Font.font(20));
         
         // Score
@@ -47,6 +47,7 @@ public class GameRenderer {
     
     // This is ugly but it works. We will fix it later.
     public void drawStartScreen(StartScreen startScreen) {
+    	 gc.setTextAlign(TextAlignment.CENTER);
         // Draw black box overlay (50% of screen, centered)
         gc.setFill(Color.BLACK);
         gc.fillRect(ImaginBlastMain.WIDTH/4, ImaginBlastMain.HEIGHT/4, 
@@ -76,6 +77,7 @@ public class GameRenderer {
     
     // This is ugly but it works. We will fix it later.
     public void drawQuestScreen(Quest01 quest) {
+    	 gc.setTextAlign(TextAlignment.CENTER);
         // Draw black box overlay
         gc.setFill(Color.BLACK);
         gc.fillRect(ImaginBlastMain.WIDTH/4, ImaginBlastMain.HEIGHT/4, 
@@ -109,6 +111,7 @@ public class GameRenderer {
      */
     // This is the old screen we have to replace it
     public void drawGameOver(int score) {
+    	 gc.setTextAlign(TextAlignment.CENTER);
         gc.setFont(Font.font(35));
         gc.setFill(Color.YELLOW);
         gc.fillText("Game Over \n Your Score is: " + score + " \n Click to play again", 

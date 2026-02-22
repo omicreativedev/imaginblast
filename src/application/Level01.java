@@ -1,16 +1,13 @@
 package application;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * LEVEL 1
  * Forest level - collect acorns, defeat squirrels
  */
 public class Level01 extends Level {
-    
-    private int targetEnemies = 50;
-    private int targetAcorns = 50;
     
     public Level01() {
         super(1, "Forest Falls");
@@ -19,35 +16,30 @@ public class Level01 extends Level {
     
     @Override
     public String getQuestText() {
-        return "Collect " + targetAcorns + " acorns and defeat " + targetEnemies + " squirrels";
+        return "Collect 50 acorns and defeat 50 squirrels";
     }
     
     @Override
-    public List<Class<? extends Enemy>> getAllowedEnemies() {
-        List<Class<? extends Enemy>> enemies = new ArrayList<>();
-        enemies.add(EnemySquirrel.class);  // Level 1 only has squirrels
-        return enemies;
+    public Map<Class<? extends Enemy>, Integer> getEnemyGoals() {
+        Map<Class<? extends Enemy>, Integer> goals = new HashMap<>();
+        goals.put(EnemySquirrel.class, 50);  // Need 50 squirrels
+        return goals;
     }
     
     @Override
-    public List<Class<? extends Item>> getAllowedItems() {
-        List<Class<? extends Item>> items = new ArrayList<>();
-        items.add(ItemAcorn.class);  // Level 1 only has acorns
-        return items;
+    public Map<Class<? extends Item>, Integer> getItemGoals() {
+        Map<Class<? extends Item>, Integer> goals = new HashMap<>();
+        goals.put(ItemAcorn.class, 50);  // Need 50 acorns
+        return goals;
     }
     
     @Override
     public int getEnemySpawnRate() {
-        return 10; // Spawn enemies frequently
+        return 10;
     }
     
     @Override
     public int getItemSpawnRate() {
-        return 8; // Spawn items frequently
-    }
-    
-    @Override
-    public boolean checkWinCondition(int enemiesDefeated, int itemsCollected) {
-        return enemiesDefeated >= targetEnemies && itemsCollected >= targetAcorns;
+        return 8;
     }
 }
