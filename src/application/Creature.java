@@ -1,6 +1,5 @@
 package application;
 
-// JavaFX imports for graphics handling
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 
@@ -15,6 +14,7 @@ public class Creature {
 	
 	// EXPLOSION ANIMATION CONSTANTS
 	// These are static because they're shared across all creatures
+	// Can we try to override this with subclasses? Hmmmmm...
 	static final Image EXPLOSION_IMG = new Image("explosion.png");  // Explosion sprite sheet
 	static final int EXPLOSION_W = 128;      // Width of each explosion frame
 	static final int EXPLOSION_ROWS = 3;     // Number of rows in sprite sheet
@@ -37,7 +37,8 @@ public class Creature {
 	int explosionStep = 0;  // Current frame of explosion animation (0 to EXPLOSION_STEPS)
 	
 	/**
-	 * CONSTRUCTOR - Creates a new creature
+	 * CONSTRUCTOR
+	 * Creates a new creature
 	 * @param posX Initial X position
 	 * @param posY Initial Y position
 	 * @param size Size of the creature (square)
@@ -51,11 +52,12 @@ public class Creature {
 	}
 	
 	/**
-	 * UPDATE METHOD - Called every frame to update creature state
-	 * Handles explosion animation progression and destruction detection
+	 * UPDATE METHOD
+	 * Called every frame to update creature state
+	 * Handles explosion animation and destruction detection
 	 */
 	public void update() {
-		// If currently exploding, advance to next explosion frame
+		// If currently exploding, go to next explosion frame
 		if(exploding) {
 			explosionStep++;
 		}
@@ -78,7 +80,7 @@ public class Creature {
 			gc.drawImage(EXPLOSION_IMG, 
 					// Source rectangle in sprite sheet
 					explosionStep % EXPLOSION_COL * EXPLOSION_W,           // Source X
-					(explosionStep / EXPLOSION_ROWS) * EXPLOSION_H + 1,   // Source Y (+1 fixes alignment)
+					(explosionStep / EXPLOSION_ROWS) * EXPLOSION_H + 1,    // Source Y (+1 fixes alignment)
 					EXPLOSION_W, EXPLOSION_H,                              // Source width/height
 					// Destination rectangle on screen
 					posX, posY, size, size);                               // Destination position/size
@@ -90,7 +92,8 @@ public class Creature {
 	}
 	
 	/**
-	 * EXPLODE METHOD - Triggers the explosion sequence
+	 * EXPLODE METHOD
+	 * Triggers the explosion sequence
 	 * Called when creature is hit by shot (enemy) or collides with enemy (player)
 	 */
 	public void explode() {
@@ -100,7 +103,8 @@ public class Creature {
 	}
 	
 	/**
-	 * SHOOT METHOD - Creates a projectile fired by the creature
+	 * SHOOT METHOD
+	 * Creates a projectile fired by the creature
 	 * Currently only used by player, but could be used for enemy shooting in future
 	 * @return A new Shot object positioned at the creature's center
 	 */
