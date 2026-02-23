@@ -9,7 +9,7 @@ import javafx.scene.image.Image;
 public class EnemySquirrel extends Enemy {
     
     // Squirrel-specific speed
-    int SPEED = 3;
+    int SPEED = 6;
     
     /**
      * CONSTRUCTOR - Creates a new squirrel enemy

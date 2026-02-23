@@ -11,7 +11,7 @@ import javafx.scene.image.Image;
 public class ItemAcorn extends Item {
 	
 	// MOVEMENT PROPERTIES
-	int speed = 5;       // Falling speed (pixels per frame)
+	int speed = 8;       // Falling speed (pixels per frame)
 	
 	/**
 	 * CONSTRUCTOR

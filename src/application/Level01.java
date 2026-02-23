@@ -22,14 +22,14 @@ public class Level01 extends Level {
     @Override
     public Map<Class<? extends Enemy>, Integer> getEnemyGoals() {
         Map<Class<? extends Enemy>, Integer> goals = new HashMap<>();
-        goals.put(EnemySquirrel.class, 50);  // Need 50 squirrels
+        goals.put(EnemySquirrel.class, 10);  // Need 50 squirrels
         return goals;
     }
     
     @Override
     public Map<Class<? extends Item>, Integer> getItemGoals() {
         Map<Class<? extends Item>, Integer> goals = new HashMap<>();
-        goals.put(ItemAcorn.class, 50);  // Need 50 acorns
+        goals.put(ItemAcorn.class, 10);  // Need 50 acorns
         return goals;
     }
     
@@ -40,6 +40,6 @@ public class Level01 extends Level {
     
     @Override
     public int getItemSpawnRate() {
-        return 8;
+        return 5; // lower number more acorns
     }
 }

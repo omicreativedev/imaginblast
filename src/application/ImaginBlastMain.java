@@ -62,7 +62,7 @@ public class ImaginBlastMain extends Application {
 	// Game balance constants
 	final int MAX_BOMBS = 10;                    // Maximum number of enemies
 	final int MAX_SHOTS = MAX_BOMBS * 2;         // Maximum number of player shots allowed
-	final int MAX_ITEMS = 3;                     // Maximum number of acorns
+	final int MAX_ITEMS = 6;                     // Maximum number of acorns
 	
 	// Game state variables
 	// boolean gameOver = false;
@@ -75,6 +75,8 @@ public class ImaginBlastMain extends Application {
 	    START_SCREEN,
 	    QUEST_SCREEN,
 	    PLAYING,
+	    BOSS_FIGHT,
+	    LEVEL_DONE,
 	    GAME_OVER
 	}
 
@@ -83,12 +85,16 @@ public class ImaginBlastMain extends Application {
 	// Game objects collections
 	Player player;                                // The player character
 	List<Shot> shots;                               // List of player shots
+	List<Shot> enemyShots = new ArrayList<>();
 	List<Particles> particles;                      // Background star/particle effects
 	List<Enemy> Squirrels;                          // List of enemy squirrels
 	List<Item> acornCaps;                           // List of acorn items
 	GameRenderer renderer;							// Draws game
 	StartScreen startScreen;						// Draws Start Screen
 	Quest01 quest01;              					// The quest for level 1
+	BossScreen01 bossScreen;
+	LevelDone01 levelDoneScreen;
+	boolean bossDefeated = false;
 	
 	// Music
 	// MediaPlayer startMusicPlayer;
@@ -169,6 +175,8 @@ public class ImaginBlastMain extends Application {
 		                // levelMusicPlayer.play();
 		                
 		                questConfirmed = true;  // Player accepted the quest
+		                bossDefeated = false;  // reset boss state
+		                bossScreen = new BossScreen01();  // fresh boss
 		                currentState = GameState.PLAYING;  // Go to game
 		                setup(); // Initialize the level
 		            }
@@ -183,6 +191,26 @@ public class ImaginBlastMain extends Application {
 		        	        }
 		        	    }
 		        	    break;
+		        	    
+		        case BOSS_FIGHT:
+		            // Player can still shoot during boss fight
+		            if(shots.size() < MAX_SHOTS) {
+		                Shot newShot = player.shoot();
+		                if (newShot != null) {
+		                    shots.add(newShot);
+		                }
+		            }
+		            break;
+		            
+		        case LEVEL_DONE:
+		            // Check if OK button clicked
+		            levelDoneScreen.handleClick(clickX, clickY);
+		            if (levelDoneScreen.isOkPressed()) {
+		                // For now, go to game over (Level 2 would come next)
+		                currentState = GameState.GAME_OVER;
+		                levelDoneScreen.setOkPressed(false); // Reset for next time
+		            }
+		            break;
 		            
 		        case GAME_OVER:
 		            // Click to return to start
@@ -215,6 +243,7 @@ public class ImaginBlastMain extends Application {
 	private void setup() {
 		particles = new ArrayList<>();                   // New background effects list
 		shots = new ArrayList<>();                       // New player bullets list
+		enemyShots = new ArrayList<>(); 
 		Squirrels = new ArrayList<>();                   // New enemies list
 		acornCaps = new ArrayList<>();                   // New acorns list
 		player = new Player(WIDTH / 2, HEIGHT - PLAYER_SIZE, PLAYER_SIZE, PLAYER_IMG); // Center player
@@ -224,6 +253,10 @@ public class ImaginBlastMain extends Application {
 		startScreen = new StartScreen();
 		quest01 = new Quest01();
 		currentLevel = new Level01();
+		
+	    bossScreen = new BossScreen01();
+	    levelDoneScreen = new LevelDone01();
+	    bossDefeated = false;
 		
 		// Create initial set of enemies
 		IntStream.range(0, MAX_BOMBS).mapToObj(_ -> this.newSquirrel()).forEach(Squirrels::add);
@@ -348,8 +381,11 @@ public class ImaginBlastMain extends Application {
 	            
 	            // Check level completion
 	            if(currentLevel.isComplete()) {
-	                // For now, just go to game over. Boss level later.
-	                currentState = GameState.GAME_OVER;
+	                currentState = GameState.BOSS_FIGHT;
+	                // Clear existing enemies and items for boss fight
+	                Squirrels.clear();
+	                acornCaps.clear();
+	                shots.clear();
 	            }
 	            
 	            // Particles
@@ -361,6 +397,96 @@ public class ImaginBlastMain extends Application {
 	                if(particles.get(i).isOffScreen())
 	                    particles.remove(i);
 	            }
+	            break;
+	            
+	        case BOSS_FIGHT:
+	            // Update player movement
+	            player.update();
+	            player.posX = (int) mouseX;
+	            // Keep player on screen
+	            if (player.posX < 0) player.posX = 0;
+	            if (player.posX + player.size > WIDTH) player.posX = WIDTH - player.size;
+
+	            // UPDATE AND CHECK PLAYER SHOTS - just like in PLAYING state
+	            for (int i = shots.size() - 1; i >= 0; i--) {
+	                Shot shot = shots.get(i);
+	                
+	                // Move the shot
+	                shot.update();
+	                
+	                // Remove if off screen
+	                if (shot.posY < 0 || shot.toRemove) {
+	                    shots.remove(i);
+	                    continue;
+	                }
+	                
+	              
+	                
+	                // Check if shot hits boss
+	                if (Collisions.shotCollides(shot, bossScreen.boss) && !bossScreen.boss.exploding) {
+	                    bossScreen.boss.takeDamage(10); // Each shot does 10 damage
+	                    shots.remove(i); // Remove the shot
+	                }
+	            }
+
+	            // Update boss screen (handles boss movement, enemy shots, portal)
+	            bossScreen.update(player, shots, enemyShots);
+
+	            // Draw everything
+	            bossScreen.draw(gc, renderer, player, score);
+
+	            // Draw player shots
+	            for (Shot shot : shots) {
+	                shot.draw(gc);
+	            }
+
+	            // Update and draw enemy shots (just like in PLAYING state)
+	            for (int i = enemyShots.size() - 1; i >= 0; i--) {
+	                Shot shot = enemyShots.get(i);
+	                
+	                // Move the shot
+	                shot.update();
+	                
+	                // Remove if off screen
+	                if (shot.posY > HEIGHT || shot.toRemove) {
+	                    enemyShots.remove(i);
+	                    continue;
+	                }
+	                
+	            
+	                
+	                // Check if enemy shot hits player
+	                if (Collisions.shotCollides(shot, player) && !player.exploding) {
+	                    player.takeDamage(5);
+	                    enemyShots.remove(i);
+	                    continue;
+	                }
+	                
+	                // Draw the shot
+	                shot.draw(gc);
+	            }
+
+	            // Check if boss is defeated
+	            if (bossScreen.boss.isDefeated() && !bossDefeated) {
+	                bossDefeated = true;
+	            }
+
+	            // Check if player entered portal
+	            if (bossScreen.isComplete()) {
+	                currentState = GameState.LEVEL_DONE;
+	            }
+
+	            // Check if player died
+	            if (player.destroyed) {
+	                currentState = GameState.GAME_OVER;
+	            }
+	            break;
+	            
+	 
+	            
+	        case LEVEL_DONE:
+	            // Draw level complete screen
+	            levelDoneScreen.draw(gc);
 	            break;
 	            
 	        case GAME_OVER:
