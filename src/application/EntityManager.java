@@ -16,14 +16,12 @@ public class EntityManager {
     private List<Shot> shots;
     private List<Shot> enemyShots;
     private List<Particles> particles;
-    private List<Enemy> squirrels;
-    private List<Item> acornCaps;
+    private List<Enemy> enemies;        // Renamed from 'squirrels'
+    private List<Item> items;            // Renamed from 'acornCaps'
     
     // Game balance constants
-
     private int MAX_SHOTS;
     
-
     private int score;
     
     // Width and height for off-screen checks
@@ -41,10 +39,10 @@ public class EntityManager {
         particles = new ArrayList<>();
         shots = new ArrayList<>();
         enemyShots = new ArrayList<>();
-        squirrels = new ArrayList<>();
-        acornCaps = new ArrayList<>();
+        enemies = new ArrayList<>();
+        items = new ArrayList<>();
         score = 0;
-        player = null; // will be set later
+        player = null;
     }
     
     // Player methods
@@ -71,7 +69,6 @@ public class EntityManager {
     public void movePlayer(int mouseX) {
         if (player != null) {
             player.posX = mouseX;
-            // Keep player on screen
             if (player.posX < 0) player.posX = 0;
             if (player.posX + player.size > WIDTH) player.posX = WIDTH - player.size;
         }
@@ -117,13 +114,13 @@ public class EntityManager {
                 continue;
             }
             shot.update();
-            for (Enemy squirrel : squirrels) {
-                if (Collisions.shotCollides(shot, squirrel) && !squirrel.exploding) {
+            for (Enemy enemy : enemies) {  // Renamed from 'squirrel'
+                if (Collisions.shotCollides(shot, enemy) && !enemy.exploding) {
                     score++;
-                    levelManager.getCurrentLevel().registerEnemyDefeated(squirrel);
-                    squirrel.explode();
+                    levelManager.getCurrentLevel().registerEnemyDefeated(enemy);
+                    enemy.explode();
                     shot.toRemove = true;
-                    break; // shot removed, exit inner loop
+                    break;
                 }
             }
         }
@@ -176,27 +173,25 @@ public class EntityManager {
         }
     }
     
-    // Enemies methods
-    public List<Enemy> getSquirrels() {
-        return squirrels;
+    // Enemies methods (renamed from Squirrels)
+    public List<Enemy> getEnemies() {  // Renamed from getSquirrels()
+        return enemies;
     }
     
     public void addEnemy(Enemy enemy) {
-        squirrels.add(enemy);
+        enemies.add(enemy);
     }
     
     public void updateEnemies() {
-        squirrels.forEach(e -> {
-            e.update();
-        });
+        enemies.forEach(e -> e.update());
     }
     
     public void drawEnemies(GraphicsContext gc) {
-        squirrels.forEach(e -> e.draw(gc));
+        enemies.forEach(e -> e.draw(gc));
     }
     
     public void checkEnemyCollisions(GameStateManager stateManager) {
-        for (Enemy e : squirrels) {
+        for (Enemy e : enemies) {
             if (Collisions.playerCollides(player, e) && !player.exploding) {
                 boolean stillAlive = player.takeDamage(1);
                 if (!stillAlive) {
@@ -206,51 +201,55 @@ public class EntityManager {
         }
     }
     
-    public void replaceDestroyedEnemies(java.util.function.Supplier<Enemy> newSquirrelSupplier) {
-        for (int i = squirrels.size() - 1; i >= 0; i--) {
-            if (squirrels.get(i).destroyed) {
-                squirrels.set(i, newSquirrelSupplier.get());
+    public void replaceDestroyedEnemies(java.util.function.Supplier<Enemy> newEnemySupplier) {  // Renamed parameter
+        for (int i = enemies.size() - 1; i >= 0; i--) {
+            if (enemies.get(i).destroyed) {
+                enemies.set(i, newEnemySupplier.get());
             }
         }
     }
     
     public void clearEnemies() {
-        squirrels.clear();
+        enemies.clear();
     }
     
-    // Acorns methods
-    public List<Item> getAcornCaps() {
-        return acornCaps;
+    // Items methods (renamed from Acorns)
+    public List<Item> getItems() {  // Renamed from getAcornCaps()
+        return items;
     }
     
-    public void addAcorn(Item acorn) {
-        acornCaps.add(acorn);
+    public void addItem(Item item) {  // Already correctly named
+        items.add(item);
     }
     
-    public void updateAcorns(LevelManager levelManager) {
-        acornCaps.forEach(i -> {
-            i.update(null); // gc not used in update
+    public void updateItems(LevelManager levelManager) {  // Renamed from updateAcorns()
+        items.forEach(i -> {
+            i.update(null);
             if (Collisions.itemCollides(player, i) && !i.collected) {
                 levelManager.getCurrentLevel().registerItemCollected(i);
-                ((ItemAcorn) i).onCollected();
+                // Cast to specific item type for onCollected()
+                if (i instanceof ItemAcorn) {
+                    ((ItemAcorn) i).onCollected();
+                }
+                // Future: add else-if for other item types
             }
         });
     }
     
-    public void drawAcorns(GraphicsContext gc) {
-        acornCaps.forEach(i -> i.draw(gc));
+    public void drawItems(GraphicsContext gc) {  // Renamed from drawAcorns()
+        items.forEach(i -> i.draw(gc));
     }
     
-    public void replaceCollectedAcorns(java.util.function.Supplier<Item> newAcornSupplier) {
-        for (int i = acornCaps.size() - 1; i >= 0; i--) {
-            if (acornCaps.get(i).gone) {
-                acornCaps.set(i, newAcornSupplier.get());
+    public void replaceCollectedItems(java.util.function.Supplier<Item> newItemSupplier) {  // Renamed parameter
+        for (int i = items.size() - 1; i >= 0; i--) {
+            if (items.get(i).gone) {
+                items.set(i, newItemSupplier.get());
             }
         }
     }
     
-    public void clearAcorns() {
-        acornCaps.clear();
+    public void clearItems() {  // Renamed from clearAcorns()
+        items.clear();
     }
     
     // Particles methods
