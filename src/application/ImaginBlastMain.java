@@ -40,7 +40,7 @@ import javafx.util.Duration;
  */
 public class ImaginBlastMain extends Application {
 	
-	// CONSTANTS AND GLOBAL VARIABLES
+	// Constants and global variables
 	private static final Random RAND = new Random();
 	public static final int WIDTH = 1280;                  // Game window width
 	public static final int HEIGHT = 720;                  // Game window height
@@ -63,38 +63,31 @@ public class ImaginBlastMain extends Application {
 	final int MAX_BOMBS = 10;                    // Maximum number of enemies
 	final int MAX_SHOTS = MAX_BOMBS * 2;         // Maximum number of player shots allowed
 	final int MAX_ITEMS = 6;                     // Maximum number of acorns
-	
-	// Game state variables
-	// boolean gameOver = false;
-	// boolean levelComplete = false;
+
 	
 	public GraphicsContext gc;                   // Graphics context for drawing
 	
-	// New Game State System
-	enum GameState {
-	    START_SCREEN,
-	    QUEST_SCREEN,
-	    PLAYING,
-	    BOSS_FIGHT,
-	    LEVEL_DONE,
-	    GAME_OVER
-	}
-
-	GameState currentState = GameState.START_SCREEN;  // Start at beginning
+	/**
+	 * GAME STATE MANAGEMENT
+	 * Moved to GameState.java and GameStateManager.java
+	 */
+	GameStateManager stateManager;
 	
 	// Game objects collections
-	Player player;                                // The player character
+	Player player;                                	// The player character
 	List<Shot> shots;                               // List of player shots
-	List<Shot> enemyShots = new ArrayList<>();
+	List<Shot> enemyShots = new ArrayList<>();		// List of enemy shots
 	List<Particles> particles;                      // Background star/particle effects
 	List<Enemy> Squirrels;                          // List of enemy squirrels
 	List<Item> acornCaps;                           // List of acorn items
 	GameRenderer renderer;							// Draws game
 	StartScreen startScreen;						// Draws Start Screen
 	Quest01 quest01;              					// The quest for level 1
-	BossScreen01 bossScreen;
-	LevelDone01 levelDoneScreen;
-	boolean bossDefeated = false;
+	BossScreen01 bossScreen;						// The boss screen for level 1
+	LevelDone01 levelDoneScreen;					// The level complete screen for level 1
+	boolean bossDefeated = false;					// Track if the boss is defeated
+	boolean questConfirmed = false;					// Track if player has read the quest
+	Level01 currentLevel;							// Will become just "Level" later
 	
 	// Music
 	// MediaPlayer startMusicPlayer;
@@ -104,9 +97,6 @@ public class ImaginBlastMain extends Application {
 	// MediaPlayer winMusicPlayer;
 	// MediaPlayer loseMusicPlayer;
 	
-	boolean questConfirmed = false;					// Track if player has read the quest
-	
-	Level01 currentLevel;							// Will become just "Level" later
 	
 	// Input and score tracking
 	public double mouseX;                           // Mouse X position for player movement
@@ -122,6 +112,7 @@ public class ImaginBlastMain extends Application {
 		Canvas canvas = new Canvas(WIDTH, HEIGHT);
 		gc = canvas.getGraphicsContext2D();
 		renderer = new GameRenderer(gc);
+		stateManager = new GameStateManager();
 		gc.setFill(Color.GREEN);
 		gc.fillRect(0, 0, WIDTH, HEIGHT);
 		
@@ -139,7 +130,7 @@ public class ImaginBlastMain extends Application {
 		    double clickX = e.getX();
 		    double clickY = e.getY();
 		    
-		    switch(currentState) {
+		    switch(stateManager.getCurrentState()) {
 		    
 		        case START_SCREEN:
 		            // Check if Play button clicked
@@ -151,7 +142,8 @@ public class ImaginBlastMain extends Application {
 		                //     musicPlayer.stop();
 		                // }
 		            	
-		                currentState = GameState.QUEST_SCREEN; // next screen
+		               
+		                stateManager.setCurrentState(GameState.QUEST_SCREEN);
 		                setup(); // Initialize game
 		            }
 		            break;
@@ -177,7 +169,8 @@ public class ImaginBlastMain extends Application {
 		                questConfirmed = true;  // Player accepted the quest
 		                bossDefeated = false;  // reset boss state
 		                bossScreen = new BossScreen01();  // fresh boss
-		                currentState = GameState.PLAYING;  // Go to game
+		            
+		                stateManager.setCurrentState(GameState.PLAYING);
 		                setup(); // Initialize the level
 		            }
 		            break;            
@@ -207,14 +200,16 @@ public class ImaginBlastMain extends Application {
 		            levelDoneScreen.handleClick(clickX, clickY);
 		            if (levelDoneScreen.isOkPressed()) {
 		                // For now, go to game over (Level 2 would come next)
-		                currentState = GameState.GAME_OVER;
+		             
+		                stateManager.setCurrentState(GameState.GAME_OVER);
 		                levelDoneScreen.setOkPressed(false); // Reset for next time
 		            }
 		            break;
 		            
 		        case GAME_OVER:
 		            // Click to return to start
-		            currentState = GameState.START_SCREEN;  // next screen
+		
+		            stateManager.setCurrentState(GameState.START_SCREEN);
 		            setup(); // Reset for next game
 		            break;
 		    }
@@ -273,7 +268,7 @@ public class ImaginBlastMain extends Application {
 	 */
 	private void run(GraphicsContext gc) {
 	    
-	    switch(currentState) {
+	    switch(stateManager.getCurrentState()) {
 	        case START_SCREEN:
 	            // Only draw start screen
 	            renderer.drawStartScreen(startScreen);
@@ -323,7 +318,8 @@ public class ImaginBlastMain extends Application {
 	                    
 	                    if (!stillAlive) {
 	                        // Player died
-	                        currentState = GameState.GAME_OVER;
+	                      
+	                        stateManager.setCurrentState(GameState.GAME_OVER);
 	                    }
 	                }
 	            });
@@ -376,12 +372,14 @@ public class ImaginBlastMain extends Application {
 	            
 	         // Check game over condition
 	            if(player.destroyed) {
-	                currentState = GameState.GAME_OVER;
+	     
+	                stateManager.setCurrentState(GameState.GAME_OVER);
 	            }
 	            
 	            // Check level completion
 	            if(currentLevel.isComplete()) {
-	                currentState = GameState.BOSS_FIGHT;
+	              
+	                stateManager.setCurrentState(GameState.BOSS_FIGHT);
 	                // Clear existing enemies and items for boss fight
 	                Squirrels.clear();
 	                acornCaps.clear();
@@ -473,17 +471,18 @@ public class ImaginBlastMain extends Application {
 
 	            // Check if player entered portal
 	            if (bossScreen.isComplete()) {
-	                currentState = GameState.LEVEL_DONE;
+	            
+	                stateManager.setCurrentState(GameState.LEVEL_DONE);
 	            }
 
 	            // Check if player died
 	            if (player.destroyed) {
-	                currentState = GameState.GAME_OVER;
+	             
+	                stateManager.setCurrentState(GameState.GAME_OVER);
 	            }
 	            break;
 	            
-	 
-	            
+	             
 	        case LEVEL_DONE:
 	            // Draw level complete screen
 	            levelDoneScreen.draw(gc);
