@@ -25,6 +25,11 @@ public class GameRenderer {
         gc.fillRect(0, 0, ImaginBlastMain.WIDTH, ImaginBlastMain.HEIGHT);
     }
     
+    
+    public GraphicsContext getGc() {
+        return gc;
+    }
+    
     /**
      * Draw score, ammo, acorns
      */

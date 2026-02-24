@@ -74,7 +74,7 @@ public class ImaginBlastMain extends Application {
 	// Game objects collections
 	EntityManager entityManager;
 	GameRenderer renderer;							// Draws game
-	StartScreen startScreen;						// Draws Start Screen
+	UIManager uiManager; 
 	boolean questConfirmed = false;					// Track if player has read the quest
 	LevelManager levelManager;						// Moved to LevelManager.java
 	InputHandler inputHandler; 
@@ -107,6 +107,7 @@ public class ImaginBlastMain extends Application {
 		stateManager = new GameStateManager();
 		levelManager = new LevelManager();
 		entityManager = new EntityManager(MAX_SHOTS, WIDTH, HEIGHT, MAX_BOMBS, MAX_ITEMS);
+		uiManager = new UIManager(renderer); 
 		setup();  // setup will now use EntityManager.java
 		inputHandler = new InputHandler(stateManager, levelManager, entityManager, MAX_SHOTS, WIDTH, HEIGHT);
 		
@@ -151,7 +152,7 @@ public class ImaginBlastMain extends Application {
 	    player.resetHealth();
 	    entityManager.setPlayer(player);
 	    
-	    startScreen = new StartScreen();  // keep startScreen separate
+	   
 	    
 	    // Create initial set of enemies
 	    for (int i = 0; i < MAX_BOMBS; i++) {
@@ -175,11 +176,11 @@ public class ImaginBlastMain extends Application {
 	    switch(stateManager.getCurrentState()) {
 	        case START_SCREEN:
 	            // Only draw start screen
-	            renderer.drawStartScreen(startScreen);
+	        	uiManager.drawStartScreen();
 	            break;
 	            
 	        case QUEST_SCREEN:
-	        	renderer.drawQuestScreen(levelManager.getQuest());
+	        	uiManager.drawQuestScreen(levelManager.getQuest());
 	            break;
 	            
 	        case PLAYING:
@@ -278,14 +279,14 @@ public class ImaginBlastMain extends Application {
 	             
 	        case LEVEL_DONE:
 	            // Draw level complete screen
-	        	levelManager.getLevelDoneScreen().draw(gc);
+	        	uiManager.drawLevelDoneScreen(levelManager.getLevelDoneScreen());
 	            break;
 	            
 	        case GAME_OVER:
 	            //stateManager.setCurrentState(GameState.START_SCREEN);
 	            //entityManager.resetAll();
 	            //startScreen = new StartScreen();
-	            renderer.drawGameOver(entityManager.getScore());
+	        	uiManager.drawGameOverScreen(entityManager.getScore());
 	            break;
 	    }
 	}
