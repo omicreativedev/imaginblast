@@ -20,7 +20,6 @@ import java.util.stream.IntStream;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
-import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -84,6 +83,7 @@ public class ImaginBlastMain extends Application {
 	StartScreen startScreen;						// Draws Start Screen
 	boolean questConfirmed = false;					// Track if player has read the quest
 	LevelManager levelManager;						// Moved to LevelManager.java
+	InputHandler inputHandler; 
 	
 	// Music
 	// MediaPlayer startMusicPlayer;
@@ -95,7 +95,7 @@ public class ImaginBlastMain extends Application {
 	
 	
 	// Input and score tracking
-	public double mouseX;                           // Mouse X position for player movement
+	
 	public int score;                               // Player's current score
 
 	/**
@@ -110,6 +110,18 @@ public class ImaginBlastMain extends Application {
 		renderer = new GameRenderer(gc);
 		stateManager = new GameStateManager();
 		levelManager = new LevelManager();
+		setup();
+		inputHandler = new InputHandler(stateManager, levelManager, player, shots, MAX_SHOTS, WIDTH, HEIGHT); 
+		
+
+	    canvas.setOnMouseMoved(e -> inputHandler.handleMouseMoved(e.getX()));
+	    // canvas.setOnMouseClicked(e -> inputHandler.handleMouseClicked(e, this::setup));
+	    canvas.setOnMouseClicked(e -> {
+	        inputHandler.handleMouseClicked(e, this::setup);
+	        // After setup, update the existing handler's references
+	        inputHandler.updateReferences(player, shots);
+	    });
+	    
 		gc.setFill(Color.GREEN);
 		gc.fillRect(0, 0, WIDTH, HEIGHT);
 		
@@ -118,104 +130,8 @@ public class ImaginBlastMain extends Application {
 		timeline.setCycleCount(Timeline.INDEFINITE);   // Loop forever
 		timeline.play();                               // Start the animation
 		
-		// Mouse input handling
-		canvas.setCursor(Cursor.DEFAULT);
-		canvas.setOnMouseMoved(e -> mouseX = e.getX());  // Track mouse X position
-		
-		canvas.setOnMouseClicked(e -> {
-		    
-		    double clickX = e.getX();
-		    double clickY = e.getY();
-		    
-		    switch(stateManager.getCurrentState()) {
-		    
-		        case START_SCREEN:
-		            // Check if Play button clicked
-		            if(clickX >= WIDTH/2 - 100 && clickX <= WIDTH/2 + 100 &&
-		               clickY >= HEIGHT/2 && clickY <= HEIGHT/2 + 50) {
-		            	
-		                // Stop START_SCREEN music
-		                // if(startMusicPlayer != null) {
-		                //     musicPlayer.stop();
-		                // }
-		            	
-		               
-		                stateManager.setCurrentState(GameState.QUEST_SCREEN);
-		                setup(); // Initialize game
-		            }
-		            break;
-		            
-		        case QUEST_SCREEN:
-		            // Check if OK button clicked
-		            // Button coordinates: x: WIDTH/2-100 to WIDTH/2+100, y: HEIGHT/2+100 to HEIGHT/2+150
-		            if(clickX >= WIDTH/2 - 100 && clickX <= WIDTH/2 + 100 &&
-		               clickY >= HEIGHT/2 + 100 && clickY <= HEIGHT/2 + 150) {
-		                
-		                // Stop quest music when leaving the quest screen
-		                // if(questMusicPlayer != null) {
-		                //     questMusicPlayer.stop();
-		                // }
-		                
-		                // Start level music based on which level we're entering
-		                // String levelSong = currentLevel.getLevelNumber() == 1 ? "level1.wav" : "level2.wav";
-		                // Media levelMusic = new Media(new File(levelSong).toURI().toString());
-		                // levelMusicPlayer = new MediaPlayer(levelMusic);
-		                // levelMusicPlayer.setCycleCount(MediaPlayer.INDEFINITE); // Loop while playing
-		                // levelMusicPlayer.play();
-		                
-		                questConfirmed = true;  // Player accepted the quest
-		                levelManager.resetForNewGame();
-		            
-		                stateManager.setCurrentState(GameState.PLAYING);
-		                setup(); // Initialize the level
-		            }
-		            break;            
-		            
-		        case PLAYING:
-		            // Shoot
-		        	 if(shots.size() < MAX_SHOTS) {
-		        	        Shot newShot = player.shoot();
-		        	        if (newShot != null) {
-		        	            shots.add(newShot);
-		        	        }
-		        	    }
-		        	    break;
-		        	    
-		        case BOSS_FIGHT:
-		            // Player can still shoot during boss fight
-		            if(shots.size() < MAX_SHOTS) {
-		                Shot newShot = player.shoot();
-		                if (newShot != null) {
-		                    shots.add(newShot);
-		                }
-		            }
-		            break;
-		            
-		        case LEVEL_DONE:
-		            // Check if OK button clicked
-		            levelManager.getLevelDoneScreen().handleClick(clickX, clickY);
-		            if (levelManager.getLevelDoneScreen().isOkPressed()) {
-		                // For now, go to game over (Level 2 would come next)
-		                stateManager.setCurrentState(GameState.GAME_OVER);
-		                levelManager.getLevelDoneScreen().setOkPressed(false); // Reset for next time
-		            }
-		            break;
-		            
-		        case GAME_OVER:
-		            // Click to return to start
-		
-		            stateManager.setCurrentState(GameState.START_SCREEN);
-		            setup(); // Reset for next game
-		            break;
-		    }
-		});
-			
-			
 	
-		
-		// Initialize game and set up window
-		setup();
-		
+
 
 		//Media startMusic = new Media(new File("start.wav").toURI().toString());
 		//musicPlayer = new MediaPlayer(startMusic);
@@ -282,7 +198,7 @@ public class ImaginBlastMain extends Application {
 	            // Update and draw player
 	            player.update();
 	            player.draw(gc);
-	            player.posX = (int) mouseX;
+	            player.posX = (int) inputHandler.getMouseX();
 	            
 	            // Update and draw enemies
 	            Squirrels.stream().peek(Creature::update).forEach(e -> {
@@ -390,7 +306,7 @@ public class ImaginBlastMain extends Application {
 	        case BOSS_FIGHT:
 	            // Update player movement
 	            player.update();
-	            player.posX = (int) mouseX;
+	            player.posX = (int) inputHandler.getMouseX();
 	            // Keep player on screen
 	            if (player.posX < 0) player.posX = 0;
 	            if (player.posX + player.size > WIDTH) player.posX = WIDTH - player.size;
