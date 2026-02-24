@@ -28,7 +28,6 @@ import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -71,15 +70,15 @@ public class ImaginBlastMain extends Application {
 	 * GAME STATE MANAGEMENT
 	 * Moved to GameState.java and GameStateManager.java
 	 */
-	GameStateManager stateManager; // Manages game states
+	GameStateManager stateManager; // Manages game states i.e. what's the current state?
 	
 	// Game objects collections
-	EntityManager entityManager; // Manages all game entities
+	EntityManager entityManager; // Manages game entities 
 	GameRenderer renderer; // Draws game
-	UIManager uiManager; // Manages UI screens
-	boolean questConfirmed = false; // Track if player has read the quest
+	UIManager uiManager; // What screen are we on?
+	boolean questConfirmed = false; // Has player read the quest???
 	LevelManager levelManager; // Moved to LevelManager.java
-	InputHandler inputHandler; // Handles user input
+	InputHandler inputHandler; // Handles user input like mouseclicks (later WASD)
 	
 	// Music -- for later
 	// MediaPlayer startMusicPlayer;
@@ -95,11 +94,12 @@ public class ImaginBlastMain extends Application {
 	 */
 	public void start(Stage stage) throws Exception {
 		
-		// Create drawing canvas
+		// Drawing canvas
 		Canvas canvas = new Canvas(WIDTH, HEIGHT); // Create canvas with game dimensions
 		gc = canvas.getGraphicsContext2D(); // Get graphics context for drawing
 		renderer = new GameRenderer(gc); // Initialize renderer with graphics context
 
+		// Other initializations
 		stateManager = new GameStateManager(); // Initialize state manager
 		levelManager = new LevelManager(); // Initialize level manager
 		entityManager = new EntityManager(MAX_SHOTS, WIDTH, HEIGHT, MAX_BOMBS, MAX_ITEMS); // Initialize entity manager
@@ -108,13 +108,11 @@ public class ImaginBlastMain extends Application {
 		inputHandler = new InputHandler(stateManager, levelManager, entityManager, MAX_SHOTS, WIDTH, HEIGHT); // Initialize input handler
 
 	    canvas.setOnMouseMoved(e -> inputHandler.handleMouseMoved(e.getX())); // Handle mouse movement
+	    
 	    canvas.setOnMouseClicked(e -> { // Handle mouse clicks
-	        inputHandler.handleMouseClicked(e, this::setup); // Process click with setup callback
+	        inputHandler.handleMouseClicked(e, this::setup); // Process click callback to setup
 	    });
 	    
-		gc.setFill(Color.GREEN); // Set background color
-		gc.fillRect(0, 0, WIDTH, HEIGHT); // Fill background
-		
 		// Set up game loop animation (100ms intervals = 10 fps)
 		Timeline timeline = new Timeline(new KeyFrame(Duration.millis(100), _ -> run(gc))); // Create animation timeline
 		timeline.setCycleCount(Timeline.INDEFINITE); // Loop forever

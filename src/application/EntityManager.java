@@ -16,12 +16,11 @@ public class EntityManager {
     private List<Shot> shots;
     private List<Shot> enemyShots;
     private List<Particles> particles;
-    private List<Enemy> enemies;        // Renamed from 'squirrels'
-    private List<Item> items;            // Renamed from 'acornCaps'
+    private List<Enemy> enemies;
+    private List<Item> items;
     
-    // Game balance constants
+    // Other constants
     private int MAX_SHOTS;
-    
     private int score;
     
     // Width and height for off-screen checks
