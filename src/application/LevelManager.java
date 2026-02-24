@@ -37,6 +37,15 @@ public class LevelManager {
         // Reset other level-specific things if needed
     }
     
+    public void reset() {
+        currentLevelNum = 1;
+        currentLevel = new Level01();
+        quest01 = new Quest01();
+        bossScreen = new BossScreen01();
+        levelDoneScreen = new LevelDone01();
+        bossDefeated = false;
+    }
+    
     // For future Level 2
     public void advanceToNextLevel() {
         currentLevelNum++;

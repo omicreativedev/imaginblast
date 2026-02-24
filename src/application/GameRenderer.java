@@ -61,6 +61,10 @@ public class GameRenderer {
     
     // This is ugly but it works. We will fix it later.
     public void drawStartScreen(StartScreen startScreen) {
+    	
+    	gc.setFill(Color.FORESTGREEN);
+        gc.fillRect(0, 0, ImaginBlastMain.WIDTH, ImaginBlastMain.HEIGHT);
+        
     	 gc.setTextAlign(TextAlignment.CENTER);
         // Draw black box overlay (50% of screen, centered)
         gc.setFill(Color.BLACK);
