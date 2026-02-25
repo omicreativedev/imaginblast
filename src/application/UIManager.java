@@ -4,6 +4,7 @@ import javafx.scene.canvas.GraphicsContext;
 
 /**
  * Manages all UI screens (start screen, quest screen, level done screen)
+ * Tells GameRenderer.java what to draw based on method calls from Main
  */
 public class UIManager {
     private StartScreen startScreen;
@@ -14,6 +15,7 @@ public class UIManager {
         this.startScreen = new StartScreen();
     }
     
+    // 
     public void drawStartScreen() {
         renderer.drawStartScreen(startScreen);
     }
