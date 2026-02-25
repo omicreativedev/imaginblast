@@ -5,9 +5,11 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 
 /**
- * CREATURE CLASS - Base class for all living/active entities in the game
+ * CREATURE CLASS
+ * Base class for all living/active entities in the game
  * Serves as the parent class for Player and Enemy
- * Handles common properties like position, size, image rendering, and explosion effects
+ * Handles common properties like position, size, image
+ * rendering, and explosion effects
  */
 public class Creature {
 	
