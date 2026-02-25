@@ -8,12 +8,10 @@ import javafx.scene.image.Image;
  * Extends the Creature class to inherit basic
  * creature properties and behaviors
  */
-
 public class Enemy extends Creature {
 	
 	// CLASS VARIABLES
-
-	boolean hitPlayer = false; // Flag to track if this enemy has hit the player
+	boolean hitPlayer = false; // Track if this enemy has hit the player (prevents multiple hits from same enemy)
 
 	/**
 	 * CONSTRUCTOR - Creates a new enemy

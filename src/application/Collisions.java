@@ -72,7 +72,7 @@ public class Collisions {
     }
     
     /**
-     * DISTANCE CALCULATION METHOD
+     * DISTANCE CALCULATION
      * Calculates distance between two points
      * Private helper used only by collision methods
      * @param x1 First point X

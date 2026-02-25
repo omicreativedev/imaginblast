@@ -4,6 +4,7 @@ package application;
  * Manages the current game state and transitions
  * Moved from ImaginBlastMain.java
  */
+
 public class GameStateManager {
     private GameState currentState;
     

@@ -5,6 +5,7 @@ import javafx.scene.input.MouseEvent;
 /**
  * Handles all mouse input for the game
  */
+
 public class InputHandler {
     private GameStateManager stateManager;
     private LevelManager levelManager;

@@ -47,6 +47,7 @@ public class ImaginBlastMain extends Application {
 	private static final int PLAYER_SIZE = 60;
 	
 	// Image resources for game elements
+	// Reference: https://docs.oracle.com/javase/8/javafx/api/javafx/scene/image/Image.html
 	static final Image PLAYER_IMG = new Image("frog_player_128x128.png");
 	static final Image SQUIRREL_IMG = new Image("squirrel_enemy_front_128x128.png");
 	static final Image EXPLOSION_IMG = new Image("explosion.png");
@@ -95,26 +96,30 @@ public class ImaginBlastMain extends Application {
 	public void start(Stage stage) throws Exception {
 		
 		// Drawing canvas
+		// Reference: https://docs.oracle.com/javase/8/javafx/api/javafx/scene/canvas/Canvas.html
 		Canvas canvas = new Canvas(WIDTH, HEIGHT); // Create canvas with game dimensions
 		gc = canvas.getGraphicsContext2D(); // Get graphics context for drawing
 		renderer = new GameRenderer(gc); // Initialize renderer with graphics context
 
 		// Other initializations
-		stateManager = new GameStateManager(); // Initialize state manager
-		levelManager = new LevelManager(); // Initialize level manager
-		entityManager = new EntityManager(MAX_SHOTS, WIDTH, HEIGHT, MAX_BOMBS, MAX_ITEMS); // Initialize entity manager
-		uiManager = new UIManager(renderer); // Initialize UI manager
+		stateManager = new GameStateManager();
+		levelManager = new LevelManager();
+		entityManager = new EntityManager(MAX_SHOTS, WIDTH, HEIGHT, MAX_BOMBS, MAX_ITEMS);
+		uiManager = new UIManager(renderer);
 		setup(); // setup will now use EntityManager.java
-		inputHandler = new InputHandler(stateManager, levelManager, entityManager, MAX_SHOTS, WIDTH, HEIGHT); // Initialize input handler
+		inputHandler = new InputHandler(stateManager, levelManager, entityManager, MAX_SHOTS, WIDTH, HEIGHT);
 
+		// Reference: https://docs.oracle.com/javase/8/javafx/api/javafx/scene/input/MouseEvent.html
 	    canvas.setOnMouseMoved(e -> inputHandler.handleMouseMoved(e.getX())); // Handle mouse movement
 	    
 	    canvas.setOnMouseClicked(e -> { // Handle mouse clicks
 	        inputHandler.handleMouseClicked(e, this::setup); // Process click callback to setup
-	    });
+	    });    
 	    
 		// Set up game loop animation (100ms intervals = 10 fps)
-		Timeline timeline = new Timeline(new KeyFrame(Duration.millis(100), _ -> run(gc))); // Create animation timeline
+	    // Create animation timeline
+	    // Reference: https://docs.oracle.com/javase/8/javafx/api/javafx/animation/Timeline.html
+		Timeline timeline = new Timeline(new KeyFrame(Duration.millis(100), _ -> run(gc)));
 		timeline.setCycleCount(Timeline.INDEFINITE); // Loop forever
 		timeline.play(); // Start the animation
 
@@ -158,6 +163,7 @@ public class ImaginBlastMain extends Application {
 	 */
 	private void run(GraphicsContext gc) {
 	    
+		// Reference: https://gameprogrammingpatterns.com/state.html
 	    switch(stateManager.getCurrentState()) {
 	        case START_SCREEN:
 	        	uiManager.drawStartScreen();
@@ -220,30 +226,30 @@ public class ImaginBlastMain extends Application {
 	            }
 	            break;
 	            
-	        case BOSS_FIGHT: // Boss fight state
+	        case BOSS_FIGHT:
 	            // Update player movement
 	        	entityManager.updatePlayer(); // Update player state
 	        	entityManager.movePlayer((int) inputHandler.getMouseX()); // Move player to mouse X position
 
-	            // UPDATE AND CHECK PLAYER SHOTS - just like in PLAYING state
-	        	entityManager.updateShotsWithBossCollisions(levelManager.getBossScreen().boss); // Update shots and check boss collisions
+	            // Update and check player shots
+	        	entityManager.updateShotsWithBossCollisions(levelManager.getBossScreen().boss);
 
-	            // Update boss screen (handles boss movement, enemy shots, portal)
-	            levelManager.getBossScreen().update(entityManager.getPlayer(), entityManager.getShots(), entityManager.getEnemyShots()); // Update boss screen
+	            // Update boss screen
+	            levelManager.getBossScreen().update(entityManager.getPlayer(), entityManager.getShots(), entityManager.getEnemyShots());
 
-	            // Draw everything
-	            levelManager.getBossScreen().draw(gc, renderer, entityManager.getPlayer(), entityManager.getScore()); // Draw boss screen
+	            // Draw boss screen stuff
+	            levelManager.getBossScreen().draw(gc, renderer, entityManager.getPlayer(), entityManager.getScore());
 
 	            // Draw player shots
 	            entityManager.drawShots(gc); // Draw player shots
 
-	            // Update and draw enemy shots (just like in PLAYING state)
+	            // Update and draw enemy shots
 	            entityManager.updateEnemyShots(); // Update enemy shots
 	            entityManager.drawEnemyShots(gc); // Draw enemy shots
 
 	            // Check if boss is defeated
 	            if (levelManager.getBossScreen().boss.isDefeated() && !levelManager.isBossDefeated()) { // If boss defeated and not already recorded
-	            	levelManager.setBossDefeated(true); // Set boss defeated flag
+	            	levelManager.setBossDefeated(true); // Set boss defeated
 	            }
 
 	            // Check if player entered portal
@@ -257,22 +263,32 @@ public class ImaginBlastMain extends Application {
 	            }
 	            break;
 	            
-	        case LEVEL_DONE: // Level done state
-	            // Draw level complete screen
-	        	uiManager.drawLevelDoneScreen(levelManager.getLevelDoneScreen()); // Draw level done screen
+	        case LEVEL_DONE:
+	        	uiManager.drawLevelDoneScreen(levelManager.getLevelDoneScreen());
 	            break;
 	            
-	        case GAME_OVER: // Game over state
-	            //stateManager.setCurrentState(GameState.START_SCREEN);
-	            //entityManager.resetAll();
-	            //startScreen = new StartScreen();
-	        	uiManager.drawGameOverScreen(entityManager.getScore()); // Draw game over screen with final score
+	        case GAME_OVER:
+	        	uiManager.drawGameOverScreen(entityManager.getScore());
 	            break;
 	    }
 	}
 
 	/**
-	 * ENEMY CREATION - Delegates to current level
+	 * CREATES A RANDOM ENEMY FOR THE CURRENT LEVEL
+	 * 
+	 * This function is called whenever a new enemy needs to be spawned in the game,
+	 * such as during initial level setup or when replacing destroyed enemies.
+	 * 
+	 * 1. Asking the current level what enemy types are allowed to appear (can be many!)
+	 * 2. Randomly selecting one of those enemy types
+	 * 3. Delegating the actual creation to the level (since different levels might
+	 *    want to create the same enemy type with different properties)
+	 * 
+	 * This allows each level to have its own "enemy pool"
+	 * Level 1 might only have squirrels, while Level 2 might have squirrels AND birds.
+	 * Reference: https://docs.oracle.com/javase/8/docs/api/java/util/Random.html#nextInt-int-
+	 * 
+	 * @return A new Enemy instance of a randomly chosen type valid for the current level
 	 */
 	Enemy createEnemyForCurrentLevel() {
 	    // Get list of possible enemies from current level
@@ -284,7 +300,8 @@ public class ImaginBlastMain extends Application {
 	}
 
 	/**
-	 * ITEM CREATION - Delegates to current level
+	 * ITEM CREATION
+	 * Works the same as enemies (above), except for items ^^^
 	 */
 	Item createItemForCurrentLevel() {
 	    // Get list of possible items from current level

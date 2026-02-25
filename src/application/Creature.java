@@ -5,16 +5,15 @@ import javafx.scene.image.Image;
 
 /**
  * CREATURE CLASS
- * Base class for all living/active entities in the game
- * Serves as the parent class for Player and Enemy
- * Handles common properties like position, size, image
- * rendering, and explosion effects
+ * Base class for all entities in the game
+ * Serves as the parent class for Player, Enemy and Boss
  */
 public class Creature {
 	
 	// EXPLOSION ANIMATION CONSTANTS
 	// These are static because they're shared across all creatures
 	// Can we try to override this with subclasses? Hmmmmm...
+	// Right now all explosions are the same.
 	static final Image EXPLOSION_IMG = new Image("explosion.png");  // Explosion sprite sheet
 	static final int EXPLOSION_W = 128;      // Width of each explosion frame
 	static final int EXPLOSION_ROWS = 3;     // Number of rows in sprite sheet
@@ -26,7 +25,7 @@ public class Creature {
 	int posX, posY;      // Current position on screen
 	int size;            // Width and height of creature (square)
 	
-	// STATE FLAGS
+	// STATE
 	boolean exploding;   // True when creature is in explosion animation
 	boolean destroyed;   // True when explosion animation is complete
 	
@@ -67,7 +66,8 @@ public class Creature {
 	}
 	
 	/**
-	 * DRAW METHOD - Renders the creature on screen
+	 * DRAW
+	 * Renders the creature on screen
 	 * Shows either the normal creature image or explosion animation
 	 * @param gc GraphicsContext used for drawing
 	 */
