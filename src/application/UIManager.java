@@ -15,7 +15,9 @@ public class UIManager {
         this.startScreen = new StartScreen();
     }
     
-    // 
+    // Example. When Main calls drawStartScreen()
+    // This will tell GameRenderer.java to do
+    // public void drawStartScreen(StartScreen startScreen)
     public void drawStartScreen() {
         renderer.drawStartScreen(startScreen);
     }
