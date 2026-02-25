@@ -35,10 +35,11 @@ public class Player extends Creature {
 	 * Overrides the Creature.shoot() method to customize shot position
 	 * @return A new Shot object positioned at the player's center
 	 */
+	@Override
 	public Shot shoot() {
 		// Calculate shot position:
 		// X: player's center (posX + size/2) minus half the shot width
 		// Y: directly above the player (posY - full shot height)
-		return new Shot(posX + size / 2 - Shot.size / 2, posY - Shot.size);
+		return new ShotStandard(posX + size / 2 - Shot.SIZE / 2, posY - Shot.SIZE);
 	}
 }

@@ -24,6 +24,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -61,14 +62,16 @@ public class ImaginBlastMain extends Application {
 	final int MAX_SHOTS = MAX_BOMBS * 2;         // Maximum number of player shots allowed
 	final int MAX_ITEMS = 3;                     // Maximum number of acorns
 	
-	// Game state variables **delete**
-	//boolean gameOver = false;                    // Flag for game over state
-	//boolean levelComplete = false;               // Flag for level completion
+	// Game state variables
+	// boolean gameOver = false;
+	// boolean levelComplete = false;
+	
 	public GraphicsContext gc;                   // Graphics context for drawing
 	
 	// New Game State System
 	enum GameState {
 	    START_SCREEN,
+	    QUEST_SCREEN,
 	    PLAYING,
 	    GAME_OVER
 	}
@@ -83,13 +86,24 @@ public class ImaginBlastMain extends Application {
 	List<Item> acornCaps;                           // List of acorn items
 	GameRenderer renderer;							// Draws game
 	StartScreen startScreen;						// Draws Start Screen
-	// MediaPlayer musicPlayer;						// Music
+	Quest01 quest01;              					// The quest for level 1
 	
+	// Music
+	// MediaPlayer startMusicPlayer;
+	// MediaPlayer questMusicPlayer;
+	// MediaPlayer levelMusicPlayer;
+	// MediaPlayer bossMusicPlayer;
+	// MediaPlayer winMusicPlayer;
+	// MediaPlayer loseMusicPlayer;
+	
+	boolean questConfirmed = false;					// Track if player has read the quest
+	
+	Level01 currentLevel;							// Will become just "Level" later
 	
 	// Input and score tracking
 	public double mouseX;                           // Mouse X position for player movement
 	public int score;                               // Player's current score
-	public int acornCount = 0;                      // ADD THIS: Track acorns collected
+
 	
 	/**
 	 * START METHOD
@@ -101,6 +115,8 @@ public class ImaginBlastMain extends Application {
 		Canvas canvas = new Canvas(WIDTH, HEIGHT);
 		gc = canvas.getGraphicsContext2D();
 		renderer = new GameRenderer(gc);
+		gc.setFill(Color.GREEN);  // Temporary fill
+		gc.fillRect(0, 0, WIDTH, HEIGHT);
 		
 		// Set up game loop animation (100ms intervals = 10 fps)
 		Timeline timeline = new Timeline(new KeyFrame(Duration.millis(100), _ -> run(gc)));
@@ -108,7 +124,7 @@ public class ImaginBlastMain extends Application {
 		timeline.play();                               // Start the animation
 		
 		// Mouse input handling
-		canvas.setCursor(Cursor.MOVE);                   // Change cursor to move cursor
+		canvas.setCursor(Cursor.DEFAULT);                   // Change cursor to move cursor
 		canvas.setOnMouseMoved(e -> mouseX = e.getX());  // Track mouse X position
 		
 		canvas.setOnMouseClicked(e -> {
@@ -117,30 +133,59 @@ public class ImaginBlastMain extends Application {
 		    double clickY = e.getY();
 		    
 		    switch(currentState) {
+		    
 		        case START_SCREEN:
 		            // Check if Play button clicked
 		            if(clickX >= WIDTH/2 - 100 && clickX <= WIDTH/2 + 100 &&
 		               clickY >= HEIGHT/2 && clickY <= HEIGHT/2 + 50) {
 		            	
-		                // Stop "start screen" music
-		                // if(musicPlayer != null) {
+		                // Stop START_SCREEN music
+		                // if(startMusicPlayer != null) {
 		                //     musicPlayer.stop();
 		                // }
 		            	
-		                //System.out.println("Starting game!");
-		                currentState = GameState.PLAYING;
+		                currentState = GameState.QUEST_SCREEN; // next screen
 		                setup(); // Initialize game
 		            }
 		            break;
 		            
+		        case QUEST_SCREEN:
+		            // Check if OK button clicked
+		            // Button coordinates: x: WIDTH/2-100 to WIDTH/2+100, y: HEIGHT/2+100 to HEIGHT/2+150
+		            if(clickX >= WIDTH/2 - 100 && clickX <= WIDTH/2 + 100 &&
+		               clickY >= HEIGHT/2 + 100 && clickY <= HEIGHT/2 + 150) {
+		                
+		                // Stop quest music when leaving the quest screen
+		                // if(questMusicPlayer != null) {
+		                //     questMusicPlayer.stop();
+		                // }
+		                
+		                // Start level music based on which level we're entering
+		                // String levelSong = currentLevel.getLevelNumber() == 1 ? "level1.wav" : "level2.wav";
+		                // Media levelMusic = new Media(new File(levelSong).toURI().toString());
+		                // levelMusicPlayer = new MediaPlayer(levelMusic);
+		                // levelMusicPlayer.setCycleCount(MediaPlayer.INDEFINITE); // Loop while playing
+		                // levelMusicPlayer.play();
+		                
+		                questConfirmed = true;  // Player accepted the quest
+		                currentState = GameState.PLAYING;  // Go to game
+		                setup(); // Initialize the level
+		            }
+		            break;            
+		            
 		        case PLAYING:
 		            // Shoot
-		            if(shots.size() < MAX_SHOTS) shots.add(player.shoot());
-		            break;
+		        	 if(shots.size() < MAX_SHOTS) {
+		        	        Shot newShot = player.shoot();
+		        	        if (newShot != null) {
+		        	            shots.add(newShot);
+		        	        }
+		        	    }
+		        	    break;
 		            
 		        case GAME_OVER:
 		            // Click to return to start
-		            currentState = GameState.START_SCREEN;
+		            currentState = GameState.START_SCREEN;  // next screen
 		            setup(); // Reset for next game
 		            break;
 		    }
@@ -168,22 +213,21 @@ public class ImaginBlastMain extends Application {
 	 * Create new collections and place initial enemies
 	 */
 	private void setup() {
-		particles = new ArrayList<>();                        // New background effects list
+		particles = new ArrayList<>();                   // New background effects list
 		shots = new ArrayList<>();                       // New player bullets list
 		Squirrels = new ArrayList<>();                   // New enemies list
-		// ADDED: Initialize acorns list
 		acornCaps = new ArrayList<>();                   // New acorns list
 		player = new Player(WIDTH / 2, HEIGHT - PLAYER_SIZE, PLAYER_SIZE, PLAYER_IMG); // Center player
 		score = 0;                                       // Reset score
 		
-		
-		// Start Screen
 		startScreen = new StartScreen();
+		quest01 = new Quest01();
+		currentLevel = new Level01();
 		
 		// Create initial set of enemies
 		IntStream.range(0, MAX_BOMBS).mapToObj(_ -> this.newSquirrel()).forEach(Squirrels::add);
 		
-		// ADDED: Create initial set of acorns
+		// Create initial set of acorns
 		IntStream.range(0, MAX_ITEMS).mapToObj(_ -> this.newAcorn()).forEach(acornCaps::add);
 	}
 
@@ -200,10 +244,17 @@ public class ImaginBlastMain extends Application {
 	            renderer.drawStartScreen(startScreen);
 	            break;
 	            
+	        case QUEST_SCREEN:
+	            renderer.drawQuestScreen(quest01);
+	            break;
+	            
 	        case PLAYING:
 	            // Full game rendering and logic
 	            renderer.clearScreen();
-	            renderer.drawHUD(score, shots.size(), MAX_SHOTS, acornCount);
+	            
+	            int acornsSoFar = currentLevel.itemsCollected.getOrDefault(ItemAcorn.class, 0);
+	            
+	            renderer.drawHUD(score, shots.size(), MAX_SHOTS, acornsSoFar);
 	            
 	            // Draw background effects
 	            particles.forEach(Particles::draw);
@@ -229,7 +280,7 @@ public class ImaginBlastMain extends Application {
 	                i.update(gc);
 	                
 	                if(Collisions.itemCollides(player, i) && !i.collected) {
-	                    acornCount++;
+	                    currentLevel.registerItemCollected(i);
 	                    ((ItemAcorn) i).onCollected();
 	                }
 	            });
@@ -247,6 +298,7 @@ public class ImaginBlastMain extends Application {
 	                for (Enemy squirrel : Squirrels) {
 	                    if(Collisions.shotCollides(shot, squirrel) && !squirrel.exploding) {
 	                        score++;
+	                        currentLevel.registerEnemyDefeated(squirrel);
 	                        squirrel.explode();
 	                        shot.toRemove = true;
 	                    }
@@ -269,6 +321,12 @@ public class ImaginBlastMain extends Application {
 	        
 	            // Check game over condition
 	            if(player.destroyed) {
+	                currentState = GameState.GAME_OVER;
+	            }
+	            
+	            // Check level completion
+	            if(currentLevel.isComplete()) {
+	                // For now, just go to game over. Boss level later.
 	                currentState = GameState.GAME_OVER;
 	            }
 	            
