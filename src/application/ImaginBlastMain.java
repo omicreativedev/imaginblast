@@ -7,6 +7,8 @@ package application;
  * for more information visit my YouTube channel. GitHub. https://github.com/Gaspared/Space-Invaders 
  * Tutorial Part 1: https://www.youtube.com/watch?v=0szmaHH1hno
  * Tutorial Part 2: https://www.youtube.com/watch?v=dzcQgv9hqXI&t=87s
+ * ---
+ * Media Player: https://blog.idrsolutions.com/write-media-player-javafx-using-netbeans-ide-part-2/
  */
 
 
@@ -79,7 +81,7 @@ public class ImaginBlastMain extends Application {
 	GameState currentState = GameState.START_SCREEN;  // Start at beginning
 	
 	// Game objects collections
-	Creature player;                                // The player character
+	Player player;                                // The player character
 	List<Shot> shots;                               // List of player shots
 	List<Particles> particles;                      // Background star/particle effects
 	List<Enemy> Squirrels;                          // List of enemy squirrels
@@ -104,7 +106,6 @@ public class ImaginBlastMain extends Application {
 	public double mouseX;                           // Mouse X position for player movement
 	public int score;                               // Player's current score
 
-	
 	/**
 	 * START METHOD
 	 * Set up the game window, canvas, input handlers, and animation timeline
@@ -115,7 +116,7 @@ public class ImaginBlastMain extends Application {
 		Canvas canvas = new Canvas(WIDTH, HEIGHT);
 		gc = canvas.getGraphicsContext2D();
 		renderer = new GameRenderer(gc);
-		gc.setFill(Color.GREEN);  // Temporary fill
+		gc.setFill(Color.GREEN);
 		gc.fillRect(0, 0, WIDTH, HEIGHT);
 		
 		// Set up game loop animation (100ms intervals = 10 fps)
@@ -124,7 +125,7 @@ public class ImaginBlastMain extends Application {
 		timeline.play();                               // Start the animation
 		
 		// Mouse input handling
-		canvas.setCursor(Cursor.DEFAULT);                   // Change cursor to move cursor
+		canvas.setCursor(Cursor.DEFAULT);
 		canvas.setOnMouseMoved(e -> mouseX = e.getX());  // Track mouse X position
 		
 		canvas.setOnMouseClicked(e -> {
@@ -195,13 +196,12 @@ public class ImaginBlastMain extends Application {
 	
 		
 		// Initialize game and set up window
-		setup();                                            // Set initial game state
+		setup();
 		
+
 		//Media startMusic = new Media(new File("start.wav").toURI().toString());
 		//musicPlayer = new MediaPlayer(startMusic);
 		//musicPlayer.play();
-		
-		
 		
 		stage.setScene(new Scene(new StackPane(canvas)));   // Add canvas to scene
 		stage.setTitle("ImaginBlast");                      // Set window title
@@ -218,6 +218,7 @@ public class ImaginBlastMain extends Application {
 		Squirrels = new ArrayList<>();                   // New enemies list
 		acornCaps = new ArrayList<>();                   // New acorns list
 		player = new Player(WIDTH / 2, HEIGHT - PLAYER_SIZE, PLAYER_SIZE, PLAYER_IMG); // Center player
+		player.resetHealth();
 		score = 0;                                       // Reset score
 		
 		startScreen = new StartScreen();
@@ -233,7 +234,8 @@ public class ImaginBlastMain extends Application {
 
 	
 	/**
-	 * RUN METHOD - Main game loop (called every frame)
+	 * RUN METHOD
+	 * Main game loop (called every frame)
 	 * Update game objects, check collisions, and render everything
 	 */
 	private void run(GraphicsContext gc) {
@@ -254,7 +256,7 @@ public class ImaginBlastMain extends Application {
 	            
 	            int acornsSoFar = currentLevel.itemsCollected.getOrDefault(ItemAcorn.class, 0);
 	            
-	            renderer.drawHUD(score, shots.size(), MAX_SHOTS, acornsSoFar);
+	            renderer.drawHUD(score, shots.size(), MAX_SHOTS, acornsSoFar, player);
 	            
 	            // Draw background effects
 	            particles.forEach(Particles::draw);
@@ -269,8 +271,27 @@ public class ImaginBlastMain extends Application {
 	                e.draw(gc);
 	                e.update();
 	                
+	                // If enemy hits player
 	                if(Collisions.playerCollides(player, e) && !player.exploding) {
-	                    player.explode();
+	                    
+	                    // Determine damage based on enemy type
+	                    int damage = 1;  // Default damage
+	                    
+	                    // Later: Different enemies do different damage?
+	                    // if (e instanceof EnemySquirrel) damage = 10;
+	                    // if (e instanceof EnemySpider) damage = 15;
+	                    // if (e instanceof EnemyBoss) damage = 25;
+	                    
+	                    // Apply damage
+	                    boolean stillAlive = player.takeDamage(damage);
+	                    
+	                    // Optional: knockback or invincibility frames???
+	                    // player.setInvincible(30);
+	                    
+	                    if (!stillAlive) {
+	                        // Player died
+	                        currentState = GameState.GAME_OVER;
+	                    }
 	                }
 	            });
 	            
@@ -319,7 +340,8 @@ public class ImaginBlastMain extends Application {
 	                }
 	            }
 	        
-	            // Check game over condition
+	            
+	         // Check game over condition
 	            if(player.destroyed) {
 	                currentState = GameState.GAME_OVER;
 	            }

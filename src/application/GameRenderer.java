@@ -28,7 +28,7 @@ public class GameRenderer {
     /**
      * Draw score, ammo, acorns
      */
-    public void drawHUD(int score, int shotsSize, int maxShots, int acornCount) {
+    public void drawHUD(int score, int shotsSize, int maxShots, int acornCount, Player player) {
         gc.setTextAlign(TextAlignment.LEFT);
         gc.setFont(Font.font(20));
         
@@ -42,6 +42,20 @@ public class GameRenderer {
         // Acorns
         gc.setFill(Color.BROWN);
         gc.fillText("Acorns: " + acornCount, 340, 20);
+        
+        
+        // Health Bar
+        gc.setFill(Color.RED);
+        gc.fillRect(480, 5, 200, 20);  // Background (empty)
+        gc.setFill(Color.LIMEGREEN);
+        double healthPercent = (double)player.hp / player.maxHp;
+        healthPercent = Math.max(0, Math.min(1, healthPercent));
+        gc.fillRect(480, 5, 200 * healthPercent, 20);
+        gc.setFill(Color.WHITE);
+        gc.fillText("HP: " + player.hp + "/" + player.maxHp, 580, 22);
+        
+        
+        
     }
     
     
