@@ -8,6 +8,7 @@ import javafx.scene.image.Image;
  * Items fall from the top of the screen and can be collected by the player
  * Specific item types (Acorn, Carrot, Starfish) extend this class
  */
+
 public class Item {
 
 	// POSITION AND SIZE PROPERTIES

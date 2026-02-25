@@ -9,24 +9,25 @@ package application;
  * Tutorial Part 2: https://www.youtube.com/watch?v=dzcQgv9hqXI&t=87s
  * ---
  * Media Player: https://blog.idrsolutions.com/write-media-player-javafx-using-netbeans-ide-part-2/
+ * ---
+ * Comments assisted with Gemini Prompt: Please reformat this code neatly. Don't remove any existing 
+ * comments. But clean up the formatting and be sure to include comments where some are missing.
+ * Each block should be commented at the top. And each line should have a very short comment. 
+ * Follow my own comment format. Do not change my code!!! DO NOT DELETE MY COMMENTS!
+ * ---
+ * Code comparison tool: https://www.diffchecker.com/
  */
 
-
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
-import java.util.stream.IntStream;
-
+import java.util.List;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
-import javafx.scene.Cursor;
+import javafx.scene.image.Image;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.image.Image;
 import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -34,83 +35,59 @@ import javafx.util.Duration;
 //import javafx.scene.media.Media;
 //import javafx.scene.media.MediaPlayer;
 
-
 /**
  * MAIN GAME CLASS
  */
 public class ImaginBlastMain extends Application {
 	
-	// CONSTANTS AND GLOBAL VARIABLES
-	private static final Random RAND = new Random();
-	public static final int WIDTH = 1280;                  // Game window width
-	public static final int HEIGHT = 720;                  // Game window height
-	private static final int PLAYER_SIZE = 60;             // Size of player
+	// Constants and global variables
+	private static final Random RAND = new Random(); // Random generator
+	public static final int WIDTH = 1280; // Game window width
+	public static final int HEIGHT = 720; // Game window height
+	private static final int PLAYER_SIZE = 60;
 	
 	// Image resources for game elements
+	// Reference: https://docs.oracle.com/javase/8/javafx/api/javafx/scene/image/Image.html
 	static final Image PLAYER_IMG = new Image("frog_player_128x128.png");
 	static final Image SQUIRREL_IMG = new Image("squirrel_enemy_front_128x128.png");
 	static final Image EXPLOSION_IMG = new Image("explosion.png");
 	static final Image ACORN_IMG = new Image("acorn_cap_64x64.png");
 	
 	// Explosion animation properties
-	static final int EXPLOSION_W = 128;          // Width of explosion sprite
-	static final int EXPLOSION_ROWS = 3;         // Rows in explosion sprite sheet
-	static final int EXPLOSION_COL = 3;          // Columns in explosion sprite sheet
-	static final int EXPLOSION_H = 128;          // Height of explosion sprite
-	static final int EXPLOSION_STEPS = 15;       // Number of steps in explosion animation
+	static final int EXPLOSION_W = 128; // Width of explosion sprite
+	static final int EXPLOSION_ROWS = 3; // Rows in explosion sprite sheet
+	static final int EXPLOSION_COL = 3; // Columns in explosion sprite sheet
+	static final int EXPLOSION_H = 128; // Height of explosion sprite
+	static final int EXPLOSION_STEPS = 15; // Number of steps in explosion animation
 	
 	// Game balance constants
-	final int MAX_BOMBS = 10;                    // Maximum number of enemies
-	final int MAX_SHOTS = MAX_BOMBS * 2;         // Maximum number of player shots allowed
-	final int MAX_ITEMS = 6;                     // Maximum number of acorns
+	final int MAX_BOMBS = 10; // Maximum number of enemies
+	final int MAX_SHOTS = MAX_BOMBS * 2; // Maximum number of player shots allowed
+	final int MAX_ITEMS = 6; // Maximum number of items
 	
-	// Game state variables
-	// boolean gameOver = false;
-	// boolean levelComplete = false;
+	public GraphicsContext gc; // Graphics context for drawing
 	
-	public GraphicsContext gc;                   // Graphics context for drawing
-	
-	// New Game State System
-	enum GameState {
-	    START_SCREEN,
-	    QUEST_SCREEN,
-	    PLAYING,
-	    BOSS_FIGHT,
-	    LEVEL_DONE,
-	    GAME_OVER
-	}
-
-	GameState currentState = GameState.START_SCREEN;  // Start at beginning
+	/**
+	 * GAME STATE MANAGEMENT
+	 * Moved to GameState.java and GameStateManager.java
+	 */
+	GameStateManager stateManager; // Manages game states i.e. what's the current state?
 	
 	// Game objects collections
-	Player player;                                // The player character
-	List<Shot> shots;                               // List of player shots
-	List<Shot> enemyShots = new ArrayList<>();
-	List<Particles> particles;                      // Background star/particle effects
-	List<Enemy> Squirrels;                          // List of enemy squirrels
-	List<Item> acornCaps;                           // List of acorn items
-	GameRenderer renderer;							// Draws game
-	StartScreen startScreen;						// Draws Start Screen
-	Quest01 quest01;              					// The quest for level 1
-	BossScreen01 bossScreen;
-	LevelDone01 levelDoneScreen;
-	boolean bossDefeated = false;
+	EntityManager entityManager; // Manages game entities 
+	GameRenderer renderer; // Draws game
+	UIManager uiManager; // What screen are we on?
+	boolean questConfirmed = false; // Has player read the quest???
+	LevelManager levelManager; // Moved to LevelManager.java
+	InputHandler inputHandler; // Handles user input like mouseclicks (later WASD)
 	
-	// Music
+	// Music -- for later
 	// MediaPlayer startMusicPlayer;
 	// MediaPlayer questMusicPlayer;
 	// MediaPlayer levelMusicPlayer;
 	// MediaPlayer bossMusicPlayer;
 	// MediaPlayer winMusicPlayer;
 	// MediaPlayer loseMusicPlayer;
-	
-	boolean questConfirmed = false;					// Track if player has read the quest
-	
-	Level01 currentLevel;							// Will become just "Level" later
-	
-	// Input and score tracking
-	public double mouseX;                           // Mouse X position for player movement
-	public int score;                               // Player's current score
 
 	/**
 	 * START METHOD
@@ -118,122 +95,41 @@ public class ImaginBlastMain extends Application {
 	 */
 	public void start(Stage stage) throws Exception {
 		
-		// Create drawing canvas
-		Canvas canvas = new Canvas(WIDTH, HEIGHT);
-		gc = canvas.getGraphicsContext2D();
-		renderer = new GameRenderer(gc);
-		gc.setFill(Color.GREEN);
-		gc.fillRect(0, 0, WIDTH, HEIGHT);
-		
+		// Drawing canvas
+		// Reference: https://docs.oracle.com/javase/8/javafx/api/javafx/scene/canvas/Canvas.html
+		Canvas canvas = new Canvas(WIDTH, HEIGHT); // Create canvas with game dimensions
+		gc = canvas.getGraphicsContext2D(); // Get graphics context for drawing
+		renderer = new GameRenderer(gc); // Initialize renderer with graphics context
+
+		// Other initializations
+		stateManager = new GameStateManager();
+		levelManager = new LevelManager();
+		entityManager = new EntityManager(MAX_SHOTS, WIDTH, HEIGHT, MAX_BOMBS, MAX_ITEMS);
+		uiManager = new UIManager(renderer);
+		setup(); // setup will now use EntityManager.java
+		inputHandler = new InputHandler(stateManager, levelManager, entityManager, MAX_SHOTS, WIDTH, HEIGHT);
+
+		// Reference: https://docs.oracle.com/javase/8/javafx/api/javafx/scene/input/MouseEvent.html
+	    canvas.setOnMouseMoved(e -> inputHandler.handleMouseMoved(e.getX())); // Handle mouse movement
+	    
+	    canvas.setOnMouseClicked(e -> { // Handle mouse clicks
+	        inputHandler.handleMouseClicked(e, this::setup); // Process click callback to setup
+	    });    
+	    
 		// Set up game loop animation (100ms intervals = 10 fps)
+	    // Create animation timeline
+	    // Reference: https://docs.oracle.com/javase/8/javafx/api/javafx/animation/Timeline.html
 		Timeline timeline = new Timeline(new KeyFrame(Duration.millis(100), _ -> run(gc)));
-		timeline.setCycleCount(Timeline.INDEFINITE);   // Loop forever
-		timeline.play();                               // Start the animation
-		
-		// Mouse input handling
-		canvas.setCursor(Cursor.DEFAULT);
-		canvas.setOnMouseMoved(e -> mouseX = e.getX());  // Track mouse X position
-		
-		canvas.setOnMouseClicked(e -> {
-		    
-		    double clickX = e.getX();
-		    double clickY = e.getY();
-		    
-		    switch(currentState) {
-		    
-		        case START_SCREEN:
-		            // Check if Play button clicked
-		            if(clickX >= WIDTH/2 - 100 && clickX <= WIDTH/2 + 100 &&
-		               clickY >= HEIGHT/2 && clickY <= HEIGHT/2 + 50) {
-		            	
-		                // Stop START_SCREEN music
-		                // if(startMusicPlayer != null) {
-		                //     musicPlayer.stop();
-		                // }
-		            	
-		                currentState = GameState.QUEST_SCREEN; // next screen
-		                setup(); // Initialize game
-		            }
-		            break;
-		            
-		        case QUEST_SCREEN:
-		            // Check if OK button clicked
-		            // Button coordinates: x: WIDTH/2-100 to WIDTH/2+100, y: HEIGHT/2+100 to HEIGHT/2+150
-		            if(clickX >= WIDTH/2 - 100 && clickX <= WIDTH/2 + 100 &&
-		               clickY >= HEIGHT/2 + 100 && clickY <= HEIGHT/2 + 150) {
-		                
-		                // Stop quest music when leaving the quest screen
-		                // if(questMusicPlayer != null) {
-		                //     questMusicPlayer.stop();
-		                // }
-		                
-		                // Start level music based on which level we're entering
-		                // String levelSong = currentLevel.getLevelNumber() == 1 ? "level1.wav" : "level2.wav";
-		                // Media levelMusic = new Media(new File(levelSong).toURI().toString());
-		                // levelMusicPlayer = new MediaPlayer(levelMusic);
-		                // levelMusicPlayer.setCycleCount(MediaPlayer.INDEFINITE); // Loop while playing
-		                // levelMusicPlayer.play();
-		                
-		                questConfirmed = true;  // Player accepted the quest
-		                bossDefeated = false;  // reset boss state
-		                bossScreen = new BossScreen01();  // fresh boss
-		                currentState = GameState.PLAYING;  // Go to game
-		                setup(); // Initialize the level
-		            }
-		            break;            
-		            
-		        case PLAYING:
-		            // Shoot
-		        	 if(shots.size() < MAX_SHOTS) {
-		        	        Shot newShot = player.shoot();
-		        	        if (newShot != null) {
-		        	            shots.add(newShot);
-		        	        }
-		        	    }
-		        	    break;
-		        	    
-		        case BOSS_FIGHT:
-		            // Player can still shoot during boss fight
-		            if(shots.size() < MAX_SHOTS) {
-		                Shot newShot = player.shoot();
-		                if (newShot != null) {
-		                    shots.add(newShot);
-		                }
-		            }
-		            break;
-		            
-		        case LEVEL_DONE:
-		            // Check if OK button clicked
-		            levelDoneScreen.handleClick(clickX, clickY);
-		            if (levelDoneScreen.isOkPressed()) {
-		                // For now, go to game over (Level 2 would come next)
-		                currentState = GameState.GAME_OVER;
-		                levelDoneScreen.setOkPressed(false); // Reset for next time
-		            }
-		            break;
-		            
-		        case GAME_OVER:
-		            // Click to return to start
-		            currentState = GameState.START_SCREEN;  // next screen
-		            setup(); // Reset for next game
-		            break;
-		    }
-		});
-			
-			
-	
-		
-		// Initialize game and set up window
-		setup();
-		
+		timeline.setCycleCount(Timeline.INDEFINITE); // Loop forever
+		timeline.play(); // Start the animation
 
 		//Media startMusic = new Media(new File("start.wav").toURI().toString());
 		//musicPlayer = new MediaPlayer(startMusic);
 		//musicPlayer.play();
 		
-		stage.setScene(new Scene(new StackPane(canvas)));   // Add canvas to scene
-		stage.setTitle("ImaginBlast");                      // Set window title
-		stage.show();                                       // Display the window
+		stage.setScene(new Scene(new StackPane(canvas))); // Add canvas to scene
+		stage.setTitle("ImaginBlast"); // Set window title
+		stage.show(); // Display the window
 	}
 
 	/**
@@ -241,31 +137,25 @@ public class ImaginBlastMain extends Application {
 	 * Create new collections and place initial enemies
 	 */
 	private void setup() {
-		particles = new ArrayList<>();                   // New background effects list
-		shots = new ArrayList<>();                       // New player bullets list
-		enemyShots = new ArrayList<>(); 
-		Squirrels = new ArrayList<>();                   // New enemies list
-		acornCaps = new ArrayList<>();                   // New acorns list
-		player = new Player(WIDTH / 2, HEIGHT - PLAYER_SIZE, PLAYER_SIZE, PLAYER_IMG); // Center player
-		player.resetHealth();
-		score = 0;                                       // Reset score
-		
-		startScreen = new StartScreen();
-		quest01 = new Quest01();
-		currentLevel = new Level01();
-		
-	    bossScreen = new BossScreen01();
-	    levelDoneScreen = new LevelDone01();
-	    bossDefeated = false;
-		
-		// Create initial set of enemies
-		IntStream.range(0, MAX_BOMBS).mapToObj(_ -> this.newSquirrel()).forEach(Squirrels::add);
-		
-		// Create initial set of acorns
-		IntStream.range(0, MAX_ITEMS).mapToObj(_ -> this.newAcorn()).forEach(acornCaps::add);
+	    entityManager.resetAll(); // Reset all entities
+	    levelManager.reset(); // Reset level manager
+	    
+	    // Create player
+	    Player player = new Player(WIDTH / 2, HEIGHT - PLAYER_SIZE, PLAYER_SIZE, PLAYER_IMG); // Create player at bottom center
+	    player.resetHealth(); // Reset player health
+	    entityManager.setPlayer(player); // Set player in entity manager
+	    
+	    // Create initial set of enemies
+	    for (int i = 0; i < MAX_BOMBS; i++) {
+	    	entityManager.addEnemy(createEnemyForCurrentLevel());
+	    }
+	    
+	    // Create initial set of items for current level
+	    for (int i = 0; i < MAX_ITEMS; i++) {
+	        entityManager.addItem(createItemForCurrentLevel());
+	    }
 	}
 
-	
 	/**
 	 * RUN METHOD
 	 * Main game loop (called every frame)
@@ -273,254 +163,159 @@ public class ImaginBlastMain extends Application {
 	 */
 	private void run(GraphicsContext gc) {
 	    
-	    switch(currentState) {
+		// Reference: https://gameprogrammingpatterns.com/state.html
+	    switch(stateManager.getCurrentState()) {
 	        case START_SCREEN:
-	            // Only draw start screen
-	            renderer.drawStartScreen(startScreen);
+	        	uiManager.drawStartScreen();
 	            break;
 	            
 	        case QUEST_SCREEN:
-	            renderer.drawQuestScreen(quest01);
+	        	uiManager.drawQuestScreen(levelManager.getQuest());
 	            break;
 	            
 	        case PLAYING:
-	            // Full game rendering and logic
 	            renderer.clearScreen();
 	            
-	            int acornsSoFar = currentLevel.itemsCollected.getOrDefault(ItemAcorn.class, 0);
 	            
-	            renderer.drawHUD(score, shots.size(), MAX_SHOTS, acornsSoFar, player);
+	            // Get the first item goal's class to display
+	            Class<? extends Item> itemType = levelManager.getCurrentLevel().getItemGoals().keySet().iterator().next();
+	            int itemsSoFar = levelManager.getCurrentLevel().itemsCollected.getOrDefault(itemType, 0);
+	            
+	            renderer.drawHUD(entityManager.getScore(), entityManager.getShots().size(), MAX_SHOTS, itemsSoFar, entityManager.getPlayer());
 	            
 	            // Draw background effects
-	            particles.forEach(Particles::draw);
+	            entityManager.drawParticles(gc);
+	            entityManager.updateParticles(gc);
 	        
 	            // Update and draw player
-	            player.update();
-	            player.draw(gc);
-	            player.posX = (int) mouseX;
+	            entityManager.updatePlayer(); // Update player state
+	            entityManager.drawPlayer(gc); // Draw player
+	            entityManager.movePlayer((int) inputHandler.getMouseX()); // Move player to mouse X position
 	            
 	            // Update and draw enemies
-	            Squirrels.stream().peek(Creature::update).forEach(e -> {
-	                e.draw(gc);
-	                e.update();
-	                
-	                // If enemy hits player
-	                if(Collisions.playerCollides(player, e) && !player.exploding) {
-	                    
-	                    // Determine damage based on enemy type
-	                    int damage = 1;  // Default damage
-	                    
-	                    // Later: Different enemies do different damage?
-	                    // if (e instanceof EnemySquirrel) damage = 10;
-	                    // if (e instanceof EnemySpider) damage = 15;
-	                    // if (e instanceof EnemyBoss) damage = 25;
-	                    
-	                    // Apply damage
-	                    boolean stillAlive = player.takeDamage(damage);
-	                    
-	                    // Optional: knockback or invincibility frames???
-	                    // player.setInvincible(30);
-	                    
-	                    if (!stillAlive) {
-	                        // Player died
-	                        currentState = GameState.GAME_OVER;
-	                    }
-	                }
-	            });
+	            entityManager.updateEnemies(); // Update enemy states
+	            entityManager.drawEnemies(gc); // Draw enemies
+	            entityManager.checkEnemyCollisions(stateManager); // Check enemy collisions
 	            
-	            // Update and draw acorns
-	            acornCaps.forEach(i -> {
-	                i.draw(gc);
-	                i.update(gc);
-	                
-	                if(Collisions.itemCollides(player, i) && !i.collected) {
-	                    currentLevel.registerItemCollected(i);
-	                    ((ItemAcorn) i).onCollected();
-	                }
-	            });
+	            // Update and draw items
+	            entityManager.drawItems(gc);
+	            entityManager.updateItems(levelManager);
 	            
 	            // Update and check shots
-	            for (int i = shots.size() - 1; i >=0 ; i--) {
-	                Shot shot = shots.get(i);
-	                if(shot.posY < 0 || shot.toRemove) { 
-	                    shots.remove(i);
-	                    continue;
-	                }
-	                shot.update();
-	                shot.draw(gc);
-	                
-	                for (Enemy squirrel : Squirrels) {
-	                    if(Collisions.shotCollides(shot, squirrel) && !squirrel.exploding) {
-	                        score++;
-	                        currentLevel.registerEnemyDefeated(squirrel);
-	                        squirrel.explode();
-	                        shot.toRemove = true;
-	                    }
-	                }
-	            }
+	            entityManager.updateShotsWithEnemyCollisions(levelManager); // Update shots and check enemy collisions
+	            entityManager.drawShots(gc); // Draw player shots
 	            
 	            // Replace destroyed enemies
-	            for (int i = Squirrels.size() - 1; i >= 0; i--){  
-	                if(Squirrels.get(i).destroyed) {
-	                    Squirrels.set(i, newSquirrel());
-	                }
-	            }
+	            entityManager.replaceDestroyedEnemies(() -> createEnemyForCurrentLevel());
 	            
-	            // Replace collected acorns
-	            for (int i = acornCaps.size() - 1; i >= 0; i--){  
-	                if(acornCaps.get(i).gone) {
-	                    acornCaps.set(i, newAcorn());
-	                }
-	            }
+	            // Replace collected items
+	            entityManager.replaceCollectedItems(() -> createItemForCurrentLevel());
 	        
-	            
-	         // Check game over condition
-	            if(player.destroyed) {
-	                currentState = GameState.GAME_OVER;
+	            // Check game over condition
+	            if(entityManager.isPlayerDestroyed()) { // If player is destroyed
+	                stateManager.setCurrentState(GameState.GAME_OVER); // Set game over state
 	            }
 	            
 	            // Check level completion
-	            if(currentLevel.isComplete()) {
-	                currentState = GameState.BOSS_FIGHT;
+	            if(levelManager.getCurrentLevel().isComplete()) { // If current level is complete
+	                stateManager.setCurrentState(GameState.BOSS_FIGHT); // Set boss fight state
 	                // Clear existing enemies and items for boss fight
-	                Squirrels.clear();
-	                acornCaps.clear();
-	                shots.clear();
-	            }
-	            
-	            // Particles
-	            if(RAND.nextInt(10) > 2) {
-	                particles.add(new Particles(gc));
-	            }
-	            
-	            for (int i = 0; i < particles.size(); i++) {
-	                if(particles.get(i).isOffScreen())
-	                    particles.remove(i);
+	                entityManager.clearEnemies(); // Clear all enemies
+	                entityManager.clearItems(); // Clear all items
+	                entityManager.getShots().clear(); // Clear all shots
 	            }
 	            break;
 	            
 	        case BOSS_FIGHT:
 	            // Update player movement
-	            player.update();
-	            player.posX = (int) mouseX;
-	            // Keep player on screen
-	            if (player.posX < 0) player.posX = 0;
-	            if (player.posX + player.size > WIDTH) player.posX = WIDTH - player.size;
+	        	entityManager.updatePlayer(); // Update player state
+	        	entityManager.movePlayer((int) inputHandler.getMouseX()); // Move player to mouse X position
 
-	            // UPDATE AND CHECK PLAYER SHOTS - just like in PLAYING state
-	            for (int i = shots.size() - 1; i >= 0; i--) {
-	                Shot shot = shots.get(i);
-	                
-	                // Move the shot
-	                shot.update();
-	                
-	                // Remove if off screen
-	                if (shot.posY < 0 || shot.toRemove) {
-	                    shots.remove(i);
-	                    continue;
-	                }
-	                
-	              
-	                
-	                // Check if shot hits boss
-	                if (Collisions.shotCollides(shot, bossScreen.boss) && !bossScreen.boss.exploding) {
-	                    bossScreen.boss.takeDamage(10); // Each shot does 10 damage
-	                    shots.remove(i); // Remove the shot
-	                }
-	            }
+	            // Update and check player shots
+	        	entityManager.updateShotsWithBossCollisions(levelManager.getBossScreen().boss);
 
-	            // Update boss screen (handles boss movement, enemy shots, portal)
-	            bossScreen.update(player, shots, enemyShots);
+	            // Update boss screen
+	            levelManager.getBossScreen().update(entityManager.getPlayer(), entityManager.getShots(), entityManager.getEnemyShots());
 
-	            // Draw everything
-	            bossScreen.draw(gc, renderer, player, score);
+	            // Draw boss screen stuff
+	            levelManager.getBossScreen().draw(gc, renderer, entityManager.getPlayer(), entityManager.getScore());
 
 	            // Draw player shots
-	            for (Shot shot : shots) {
-	                shot.draw(gc);
-	            }
+	            entityManager.drawShots(gc); // Draw player shots
 
-	            // Update and draw enemy shots (just like in PLAYING state)
-	            for (int i = enemyShots.size() - 1; i >= 0; i--) {
-	                Shot shot = enemyShots.get(i);
-	                
-	                // Move the shot
-	                shot.update();
-	                
-	                // Remove if off screen
-	                if (shot.posY > HEIGHT || shot.toRemove) {
-	                    enemyShots.remove(i);
-	                    continue;
-	                }
-	                
-	            
-	                
-	                // Check if enemy shot hits player
-	                if (Collisions.shotCollides(shot, player) && !player.exploding) {
-	                    player.takeDamage(5);
-	                    enemyShots.remove(i);
-	                    continue;
-	                }
-	                
-	                // Draw the shot
-	                shot.draw(gc);
-	            }
+	            // Update and draw enemy shots
+	            entityManager.updateEnemyShots(); // Update enemy shots
+	            entityManager.drawEnemyShots(gc); // Draw enemy shots
 
 	            // Check if boss is defeated
-	            if (bossScreen.boss.isDefeated() && !bossDefeated) {
-	                bossDefeated = true;
+	            if (levelManager.getBossScreen().boss.isDefeated() && !levelManager.isBossDefeated()) { // If boss defeated and not already recorded
+	            	levelManager.setBossDefeated(true); // Set boss defeated
 	            }
 
 	            // Check if player entered portal
-	            if (bossScreen.isComplete()) {
-	                currentState = GameState.LEVEL_DONE;
+	            if (levelManager.getBossScreen().isComplete()) { // If boss screen is complete
+	                stateManager.setCurrentState(GameState.LEVEL_DONE); // Set level done state
 	            }
 
 	            // Check if player died
-	            if (player.destroyed) {
-	                currentState = GameState.GAME_OVER;
+	            if (entityManager.isPlayerDestroyed()) { // If player is destroyed
+	                stateManager.setCurrentState(GameState.GAME_OVER); // Set game over state
 	            }
 	            break;
 	            
-	 
-	            
 	        case LEVEL_DONE:
-	            // Draw level complete screen
-	            levelDoneScreen.draw(gc);
+	        	uiManager.drawLevelDoneScreen(levelManager.getLevelDoneScreen());
 	            break;
 	            
 	        case GAME_OVER:
-	            // Only draw game over screen
-	            renderer.drawGameOver(score);
+	        	uiManager.drawGameOverScreen(entityManager.getScore());
 	            break;
 	    }
 	}
 
-	
-	
 	/**
-	 * ENEMY CREATION METHOD
-	 * Creates a new enemy squirrel at a random X position at the top of screen
+	 * CREATES A RANDOM ENEMY FOR THE CURRENT LEVEL
+	 * 
+	 * This function is called whenever a new enemy needs to be spawned in the game,
+	 * such as during initial level setup or when replacing destroyed enemies.
+	 * 
+	 * 1. Asking the current level what enemy types are allowed to appear (can be many!)
+	 * 2. Randomly selecting one of those enemy types
+	 * 3. Delegating the actual creation to the level (since different levels might
+	 *    want to create the same enemy type with different properties)
+	 * 
+	 * This allows each level to have its own "enemy pool"
+	 * Level 1 might only have squirrels, while Level 2 might have squirrels AND birds.
+	 * Reference: https://docs.oracle.com/javase/8/docs/api/java/util/Random.html#nextInt-int-
+	 * 
+	 * @return A new Enemy instance of a randomly chosen type valid for the current level
 	 */
-	Enemy newSquirrel() {
-		return new EnemySquirrel(50 + RAND.nextInt(WIDTH - 100), 0, PLAYER_SIZE, SQUIRREL_IMG);
+	Enemy createEnemyForCurrentLevel() {
+	    // Get list of possible enemies from current level
+	    List<Class<? extends Enemy>> possibleEnemies = levelManager.getCurrentLevel().getPossibleEnemies();
+	    // Pick a random enemy type
+	    Class<? extends Enemy> randomEnemy = possibleEnemies.get(RAND.nextInt(possibleEnemies.size()));
+	    // Create that enemy type
+	    return levelManager.getCurrentLevel().createEnemy(RAND, WIDTH, PLAYER_SIZE, randomEnemy);
+	}
+
+	/**
+	 * ITEM CREATION
+	 * Works the same as enemies (above), except for items ^^^
+	 */
+	Item createItemForCurrentLevel() {
+	    // Get list of possible items from current level
+	    List<Class<? extends Item>> possibleItems = levelManager.getCurrentLevel().getPossibleItems();
+	    // Pick a random item type
+	    Class<? extends Item> randomItem = possibleItems.get(RAND.nextInt(possibleItems.size()));
+	    // Create that item type
+	    return levelManager.getCurrentLevel().createItem(RAND, WIDTH, PLAYER_SIZE, randomItem);
 	}
 	
 	/**
-	 * ADDED: ACORN CREATION METHOD
-	 * Creates a new acorn collectible at a random X position at the top of screen
-	 */
-	Item newAcorn() {
-		return new ItemAcorn(50 + RAND.nextInt(WIDTH - 100), 0, PLAYER_SIZE, ACORN_IMG);
-	}
-	
-	
-	
-	/**
-	 * MAIN METHOD - Application entry point
-	 * Start JavaFX application
+	 * MAIN
 	 */
 	public static void main(String[] args) {
-		launch(); 
+		launch();
 	}
 }

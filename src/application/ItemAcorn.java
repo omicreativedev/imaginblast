@@ -7,7 +7,6 @@ import javafx.scene.image.Image;
  * ACORN ITEM CLASS
  * Acorns fall straight down and give 1 point when collected
  */
-
 public class ItemAcorn extends Item {
 	
 	// MOVEMENT PROPERTIES
