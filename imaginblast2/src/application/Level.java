@@ -1,0 +1,93 @@
+package application;
+
+import java.util.HashMap;
+import javafx.scene.image.Image;
+import java.util.Random;
+import java.util.Map;
+import java.util.List;
+
+/**
+ * LEVEL BASE CLASS
+ * Defines what each level contains
+ * Each level defines its own goals, enemies, and items
+ */
+public abstract class Level {
+    protected int levelNumber;
+    protected String levelName;
+    protected Image background;
+    
+    // TRACKING MAPS
+    protected Map<Class<? extends Item>, Integer> itemsCollected = new HashMap<>();
+    protected Map<Class<? extends Enemy>, Integer> enemiesDefeated = new HashMap<>();
+    
+    public Level(int levelNumber, String levelName) {
+        this.levelNumber = levelNumber;
+        this.levelName = levelName;
+    }
+    
+    // Each level defines its own goals
+    public abstract String getQuestText();
+    
+    // Each level defines what enemies appear and their goals
+    public abstract Map<Class<? extends Enemy>, Integer> getEnemyGoals();
+    
+    // Each level defines what items appear and their goals
+    public abstract Map<Class<? extends Item>, Integer> getItemGoals();
+    
+    // Each level defines what enemies can spawn
+    public abstract List<Class<? extends Enemy>> getPossibleEnemies();
+    
+    // Each level defines what items can spawn
+    public abstract List<Class<? extends Item>> getPossibleItems();
+    
+    // Create a specific enemy type
+    public abstract Enemy createEnemy(Random rand, int width, int playerSize, Class<? extends Enemy> enemyClass);
+    
+    // Create a specific item type
+    public abstract Item createItem(Random rand, int width, int playerSize, Class<? extends Item> itemClass);
+    
+    // Get image for a specific enemy type
+    public abstract Image getEnemyImage(Class<? extends Enemy> enemyClass);
+    
+    // Get image for a specific item type
+    public abstract Image getItemImage(Class<? extends Item> itemClass);
+    
+    // TRACKING METHODS
+    public void registerItemCollected(Item item) {
+        Class<? extends Item> itemClass = item.getClass();
+        itemsCollected.put(itemClass, itemsCollected.getOrDefault(itemClass, 0) + 1);
+    }
+    
+    public void registerEnemyDefeated(Enemy enemy) {
+        Class<? extends Enemy> enemyClass = enemy.getClass();
+        enemiesDefeated.put(enemyClass, enemiesDefeated.getOrDefault(enemyClass, 0) + 1);
+    }
+    
+    // WIN CONDITION CHECK
+    public boolean isComplete() {
+        // Check each item goal
+        for (Map.Entry<Class<? extends Item>, Integer> goal : getItemGoals().entrySet()) {
+            int collected = itemsCollected.getOrDefault(goal.getKey(), 0);
+            if (collected < goal.getValue()) {
+                return false;
+            }
+        }
+        
+        // Check each enemy goal
+        for (Map.Entry<Class<? extends Enemy>, Integer> goal : getEnemyGoals().entrySet()) {
+            int defeated = enemiesDefeated.getOrDefault(goal.getKey(), 0);
+            if (defeated < goal.getValue()) {
+                return false;
+            }
+        }
+        
+        return true;
+    }
+    
+    // Each level defines spawn rates
+    public abstract int getEnemySpawnRate();
+    public abstract int getItemSpawnRate();
+
+    public Image getBackground() { return background; }
+    public int getLevelNumber() { return levelNumber; }
+}
