@@ -41,13 +41,13 @@ public class InputHandler {
         
         switch(stateManager.getCurrentState()) {
         
-            case START_SCREEN:
-                if(clickX >= WIDTH/2 - 100 && clickX <= WIDTH/2 + 100 &&
-                   clickY >= HEIGHT/2 && clickY <= HEIGHT/2 + 50) {
-                    stateManager.setCurrentState(GameState.QUEST_SCREEN);
-                    setupCallback.run();
-                }
-                break;
+        case START_SCREEN:
+            if(clickX >= WIDTH/2 - 100 && clickX <= WIDTH/2 + 100 &&
+               clickY >= HEIGHT/2 + 100 && clickY <= HEIGHT/2 + 150) {
+                stateManager.setCurrentState(GameState.QUEST_SCREEN);
+                setupCallback.run();
+            }
+            break;
                 
             case QUEST_SCREEN:
                 if(clickX >= WIDTH/2 - 100 && clickX <= WIDTH/2 + 100 &&

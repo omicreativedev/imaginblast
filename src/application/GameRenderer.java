@@ -1,5 +1,6 @@
 package application;
 
+import javafx.scene.image.Image;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -104,24 +105,42 @@ public class GameRenderer {
         gc.fillRect(ImaginBlastMain.WIDTH/4, ImaginBlastMain.HEIGHT/4, 
                     ImaginBlastMain.WIDTH/2, ImaginBlastMain.HEIGHT/2);
         
-        // Game title (placeholder until logo.png is added)
+        // Calculate center positions for easier reference
+        double centerX = ImaginBlastMain.WIDTH / 2;
+        double boxTop = ImaginBlastMain.HEIGHT / 4;
+       
+        // Load and resize the logo
+        final Image logo = new Image("logo_black_bg.png");
+        double logoWidth = 400; // Desired width - adjust as needed
+        double logoHeight = logoWidth * (logo.getHeight() / logo.getWidth()); // Maintain aspect ratio
+        double logoX = centerX - (logoWidth / 2);
+        double logoY = boxTop + 40; // Position from top of black box
+        gc.drawImage(logo, logoX, logoY, logoWidth, logoHeight);
+        
+        // FrogArmy text below the logo
         gc.setFill(Color.WHITE);
         gc.setFont(Font.font(24));
-        gc.fillText("FrogArmy", ImaginBlastMain.WIDTH/2, ImaginBlastMain.HEIGHT/2 - 50);
+        gc.fillText("FrogArmy", centerX, logoY + logoHeight + 30);
+        
+        // Instructions (How to Play) - positioned above the button
+        gc.setFill(Color.WHITE);
+        gc.setFont(Font.font(18));
+        gc.fillText("Instructions: Move your mouse cursor to move, left-click on mouse to shoot!", 
+                    centerX, ImaginBlastMain.HEIGHT/2 + 40);
         
         // PLAY GAME button - green rectangle
         gc.setFill(Color.GREEN);
-        gc.fillRect(ImaginBlastMain.WIDTH/2 - 100, ImaginBlastMain.HEIGHT/2, 200, 50);
+        gc.fillRect(ImaginBlastMain.WIDTH/2 - 100, ImaginBlastMain.HEIGHT/2 + 100, 200, 50);
         
         // Button text
         gc.setFill(Color.BLACK);
         gc.setFont(Font.font(18));
-        gc.fillText("PLAY", ImaginBlastMain.WIDTH/2, ImaginBlastMain.HEIGHT/2 + 30);
-    
+        gc.fillText("PLAY", ImaginBlastMain.WIDTH/2, ImaginBlastMain.HEIGHT/2 + 130);
+
         // Button border to make it visually distinct
         gc.setStroke(Color.WHITE);
         gc.setLineWidth(1);
-        gc.strokeRect(ImaginBlastMain.WIDTH/2 - 100, ImaginBlastMain.HEIGHT/2, 200, 50);
+        gc.strokeRect(ImaginBlastMain.WIDTH/2 - 100, ImaginBlastMain.HEIGHT/2 + 100, 200, 50);
     }
     
     /**
