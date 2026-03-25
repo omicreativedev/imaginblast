@@ -75,7 +75,7 @@ public class ImaginBlastMain extends Application {
 	
 	// Game objects collections
 	EntityManager entityManager; // Manages game entities 
-	GameRenderer renderer; // Draws game
+	GameRenderer gameRenderer; // Draws game
 	UIManager uiManager; // What screen are we on?
 	boolean questConfirmed = false; // Has player read the quest???
 	LevelManager levelManager; // Moved to LevelManager.java
@@ -99,18 +99,18 @@ public class ImaginBlastMain extends Application {
 		// Reference: https://docs.oracle.com/javase/8/javafx/api/javafx/scene/canvas/Canvas.html
 		Canvas canvas = new Canvas(WIDTH, HEIGHT); // Create canvas with game dimensions
 		gc = canvas.getGraphicsContext2D(); // Get graphics context for drawing
-		renderer = new GameRenderer(gc); // Initialize renderer with graphics context
+		gameRenderer = new GameRenderer(gc); // Initialize renderer with graphics context
 
 		// Other initializations
 		stateManager = new GameStateManager();
 		levelManager = new LevelManager();
 		entityManager = new EntityManager(MAX_SHOTS, WIDTH, HEIGHT, MAX_BOMBS, MAX_ITEMS);
-		uiManager = new UIManager(renderer);
+		uiManager = new UIManager(gameRenderer);
 		setup(); // setup will now use EntityManager.java
-		inputHandler = new InputHandler(stateManager, levelManager, entityManager, MAX_SHOTS, WIDTH, HEIGHT);
+		inputHandler = new InputHandler(stateManager, levelManager, entityManager, gameRenderer, MAX_SHOTS, WIDTH, HEIGHT);
 
 		// Reference: https://docs.oracle.com/javase/8/javafx/api/javafx/scene/input/MouseEvent.html
-	    canvas.setOnMouseMoved(e -> inputHandler.handleMouseMoved(e.getX())); // Handle mouse movement
+		canvas.setOnMouseMoved(e -> inputHandler.handleMouseMoved(e.getX(), e.getY())); // Handle mouse movement
 	    
 	    canvas.setOnMouseClicked(e -> { // Handle mouse clicks
 	        inputHandler.handleMouseClicked(e, this::setup); // Process click callback to setup
@@ -166,6 +166,7 @@ public class ImaginBlastMain extends Application {
 		// Reference: https://gameprogrammingpatterns.com/state.html
 	    switch(stateManager.getCurrentState()) {
 	        case START_SCREEN:
+	        	gameRenderer.updateButtonHover(inputHandler.getMouseX(), inputHandler.getMouseY());
 	        	uiManager.drawStartScreen();
 	            break;
 	            
@@ -174,14 +175,14 @@ public class ImaginBlastMain extends Application {
 	            break;
 	            
 	        case PLAYING:
-	            renderer.clearScreen();
+	            gameRenderer.clearScreen();
 	            
 	            
 	            // Get the first item goal's class to display
 	            Class<? extends Item> itemType = levelManager.getCurrentLevel().getItemGoals().keySet().iterator().next();
 	            int itemsSoFar = levelManager.getCurrentLevel().itemsCollected.getOrDefault(itemType, 0);
 	            
-	            renderer.drawHUD(entityManager.getScore(), entityManager.getShots().size(), MAX_SHOTS, itemsSoFar, entityManager.getPlayer());
+	            gameRenderer.drawHUD(entityManager.getScore(), entityManager.getShots().size(), MAX_SHOTS, itemsSoFar, entityManager.getPlayer());
 	            
 	            // Draw background effects
 	            entityManager.drawParticles(gc);
@@ -238,7 +239,7 @@ public class ImaginBlastMain extends Application {
 	            levelManager.getBossScreen().update(entityManager.getPlayer(), entityManager.getShots(), entityManager.getEnemyShots());
 
 	            // Draw boss screen stuff
-	            levelManager.getBossScreen().draw(gc, renderer, entityManager.getPlayer(), entityManager.getScore());
+	            levelManager.getBossScreen().draw(gc, gameRenderer, entityManager.getPlayer(), entityManager.getScore());
 
 	            // Draw player shots
 	            entityManager.drawShots(gc); // Draw player shots

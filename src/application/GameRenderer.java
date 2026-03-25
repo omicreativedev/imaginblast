@@ -1,9 +1,12 @@
 package application;
 
+import javafx.scene.image.Image;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
+import javafx.scene.media.AudioClip;
+
 
 /**
  * GAME RENDERER CLASS
@@ -12,7 +15,11 @@ import javafx.scene.text.TextAlignment;
  */
 public class GameRenderer {
     
-    private GraphicsContext gc; 
+    private GraphicsContext gc;
+    private Image startupBgGif;
+    private AudioClip startScreenMusic;
+    private AudioClip buttonClickSound;
+    private boolean isHoveringPlayButton = false;
     
     /**
      * CONSTRUCTOR
@@ -20,6 +27,35 @@ public class GameRenderer {
      */
     public GameRenderer(GraphicsContext gc) {
         this.gc = gc;
+        this.startupBgGif = new Image("blinking_bg_startup.gif");
+        
+        
+    String musicUrl = getClass().getResource("/start_screen_music.wav").toString();
+    this.startScreenMusic = new AudioClip(musicUrl);
+    this.startScreenMusic.setCycleCount(1);
+    this.startScreenMusic.play();   
+    
+    String clickUrl = getClass().getResource("/button_click.wav").toString();
+    this.buttonClickSound = new AudioClip(clickUrl);
+        
+        
+    }
+    
+    /**
+     * Change the button color of the button when hover
+     * There might be an easier way to do this.
+     * Sort of a hack? 
+     * @param mouseX Current mouse X coordinate
+     * @param mouseY Current mouse Y coordinate
+     */
+    public void updateButtonHover(double mouseX, double mouseY) {
+        int buttonX = ImaginBlastMain.WIDTH/2 - 100;
+        int buttonY = ImaginBlastMain.HEIGHT/2 + 100;
+        int buttonWidth = 200;
+        int buttonHeight = 50;
+        
+        isHoveringPlayButton = (mouseX >= buttonX && mouseX <= buttonX + buttonWidth &&
+                                mouseY >= buttonY && mouseY <= buttonY + buttonHeight);
     }
     
     /**
@@ -93,9 +129,10 @@ public class GameRenderer {
      */
     public void drawStartScreen(StartScreen startScreen) {
         // Forest green background (same as gameplay)
-        gc.setFill(Color.FORESTGREEN);
-        gc.fillRect(0, 0, ImaginBlastMain.WIDTH, ImaginBlastMain.HEIGHT);
-        
+        // gc.setFill(Color.FORESTGREEN);
+        // gc.fillRect(0, 0, ImaginBlastMain.WIDTH, ImaginBlastMain.HEIGHT);
+    	gc.drawImage(startupBgGif, 0, 0, ImaginBlastMain.WIDTH, ImaginBlastMain.HEIGHT);
+    	
         // Center text alignment for menu elements
         gc.setTextAlign(TextAlignment.CENTER);
         
@@ -104,24 +141,57 @@ public class GameRenderer {
         gc.fillRect(ImaginBlastMain.WIDTH/4, ImaginBlastMain.HEIGHT/4, 
                     ImaginBlastMain.WIDTH/2, ImaginBlastMain.HEIGHT/2);
         
-        // Game title (placeholder until logo.png is added)
+        // Calculate center positions for easier reference
+        double centerX = ImaginBlastMain.WIDTH / 2;
+        double boxTop = ImaginBlastMain.HEIGHT / 4;
+       
+        // Load and resize the logo
+        final Image logo = new Image("logo_black_bg.png");
+        double logoWidth = 400; // Desired width - adjust as needed
+        double logoHeight = logoWidth * (logo.getHeight() / logo.getWidth()); // Maintain aspect ratio
+        double logoX = centerX - (logoWidth / 2);
+        double logoY = boxTop + 40; // Position from top of black box
+        gc.drawImage(logo, logoX, logoY, logoWidth, logoHeight);
+        
+        // FrogArmy text below the logo
         gc.setFill(Color.WHITE);
         gc.setFont(Font.font(24));
-        gc.fillText("FrogArmy", ImaginBlastMain.WIDTH/2, ImaginBlastMain.HEIGHT/2 - 50);
+        gc.fillText("FrogArmy", centerX, logoY + logoHeight + 30);
+        
+        // Instructions (How to Play) - positioned above the button
+        gc.setFill(Color.WHITE);
+        gc.setFont(Font.font(18));
+        gc.fillText("Instructions: Move your mouse cursor to move, left-click on mouse to shoot!", 
+                    centerX, ImaginBlastMain.HEIGHT/2 + 40);
+        
+        
+        
         
         // PLAY GAME button - green rectangle
         gc.setFill(Color.GREEN);
-        gc.fillRect(ImaginBlastMain.WIDTH/2 - 100, ImaginBlastMain.HEIGHT/2, 200, 50);
+        gc.fillRect(ImaginBlastMain.WIDTH/2 - 100, ImaginBlastMain.HEIGHT/2 + 100, 200, 50);
+        
+        
+        // On Mouse over Button
+        if (isHoveringPlayButton) {
+            gc.setFill(Color.LIMEGREEN);
+        } else {
+            gc.setFill(Color.GREEN);
+        }
+        gc.fillRect(ImaginBlastMain.WIDTH/2 - 100, ImaginBlastMain.HEIGHT/2 + 100, 200, 50);  
+        
+        
+        
         
         // Button text
         gc.setFill(Color.BLACK);
         gc.setFont(Font.font(18));
-        gc.fillText("PLAY", ImaginBlastMain.WIDTH/2, ImaginBlastMain.HEIGHT/2 + 30);
-    
+        gc.fillText("PLAY", ImaginBlastMain.WIDTH/2, ImaginBlastMain.HEIGHT/2 + 130);
+
         // Button border to make it visually distinct
         gc.setStroke(Color.WHITE);
         gc.setLineWidth(1);
-        gc.strokeRect(ImaginBlastMain.WIDTH/2 - 100, ImaginBlastMain.HEIGHT/2, 200, 50);
+        gc.strokeRect(ImaginBlastMain.WIDTH/2 - 100, ImaginBlastMain.HEIGHT/2 + 100, 200, 50);
     }
     
     /**
@@ -267,6 +337,25 @@ public class GameRenderer {
      */
     public void drawPortal(Portal portal) {
         portal.draw(gc);
+    }
+    
+    
+    /**
+     * STOP MUSIC ON START SCREEN
+     */
+    public void stopStartScreenMusic() {
+        if (startScreenMusic != null) {
+            startScreenMusic.stop();
+        }
+    }
+    
+    /**
+     * PLAY BUTTON CLICK SOUND
+     */
+    public void playButtonClick() {
+        if (buttonClickSound != null) {
+            buttonClickSound.play();
+        }
     }
     
     /**

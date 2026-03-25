@@ -97,12 +97,12 @@ public class BossScreen01 extends BossScreen {
      * Renders all boss fight elements to the screen
      * 
      * @param gc Graphics context for drawing
-     * @param renderer Game renderer (not heavily used here but available)
+     * @param gameRenderer Game renderer (not heavily used here but available)
      * @param player The player entity (drawn at current position)
      * @param score Current player score (can be displayed if needed)
      */
     @Override
-    public void draw(GraphicsContext gc, GameRenderer renderer, Player player, int score) {
+    public void draw(GraphicsContext gc, GameRenderer gameRenderer, Player player, int score) {
     	
         // Draw background image first so everything else appears on top
         // gc.drawImage(backgroundImage, 0, 0, ImaginBlastMain.WIDTH, ImaginBlastMain.HEIGHT);
