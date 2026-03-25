@@ -14,5 +14,5 @@
     <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="application.ImaginBlastMain"/>
     <stringAttribute key="org.eclipse.jdt.launching.MODULE_NAME" value="imaginblast"/>
     <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="imaginblast"/>
-    <stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="--module-path &quot;D:/Program Files/JavaFX/javafx-sdk-25.0.2/lib&quot; --add-modules javafx.controls,javafx.fxml,javafx.media --enable-native-access=javafx.graphics --add-exports javafx.base/com.sun.javafx=ALL-UNNAMED"/>
+    <stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="--module-path &quot;D:/Program Files/JavaFX/javafx-sdk-25.0.2/lib&quot; --add-modules javafx.controls,javafx.fxml,javafx.media --enable-native-access=javafx.graphics,javafx.media --add-exports javafx.base/com.sun.javafx=ALL-UNNAMED"/>
 </launchConfiguration>

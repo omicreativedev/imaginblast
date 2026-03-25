@@ -5,6 +5,8 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
+import javafx.scene.media.AudioClip;
+
 
 /**
  * GAME RENDERER CLASS
@@ -15,6 +17,7 @@ public class GameRenderer {
     
     private GraphicsContext gc;
     private Image startupBgGif;
+    private AudioClip startScreenMusic;
     
     /**
      * CONSTRUCTOR
@@ -23,6 +26,15 @@ public class GameRenderer {
     public GameRenderer(GraphicsContext gc) {
         this.gc = gc;
         this.startupBgGif = new Image("blinking_bg_startup.gif");
+        
+        
+    String musicUrl = getClass().getResource("/start_screen_music.wav").toString();
+    this.startScreenMusic = new AudioClip(musicUrl);
+    this.startScreenMusic.setCycleCount(1);
+    this.startScreenMusic.play();   
+        
+        
+        
     }
     
     /**
@@ -289,6 +301,16 @@ public class GameRenderer {
      */
     public void drawPortal(Portal portal) {
         portal.draw(gc);
+    }
+    
+    
+    /**
+     * Stop the start screen music (call when leaving the start screen)
+     */
+    public void stopStartScreenMusic() {
+        if (startScreenMusic != null) {
+            startScreenMusic.stop();
+        }
     }
     
     /**

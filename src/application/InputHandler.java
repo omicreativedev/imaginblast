@@ -10,6 +10,7 @@ public class InputHandler {
     private GameStateManager stateManager;
     private LevelManager levelManager;
     private EntityManager entityManager;
+    private GameRenderer gameRenderer;
     private int MAX_SHOTS;
     private int WIDTH;
     private int HEIGHT;
@@ -18,10 +19,12 @@ public class InputHandler {
     private double mouseX;
     
     public InputHandler(GameStateManager stateManager, LevelManager levelManager, 
-                        EntityManager entityManager, int MAX_SHOTS, int WIDTH, int HEIGHT) {
+                        EntityManager entityManager, GameRenderer gameRenderer,
+                        int MAX_SHOTS, int WIDTH, int HEIGHT) {
         this.stateManager = stateManager;
         this.levelManager = levelManager;
         this.entityManager = entityManager;
+        this.gameRenderer = gameRenderer;
         this.MAX_SHOTS = MAX_SHOTS;
         this.WIDTH = WIDTH;
         this.HEIGHT = HEIGHT;
@@ -44,6 +47,7 @@ public class InputHandler {
         case START_SCREEN:
             if(clickX >= WIDTH/2 - 100 && clickX <= WIDTH/2 + 100 &&
                clickY >= HEIGHT/2 + 100 && clickY <= HEIGHT/2 + 150) {
+            	gameRenderer.stopStartScreenMusic();
                 stateManager.setCurrentState(GameState.QUEST_SCREEN);
                 setupCallback.run();
             }

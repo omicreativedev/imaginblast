@@ -8,10 +8,10 @@ import javafx.scene.canvas.GraphicsContext;
  */
 public class UIManager {
     private StartScreen startScreen;
-    private GameRenderer renderer;
+    private GameRenderer gameRenderer;
     
-    public UIManager(GameRenderer renderer) {
-        this.renderer = renderer;
+    public UIManager(GameRenderer gameRenderer) {
+        this.gameRenderer = gameRenderer;
         this.startScreen = new StartScreen();
     }
     
@@ -19,19 +19,19 @@ public class UIManager {
     // This will tell GameRenderer.java to do
     // public void drawStartScreen(StartScreen startScreen)
     public void drawStartScreen() {
-        renderer.drawStartScreen(startScreen);
+    	gameRenderer.drawStartScreen(startScreen);
     }
     
     public void drawQuestScreen(Quest01 quest) {
-        renderer.drawQuestScreen(quest);
+    	gameRenderer.drawQuestScreen(quest);
     }
     
     public void drawLevelDoneScreen(LevelDone01 screen) {
-        screen.draw(renderer.getGc());
+        screen.draw(gameRenderer.getGc());
     }
     
     public void drawGameOverScreen(int score) {
-        renderer.drawGameOver(score);
+    	gameRenderer.drawGameOver(score);
     }
     
     public void resetStartScreen() {
@@ -40,6 +40,6 @@ public class UIManager {
     
     // For GameRenderer to access gc if needed
     public GraphicsContext getGc() {
-        return renderer.getGc();
+        return gameRenderer.getGc();
     }
 }

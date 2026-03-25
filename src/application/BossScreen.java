@@ -35,11 +35,11 @@ public abstract class BossScreen {
      * Each boss screen implements its own layout
      * 
      * @param gc Graphics context for drawing
-     * @param renderer Game renderer for HUD and common elements
+     * @param gameRenderer Game renderer for HUD and common elements
      * @param player The player entity to draw at correct position
      * @param score Current player score displayed during fight
      */
-    public abstract void draw(GraphicsContext gc, GameRenderer renderer, Player player, int score);
+    public abstract void draw(GraphicsContext gc, GameRenderer gameRenderer, Player player, int score);
     
     /**
      * ABSTRACT COMPLETION CHECK
