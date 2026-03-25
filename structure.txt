@@ -14,13 +14,20 @@ D:.
 +---bin
 |   |   800x600_bg.png
 |   |   acorn_cap_64x64.png
+|   |   basis33.ttf
+|   |   blinking_bg_startup.gif
 |   |   boss_pirate_256x256.png
+|   |   button_click.wav
 |   |   explosion.png
 |   |   frog_player_128x128.png
 |   |   logo_black_bg.png
 |   |   logo_clr.png
+|   |   ponde___.ttf
 |   |   portal_256x256.png
 |   |   squirrel_enemy_front_128x128.png
+|   |   startup_bg.png
+|   |   start_screen_music.wav
+|   |   zig_____.ttf
 |   |   
 |   \---application
 |           application.css
@@ -59,13 +66,20 @@ D:.
 \---src
     |   800x600_bg.png
     |   acorn_cap_64x64.png
+    |   basis33.ttf
+    |   blinking_bg_startup.gif
     |   boss_pirate_256x256.png
+    |   button_click.wav
     |   explosion.png
     |   frog_player_128x128.png
     |   logo_black_bg.png
     |   logo_clr.png
+    |   ponde___.ttf
     |   portal_256x256.png
     |   squirrel_enemy_front_128x128.png
+    |   startup_bg.png
+    |   start_screen_music.wav
+    |   zig_____.ttf
     |   
     \---application
             application.css

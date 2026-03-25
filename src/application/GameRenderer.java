@@ -13,7 +13,8 @@ import javafx.scene.text.TextAlignment;
  */
 public class GameRenderer {
     
-    private GraphicsContext gc; 
+    private GraphicsContext gc;
+    private Image startupBgGif;
     
     /**
      * CONSTRUCTOR
@@ -21,6 +22,7 @@ public class GameRenderer {
      */
     public GameRenderer(GraphicsContext gc) {
         this.gc = gc;
+        this.startupBgGif = new Image("blinking_bg_startup.gif");
     }
     
     /**
@@ -94,9 +96,10 @@ public class GameRenderer {
      */
     public void drawStartScreen(StartScreen startScreen) {
         // Forest green background (same as gameplay)
-        gc.setFill(Color.FORESTGREEN);
-        gc.fillRect(0, 0, ImaginBlastMain.WIDTH, ImaginBlastMain.HEIGHT);
-        
+        // gc.setFill(Color.FORESTGREEN);
+        // gc.fillRect(0, 0, ImaginBlastMain.WIDTH, ImaginBlastMain.HEIGHT);
+    	gc.drawImage(startupBgGif, 0, 0, ImaginBlastMain.WIDTH, ImaginBlastMain.HEIGHT);
+    	
         // Center text alignment for menu elements
         gc.setTextAlign(TextAlignment.CENTER);
         
