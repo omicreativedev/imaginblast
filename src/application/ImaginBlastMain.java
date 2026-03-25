@@ -110,7 +110,7 @@ public class ImaginBlastMain extends Application {
 		inputHandler = new InputHandler(stateManager, levelManager, entityManager, gameRenderer, MAX_SHOTS, WIDTH, HEIGHT);
 
 		// Reference: https://docs.oracle.com/javase/8/javafx/api/javafx/scene/input/MouseEvent.html
-	    canvas.setOnMouseMoved(e -> inputHandler.handleMouseMoved(e.getX())); // Handle mouse movement
+		canvas.setOnMouseMoved(e -> inputHandler.handleMouseMoved(e.getX(), e.getY())); // Handle mouse movement
 	    
 	    canvas.setOnMouseClicked(e -> { // Handle mouse clicks
 	        inputHandler.handleMouseClicked(e, this::setup); // Process click callback to setup
@@ -166,6 +166,7 @@ public class ImaginBlastMain extends Application {
 		// Reference: https://gameprogrammingpatterns.com/state.html
 	    switch(stateManager.getCurrentState()) {
 	        case START_SCREEN:
+	        	gameRenderer.updateButtonHover(inputHandler.getMouseX(), inputHandler.getMouseY());
 	        	uiManager.drawStartScreen();
 	            break;
 	            

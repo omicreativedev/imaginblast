@@ -19,6 +19,7 @@ public class GameRenderer {
     private Image startupBgGif;
     private AudioClip startScreenMusic;
     private AudioClip buttonClickSound;
+    private boolean isHoveringPlayButton = false;
     
     /**
      * CONSTRUCTOR
@@ -40,6 +41,22 @@ public class GameRenderer {
         
     }
     
+    /**
+     * Change the button color of the button when hover
+     * There might be an easier way to do this.
+     * Sort of a hack? 
+     * @param mouseX Current mouse X coordinate
+     * @param mouseY Current mouse Y coordinate
+     */
+    public void updateButtonHover(double mouseX, double mouseY) {
+        int buttonX = ImaginBlastMain.WIDTH/2 - 100;
+        int buttonY = ImaginBlastMain.HEIGHT/2 + 100;
+        int buttonWidth = 200;
+        int buttonHeight = 50;
+        
+        isHoveringPlayButton = (mouseX >= buttonX && mouseX <= buttonX + buttonWidth &&
+                                mouseY >= buttonY && mouseY <= buttonY + buttonHeight);
+    }
     
     /**
      * Clear the screen with forest green background
@@ -147,9 +164,24 @@ public class GameRenderer {
         gc.fillText("Instructions: Move your mouse cursor to move, left-click on mouse to shoot!", 
                     centerX, ImaginBlastMain.HEIGHT/2 + 40);
         
+        
+        
+        
         // PLAY GAME button - green rectangle
         gc.setFill(Color.GREEN);
         gc.fillRect(ImaginBlastMain.WIDTH/2 - 100, ImaginBlastMain.HEIGHT/2 + 100, 200, 50);
+        
+        
+        // On Mouse over Button
+        if (isHoveringPlayButton) {
+            gc.setFill(Color.LIMEGREEN);
+        } else {
+            gc.setFill(Color.GREEN);
+        }
+        gc.fillRect(ImaginBlastMain.WIDTH/2 - 100, ImaginBlastMain.HEIGHT/2 + 100, 200, 50);  
+        
+        
+        
         
         // Button text
         gc.setFill(Color.BLACK);

@@ -17,6 +17,11 @@ public class InputHandler {
     
     // Track mouse position
     private double mouseX;
+    private double mouseY;
+    
+    public double getMouseY() {
+        return mouseY;
+    }
     
     public InputHandler(GameStateManager stateManager, LevelManager levelManager, 
                         EntityManager entityManager, GameRenderer gameRenderer,
@@ -30,8 +35,9 @@ public class InputHandler {
         this.HEIGHT = HEIGHT;
     }
     
-    public void handleMouseMoved(double mouseX) {
+    public void handleMouseMoved(double mouseX, double mouseY) {
         this.mouseX = mouseX;
+        this.mouseY = mouseY;
     }
     
     public double getMouseX() {
