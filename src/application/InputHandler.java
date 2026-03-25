@@ -57,7 +57,7 @@ public class InputHandler {
             case QUEST_SCREEN:
                 if(clickX >= WIDTH/2 - 100 && clickX <= WIDTH/2 + 100 &&
                    clickY >= HEIGHT/2 + 100 && clickY <= HEIGHT/2 + 150) {
-                	
+                	gameRenderer.playButtonClick();
                 	levelManager.resetForNewGame();
                     stateManager.setCurrentState(GameState.PLAYING);
                     setupCallback.run();
