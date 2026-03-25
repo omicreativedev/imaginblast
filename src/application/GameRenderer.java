@@ -18,6 +18,7 @@ public class GameRenderer {
     private GraphicsContext gc;
     private Image startupBgGif;
     private AudioClip startScreenMusic;
+    private AudioClip buttonClickSound;
     
     /**
      * CONSTRUCTOR
@@ -32,10 +33,13 @@ public class GameRenderer {
     this.startScreenMusic = new AudioClip(musicUrl);
     this.startScreenMusic.setCycleCount(1);
     this.startScreenMusic.play();   
-        
+    
+    String clickUrl = getClass().getResource("/button_click.wav").toString();
+    this.buttonClickSound = new AudioClip(clickUrl);
         
         
     }
+    
     
     /**
      * Clear the screen with forest green background
@@ -305,11 +309,20 @@ public class GameRenderer {
     
     
     /**
-     * Stop the start screen music (call when leaving the start screen)
+     * STOP MUSIC ON START SCREEN
      */
     public void stopStartScreenMusic() {
         if (startScreenMusic != null) {
             startScreenMusic.stop();
+        }
+    }
+    
+    /**
+     * PLAY BUTTON CLICK SOUND
+     */
+    public void playButtonClick() {
+        if (buttonClickSound != null) {
+            buttonClickSound.play();
         }
     }
     
