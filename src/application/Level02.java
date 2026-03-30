@@ -67,7 +67,7 @@ public class Level02 extends Level{
     @Override
     public Image getEnemyImage(Class<? extends Enemy> enemyClass) {
         if (enemyClass == EnemySquirrel.class) {
-            return ImaginBlastMain.SQUIRREL_IMG; //CHANGE TO PILLBUG IMG
+            return ImaginBlastMain.PILLBUG_IMG; //Changed from SQUIRELL_IMG TO PILLBUG_IMG
         }
         return null;
     }
