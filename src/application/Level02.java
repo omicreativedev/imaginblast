@@ -27,7 +27,7 @@ public class Level02 extends Level{
     @Override
     public Map<Class<? extends Enemy>, Integer> getEnemyGoals() {
         Map<Class<? extends Enemy>, Integer> goals = new HashMap<>();
-        goals.put(EnemySquirrel.class, 10); //NEEDS TO BE CHANGED TO PILLBUGS
+        goals.put(EnemyPillbug.class, 10); 
         return goals;
     }
     
@@ -40,7 +40,7 @@ public class Level02 extends Level{
     
     @Override
     public List<Class<? extends Enemy>> getPossibleEnemies() {
-        return Arrays.asList(EnemySquirrel.class); //CHANGE TO PILLBUGS
+        return Arrays.asList(EnemyPillbug.class);
     }
     
     @Override
@@ -50,8 +50,8 @@ public class Level02 extends Level{
     
     @Override
     public Enemy createEnemy(Random rand, int width, int playerSize, Class<? extends Enemy> enemyClass) {
-        if (enemyClass == EnemySquirrel.class) { //CHANGE TO PILLBUGS
-            return new EnemySquirrel(50 + rand.nextInt(width - 100), 0, playerSize, getEnemyImage(enemyClass));
+        if (enemyClass == EnemyPillbug.class) { //CHANGE TO PILLBUGS
+            return new EnemyPillbug(50 + rand.nextInt(width - 100), 0, playerSize, getEnemyImage(enemyClass));
         }
         return null;
     }
@@ -66,7 +66,7 @@ public class Level02 extends Level{
     
     @Override
     public Image getEnemyImage(Class<? extends Enemy> enemyClass) {
-        if (enemyClass == EnemySquirrel.class) {
+        if (enemyClass == EnemyPillbug.class) {
             return ImaginBlastMain.PILLBUG_IMG; //Changed from SQUIRELL_IMG TO PILLBUG_IMG
         }
         return null;
