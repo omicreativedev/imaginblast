@@ -11,10 +11,13 @@ import java.util.List;
  * Defines what each level contains
  * Each level defines its own goals, enemies, and items
  */
+
+//EV- Added image backgrounds
 public abstract class Level {
     protected int levelNumber;
     protected String levelName;
-    protected String background;
+    //protected String background;
+    protected Image background;
     
     // TRACKING MAPS
     protected Map<Class<? extends Item>, Integer> itemsCollected = new HashMap<>();
@@ -88,6 +91,7 @@ public abstract class Level {
     public abstract int getEnemySpawnRate();
     public abstract int getItemSpawnRate();
 
-    public String getBackground() { return background; }
+    //public String getBackground() { return background; }
+    public Image getBackground() {return background;}
     public int getLevelNumber() { return levelNumber; }
 }

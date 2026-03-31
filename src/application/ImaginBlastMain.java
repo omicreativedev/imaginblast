@@ -181,6 +181,15 @@ public class ImaginBlastMain extends Application {
 	        	uiManager.drawQuestScreen(levelManager.getQuest());
 	            break;
 	            
+	            //Unsure where I would specifically implement the backgrounds for the levels
+	            //I thought maybe it would be a similar process to start screen or quest screen
+	        //case LEVEL1_SCREEN:
+	            //uiManager.drawLevel2Screen();
+	           // break;
+	        //case LEVEL2_SCREEN:
+	        	//uiManager.drawLevel2Screen();
+	            //break;
+	            
 	        case PLAYING:
 	            gameRenderer.clearScreen();
 	            

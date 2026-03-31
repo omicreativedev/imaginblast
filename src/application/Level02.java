@@ -16,7 +16,8 @@ public class Level02 extends Level{
 	
 	public Level02() {
 		super(2, "Muddy Ponds");
-		this.background = "TBD"; //TBD = To Be Done, what needs to be changed once I get files/info for these.
+		
+		this.background = new Image("lvl2_1280x720_bf.png"); //TBD = To Be Done, what needs to be changed once I get files/info for these.
 	}
 	
 	@Override
