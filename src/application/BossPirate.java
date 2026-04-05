@@ -34,7 +34,8 @@ public class BossPirate extends Boss {
      * @param posY Starting Y coordinate
      */
     public BossPirate(int posX, int posY) {
-        super(posX, posY, 256, new Image("boss_pirate_256x256.png")); // Call Boss.java constructor with large size
+        super(posX, posY, 256, new Image("catPirate_boss_cropped.png")); // Call Boss.java constructor with large size
+        	//Cat pirate boss png has been updated 04/04 9:26 PM by Ev
         this.health = 200; // Set current health (inherited from Boss.java)
         this.maxHealth = 200; // Set max health for health bar (inherited from Boss.java)
         // try {
