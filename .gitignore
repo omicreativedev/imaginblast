@@ -1,0 +1,11 @@
+# Eclipse project files
+.settings/
+.classpath
+.project
+ImaginBlastMain.launch
+backup_gitignore.txt
+structure.txt
+
+# Build output
+bin/
+/bin/
