@@ -14,12 +14,15 @@ import javafx.scene.media.AudioClip;
  * Handles all drawing operations for different game states
  */
 public class GameRenderer {
-    
+   
     private GraphicsContext gc;
     private Image startupBgGif;
     private AudioClip startScreenMusic;
     private AudioClip buttonClickSound;
     private boolean isHoveringPlayButton = false;
+    //private Image lvl2BGpng; //Unsure how to exactly create backgrounds for levels
+    //private Image lvl1BG;
+  
     
     /**
      * CONSTRUCTOR
@@ -29,6 +32,7 @@ public class GameRenderer {
         this.gc = gc;
         this.startupBgGif = new Image("blinking_bg_startup.gif");
         
+      
         
     String musicUrl = getClass().getResource("/start_screen_music.wav").toString();
     this.startScreenMusic = new AudioClip(musicUrl);
@@ -118,7 +122,23 @@ public class GameRenderer {
         // Health text overlay
         gc.setFill(Color.WHITE);
         gc.fillText("HP: " + player.hp + "/" + player.maxHp, 580, 22);
+      
     }
+    
+    /*
+     * I honestly got confused how to implement background images to levels
+     * I was wondering if it was similar to how quest and startup screens worked
+     * Also the startup png is just a placeholder for level 1 background
+   	Draw Level 1 Screen
+    public void drawLevel2Screen() {
+    	this.lvl1BG = new Image("startup_bg.png");
+    	gc.drawImage(lvl1BG, 0, 0, ImaginBlastMain.WIDTH, ImaginBlastMain.HEIGHT);
+   }
+    Draw Level 2 Screen
+    public void drawLevel2Screen() {
+     *	 gc.drawImage(lvl2BGpng,0 ,0 ImaginBlastMain.WIDTH, ImaginBlastMain.HEIGHT);
+     * }
+     */
     
     /**
      * DRAW START SCREEN

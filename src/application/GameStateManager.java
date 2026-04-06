@@ -23,4 +23,5 @@ public class GameStateManager {
     public boolean isInState(GameState state) {
         return currentState == state;
     }
+    
 }
