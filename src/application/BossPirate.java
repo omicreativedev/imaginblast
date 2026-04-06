@@ -60,6 +60,11 @@ public class BossPirate extends Boss {
      * 
      * @param player Reference to player object (used for tracking/targeting)
      */
+    
+    @Override
+    public void update() {
+    	super.update();
+    }
     @Override
     public void update(Player player) {
         super.update(); // Call Creature.java's update method to handle explosion animation
@@ -137,7 +142,9 @@ public class BossPirate extends Boss {
     @Override
     public void takeDamage(int amount) {
         health -= amount; // Reduce health by damage amount
-        if (health < 0) health = 0; // Prevent negative health values
+        if (health==0) {health=0;}
+        //if (health == 0) { explode();} //I removed the health=0; since if the boss is gone, then the health would never go below 0
+        //Y U NO EXPLODE \(>~<)/
         
         // if (bossHitSound != null) {
         //     bossHitSound.stop();
@@ -145,12 +152,12 @@ public class BossPirate extends Boss {
         // }
         
         // Check if boss is defeated (health depleted)
-        if (health <= 0) {
-            // if (bossDefeatedSound != null) {
+        //if (health == 0) {explode();}
+            // if (bossDefeatedSound != null) {// Call Creature.java's explode() method to start death animation
             //     bossDefeatedSound.play();
             // }
-            explode(); // Call Creature.java's explode() method to start death animation
+            //; 
             // ^^^ I think this is broken/bug
-        }
+        
     }
 }
