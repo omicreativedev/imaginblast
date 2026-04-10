@@ -15,7 +15,7 @@ public class Level01 extends Level {
     
     public Level01() {
         super(1, "Forest Falls");
-        this.background = "FORESTGREEN";
+        this.background = new Image("startup_bg.png");
     }
     
     @Override

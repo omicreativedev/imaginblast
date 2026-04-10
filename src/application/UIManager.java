@@ -22,11 +22,11 @@ public class UIManager {
     	gameRenderer.drawStartScreen(startScreen);
     }
     
-    public void drawQuestScreen(Quest01 quest) {
-    	gameRenderer.drawQuestScreen(quest);
+    public void drawQuestScreen(Quest01 quest) { //Needs to be edited to get rid of Quest01
+    	gameRenderer.drawQuestScreen(quest); //I try to put it as just 'Quest' without the '01', and I get an error
     }
     
-    public void drawLevelDoneScreen(LevelDone01 screen) {
+    public void drawLevelDoneScreen(LevelDone screen) {
         screen.draw(gameRenderer.getGc());
     }
     
@@ -37,6 +37,9 @@ public class UIManager {
     public void resetStartScreen() {
         startScreen = new StartScreen();
     }
+    
+   
+    
     
     // For GameRenderer to access gc if needed
     public GraphicsContext getGc() {

@@ -1,5 +1,7 @@
 package application;
 
+//Hello this is a test to see if pushing works or sinister shenanigans ensue -EV
+
 /* 
  * ACKNOWLEDGEMENTS AND SOURCES:
  * Much of this code was started from this tutorial, and this github page:
@@ -49,9 +51,14 @@ public class ImaginBlastMain extends Application {
 	// Image resources for game elements
 	// Reference: https://docs.oracle.com/javase/8/javafx/api/javafx/scene/image/Image.html
 	static final Image PLAYER_IMG = new Image("frog_player_128x128.png");
-	static final Image SQUIRREL_IMG = new Image("squirrel_enemy_front_128x128.png");
+	
+	//Enemy images
+	static final Image PILLBUG_IMG = new Image("pill_bug.png"); //level02 enemy
+	static final Image SQUIRREL_IMG = new Image("squirrel_enemy_front_128x128.png"); //level01 enemy
+	
 	static final Image EXPLOSION_IMG = new Image("explosion.png");
 	static final Image ACORN_IMG = new Image("acorn_cap_64x64.png");
+	static final Image CUPCAKE_IMG = new Image("cupcake.png");
 	
 	// Explosion animation properties
 	static final int EXPLOSION_W = 128; // Width of explosion sprite
@@ -173,6 +180,15 @@ public class ImaginBlastMain extends Application {
 	        case QUEST_SCREEN:
 	        	uiManager.drawQuestScreen(levelManager.getQuest());
 	            break;
+	            
+	            //Unsure where I would specifically implement the backgrounds for the levels
+	            //I thought maybe it would be a similar process to start screen or quest screen
+	        //case LEVEL1_SCREEN:
+	            //uiManager.drawLevel2Screen();
+	           // break;
+	        //case LEVEL2_SCREEN:
+	        	//uiManager.drawLevel2Screen();
+	            //break;
 	            
 	        case PLAYING:
 	            gameRenderer.clearScreen();
