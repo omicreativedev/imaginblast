@@ -70,9 +70,13 @@ public class BossScreen01 extends BossScreen {
             // }
         }
         
+        // Moved out of isDefeated
+        boss.update(player); // Update boss position and behavior
+        
+        
         // Prevents movement after death. No Zombie Pirate (or maybe??? LOL!)
         if (!boss.isDefeated()) {
-            boss.update(player); // Update boss position and behavior
+         
             boss.shoot(enemyShots); // Boss adds new projectiles to enemyShots list
         }
         
