@@ -26,7 +26,8 @@ public class Collisions {
         );
         
         // Return true if distance is less than sum of radii
-        return distance < target.size;
+        // Fix Bug: Boss too big so bullets don't hit him
+        return distance < target.size / 2;
     } 
     
     /**
