@@ -14,16 +14,14 @@ import java.util.List;
  * Cheshire cat pirate boss that follows the player horizontally
  * Extends Boss.java which extends Creature.java, inheriting explosion behavior
  * We may change this later to offer different explosions for different Bosses
- * 
- * Source(s)
- * Help with Math for WASD
- * https://gamedev.stackexchange.com/questions/122374
+ * NEW: Boss now shoots at the player's current position (aimed shots)
  */
 public class BossPirate extends Boss {
     
     // Boss-specific attributes
     private int shootCooldown = 0; // Frames until boss can shoot again (prevents bullet spam)
     private int speed = 4; // Movement speed
+    private static final int BULLET_SPEED = 6; // Speed of boss projectiles (slower than player shots)
     // private MediaPlayer bossLaughSound;
     // private MediaPlayer bossHitSound;
     // private MediaPlayer bossDefeatedSound;
@@ -61,7 +59,7 @@ public class BossPirate extends Boss {
      * Required by Boss.java's abstract update() method
      * Handles boss movement behavior each frame
      * Boss follows player's X position with sine wave variation
-     * 
+     * https://forum.jogamp.org/Can-JOGL-be-used-without-requiring-GLAutoDrawable-instances-tt4034953.html#a4034966
      * @param player Reference to player object (used for tracking/targeting)
      */
     
@@ -115,12 +113,46 @@ public class BossPirate extends Boss {
     }
     
     /**
+     * CALCULATE DIRECTION VECTOR
+     * Calculate direction from boss to target (our frog dude)
+     * Used for aiming shots at the player
+     * Source: Vector math from https://gamedev.stackexchange.com/questions/122374
+     * @param targetX Target X coordinate (player center)
+     * @param targetY Target Y coordinate (player center)
+     * @return double array where [0] = normalized X direction, [1] = normalized Y direction
+     */
+    private double[] calculateDirection(double targetX, double targetY) {
+        // Get boss center coordinates (where shot originates)
+        double fromX = posX + size / 2;
+        double fromY = posY + size / 2;
+        
+        // Calculate difference between target and shooter
+        double dx = targetX - fromX;
+        double dy = targetY - fromY;
+        
+        // Calculate distance (length of the vector)
+        double length = Math.sqrt(dx * dx + dy * dy);
+        
+        // Normalize (avoid division by zero)
+        if (length != 0) {
+            dx /= length;
+            dy /= length;
+        } else {
+            // If target is exactly at boss center, shoot downward as default
+            dx = 0;
+            dy = 1;
+        }
+        
+        return new double[]{dx, dy};
+    }
+    
+    /**
      * OVERRIDE SHOOT METHOD
      * Required by Boss.java's abstract shoot() method
-     * Creates a new enemy projectile when cooldown allows
-     * Shots originate from bottom center of boss sprite
-     * 
+     * Creates an enemy projectile aimed at the player's current position
+     * Shots originate from center of boss sprite
      * @param shots List of enemy shots to add the new projectile to
+     * @param player Reference to player for aiming (passed from BossScreen)
      */
     @Override
     public void shoot(List<Shot> shots) {
@@ -130,8 +162,52 @@ public class BossPirate extends Boss {
             //     bossShootSound.stop();
             //     bossShootSound.play();
             // }
-            // Create new enemy shot at bottom center of boss
-            shots.add(new EnemyShot(posX + size/2 - Shot.SIZE/2, posY + size));
+            
+            // We need the player reference to aim. Since shoot() doesn't take a player param,
+            // we'll need to store a reference or get it another way.
+            // For now, this shoots straight down. The BossScreen will need to pass player to shoot.
+            // TEMPORARY: Shoot straight down until we can pass player reference
+            
+            // Calculate shot starting position (center of boss)
+            int shotX = posX + size / 2 - EnemyShot.getEnemyShotSize() / 2;
+            int shotY = posY + size / 2 - EnemyShot.getEnemyShotSize() / 2;
+            
+            // Create new enemy shot at center of boss (straight down for now)
+            shots.add(new EnemyShot(shotX, shotY));
+            shootCooldown = 30; // Reset cooldown (30 frames between shots)
+        }
+    }
+    
+    /**
+     * OVERRIDE SHOOT WITH PLAYER METHOD
+     * Acept player reference for aiming
+     * Called by BossScreen with player position
+     * @param shots List of enemy shots to add the new projectile to
+     * @param player Reference to player object for aiming
+     */
+    public void shootAtPlayer(List<Shot> shots, Player player) {
+        // Only shoot if cooldown is zero AND boss isn't exploding
+        if (shootCooldown <= 0 && !exploding) {
+            // if (bossShootSound != null) {
+            //     bossShootSound.stop();
+            //     bossShootSound.play();
+            // }
+            
+            // Get player center position
+            double playerCenterX = player.posX + player.size / 2;
+            double playerCenterY = player.posY + player.size / 2;
+            
+            // Calculate direction from boss to player
+            double[] direction = calculateDirection(playerCenterX, playerCenterY);
+            double velX = direction[0] * BULLET_SPEED;
+            double velY = direction[1] * BULLET_SPEED;
+            
+            // Calculate shot starting position (center of boss)
+            int shotX = posX + size / 2 - EnemyShot.getEnemyShotSize() / 2;
+            int shotY = posY + size / 2 - EnemyShot.getEnemyShotSize() / 2;
+            
+            // Create new aimed enemy shot
+            shots.add(new EnemyShot(shotX, shotY, velX, velY));
             shootCooldown = 30; // Reset cooldown (30 frames between shots)
         }
     }
@@ -146,7 +222,11 @@ public class BossPirate extends Boss {
     @Override
     public void takeDamage(int amount) {
         health -= amount; // Reduce health by damage amount
-        if (health==0) {health=0;}
+        if (health <= 0) {
+            health = 0;
+            explode(); // Call Creature.java's explode() method to start death animation
+        }
+        //if (health == 0) { health=0; }
         //if (health == 0) { explode();} //I removed the health=0; since if the boss is gone, then the health would never go below 0
         //Y U NO EXPLODE \(>~<)/
         
