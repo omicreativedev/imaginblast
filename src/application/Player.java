@@ -7,6 +7,10 @@ import javafx.scene.image.Image;
  * Represents the player character in the game
  * Extends Creature to inherit basic creature properties and behaviors
  * Adds player-specific attributes like health and item collection
+ * 
+ * Source(s)
+ * Help with Math for WASD
+ * https://gamedev.stackexchange.com/questions/122374
  */
 
 public class Player extends Creature {
@@ -24,8 +28,10 @@ public class Player extends Creature {
 	private int invincibilityFrames = 0;
     private static final int INVINCIBILITY_DURATION = 60;
     private boolean isShielded = false;
-	
     
+    // WASD MOVEMENT PROPERTIES
+    private int speed = 12;              // Movement speed in pixels per frame
+    private InputHandler inputHandler;  // Reference to input handler
     
 	 /**
      * Take damage from enemy collision, projectile, etc.
@@ -88,20 +94,61 @@ public class Player extends Creature {
         hp = maxHp;  // Reset to max (might be increased due to power-up. Must debug.
     }
     
-
-	
     /**
      * UPDATE METHOD
      * Called every frame to update player state
      * Overrides Creature.update() to add invincibility countdown
+     * NEW: Also handles WASD movement
      */
     @Override
     public void update() {
         super.update(); // Call Creature's update (handles explosion)
         updateInvincibility(); // Count down invincibility frames
+        handleMovement(); // Handle WASD key movement
     }
-	
-	
+    
+    /**
+     * HANDLE MOVEMENT
+     * NEW METHOD: Reads input handler for WASD key states
+     * Moves player in the corresponding direction each frame
+     * Source: https://gamedev.stackexchange.com/questions/122374
+     */
+    private void handleMovement() {
+        // Skip movement if player is exploding
+        if (exploding) return;
+        
+        // Store original position for boundary checking
+        int newX = posX;
+        int newY = posY;
+        
+        // Apply movement based on active keys
+        if (inputHandler != null) {
+            if (inputHandler.isUpPressed())    newY -= speed;
+            if (inputHandler.isDownPressed())  newY += speed;
+            if (inputHandler.isLeftPressed())  newX -= speed;
+            if (inputHandler.isRightPressed()) newX += speed;
+        }
+        
+        // Apply boundary constraints (keep player within screen)
+        if (newX < 0) newX = 0;
+        if (newX + size > ImaginBlastMain.WIDTH) newX = ImaginBlastMain.WIDTH - size;
+        if (newY < 0) newY = 0;
+        if (newY + size > ImaginBlastMain.HEIGHT) newY = ImaginBlastMain.HEIGHT - size;
+        
+        // Update position
+        posX = newX;
+        posY = newY;
+    }
+    
+    /**
+     * SET INPUT HANDLER
+     * NEW METHOD: Provides reference to InputHandler for key state queries
+     * Called by EntityManager after player creation
+     * @param handler The InputHandler instance
+     */
+    public void setInputHandler(InputHandler handler) {
+        this.inputHandler = handler;
+    }
 	
 	
 	/**
@@ -116,8 +163,8 @@ public class Player extends Creature {
 		// Call parent Creature constructor to set up position, size, and image
 		super(posX, posY, size, image);
 		// hp and col_items keep their default values
+		// inputHandler will be set later via setInputHandler()
 	}
-	
 	
 	
 	/**

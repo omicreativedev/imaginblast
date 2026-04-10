@@ -115,11 +115,21 @@ public class ImaginBlastMain extends Application {
 		uiManager = new UIManager(gameRenderer);
 		setup(); // setup will now use EntityManager.java
 		inputHandler = new InputHandler(stateManager, levelManager, entityManager, gameRenderer, MAX_SHOTS, WIDTH, HEIGHT);
+		
+		// NEW: Connect input handler to entity manager so player can access key states
+		entityManager.setInputHandler(inputHandler);
 
+		// KEYBOARD INPUT for WASD movement
+		// Reference: https://docs.oracle.com/javase/8/javafx/api/javafx/scene/input/KeyEvent.html
+		canvas.setFocusTraversable(true); // Make canvas focusable to receive key events
+		canvas.setOnKeyPressed(e -> inputHandler.handleKeyPressed(e)); // Handle key down
+		canvas.setOnKeyReleased(e -> inputHandler.handleKeyReleased(e)); // Handle key up
+		
+		// MOUSE INPUT for aiming and shooting
 		// Reference: https://docs.oracle.com/javase/8/javafx/api/javafx/scene/input/MouseEvent.html
-		canvas.setOnMouseMoved(e -> inputHandler.handleMouseMoved(e.getX(), e.getY())); // Handle mouse movement
+		canvas.setOnMouseMoved(e -> inputHandler.handleMouseMoved(e.getX(), e.getY())); // Track mouse for aiming only
 	    
-	    canvas.setOnMouseClicked(e -> { // Handle mouse clicks
+	    canvas.setOnMouseClicked(e -> { // Handle mouse clicks for shooting and UI
 	        inputHandler.handleMouseClicked(e, this::setup); // Process click callback to setup
 	    });    
 	    
@@ -204,10 +214,10 @@ public class ImaginBlastMain extends Application {
 	            entityManager.drawParticles(gc);
 	            entityManager.updateParticles(gc);
 	        
-	            // Update and draw player
-	            entityManager.updatePlayer(); // Update player state
+	            // Update and draw player (WASD movement now handled inside player.update())
+	            entityManager.updatePlayer(); // Update player state (includes movement)
 	            entityManager.drawPlayer(gc); // Draw player
-	            entityManager.movePlayer((int) inputHandler.getMouseX()); // Move player to mouse X position
+	            // REMOVED: entityManager.movePlayer() - WASD replaces mouse movement
 	            
 	            // Update and draw enemies
 	            entityManager.updateEnemies(); // Update enemy states
@@ -244,9 +254,9 @@ public class ImaginBlastMain extends Application {
 	            break;
 	            
 	        case BOSS_FIGHT:
-	            // Update player movement
-	        	entityManager.updatePlayer(); // Update player state
-	        	entityManager.movePlayer((int) inputHandler.getMouseX()); // Move player to mouse X position
+	            // Update player movement (WASD handled inside player.update)
+	        	entityManager.updatePlayer(); // Update player state (includes movement)
+	        	// REMOVED: entityManager.movePlayer() - WASD replaces mouse movement
 
 	            // Update and check player shots
 	        	entityManager.updateShotsWithBossCollisions(levelManager.getBossScreen().boss);
@@ -296,9 +306,9 @@ public class ImaginBlastMain extends Application {
 	 * This function is called whenever a new enemy needs to be spawned in the game,
 	 * such as during initial level setup or when replacing destroyed enemies.
 	 * 
-	 * 1. Asking the current level what enemy types are allowed to appear (can be many!)
-	 * 2. Randomly selecting one of those enemy types
-	 * 3. Delegating the actual creation to the level (since different levels might
+	 * Asking the current level what enemy types are allowed to appear (can be many!)
+	 * Randomly selecting one of those enemy types
+	 * Delegating the actual creation to the level (since different levels might
 	 *    want to create the same enemy type with different properties)
 	 * 
 	 * This allows each level to have its own "enemy pool"

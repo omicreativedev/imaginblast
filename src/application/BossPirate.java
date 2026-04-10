@@ -14,6 +14,10 @@ import java.util.List;
  * Cheshire cat pirate boss that follows the player horizontally
  * Extends Boss.java which extends Creature.java, inheriting explosion behavior
  * We may change this later to offer different explosions for different Bosses
+ * 
+ * Source(s)
+ * Help with Math for WASD
+ * https://gamedev.stackexchange.com/questions/122374
  */
 public class BossPirate extends Boss {
     

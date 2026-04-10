@@ -29,8 +29,12 @@ public class EntityManager {
     private int score;         // Player's current score
     
     // Width and height for off-screen checks
+    @SuppressWarnings("unused")
     private int WIDTH;  // Game screen width
     private int HEIGHT; // Game screen height
+    
+    // Reference to input handler for player movement (WASD)
+    private InputHandler inputHandler; // NEW: Store input handler reference
     
     /**
      * CONSTRUCTOR
@@ -70,6 +74,23 @@ public class EntityManager {
      */
     public void setPlayer(Player player) {
         this.player = player;
+        // NEW: If we have an input handler, connect it to the player right away
+        if (this.player != null && inputHandler != null) {
+            this.player.setInputHandler(inputHandler);
+        }
+    }
+    
+    /**
+     * NEW: Sets the input handler for WASD movement
+     * Called by ImaginBlastMain after creating EntityManager
+     * @param handler The InputHandler instance
+     */
+    public void setInputHandler(InputHandler handler) {
+        this.inputHandler = handler;
+        // If player already exists, connect them now
+        if (player != null) {
+            player.setInputHandler(inputHandler);
+        }
     }
     
     /**
@@ -101,14 +122,17 @@ public class EntityManager {
     /**
      * Moves player horizontally based on mouse position
      * @param mouseX Current mouse X coordinate
+     * 
+     * DEPRECATED: WASD movement now handles player positioning.
+     * Keeping this method for backward compatibility but it is no longer called.
+     * We might remove it later if nothing breaks.
      */
     public void movePlayer(int mouseX) {
-        if (player != null) {
-            player.posX = mouseX;
-            // Keep player within screen bounds
-            if (player.posX < 0) player.posX = 0;
-            if (player.posX + player.size > WIDTH) player.posX = WIDTH - player.size;
-        }
+        // WASD movement has replaced mouse movement.
+        // This method is intentionally left empty but not deleted.
+        // If called, it does nothing. The player now moves via handleMovement() in Player.java.
+        // Keeping the method signature so existing code that calls it doesn't break.
+        // TODO: Remove this method entirely after confirming ImaginBlastMain no longer calls it.
     }
     
     /**
