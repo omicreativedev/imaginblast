@@ -44,8 +44,6 @@ public class Player extends Creature {
     // SHOOTING PROPERTIES
     private static final int BULLET_SPEED = 20; // Speed of fired projectiles (pixels per frame)
     
-    
-    
 	 /**
      * Take damage from enemy collision, projectile, etc.
      * @param amount Amount of damage to take

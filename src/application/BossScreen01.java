@@ -90,6 +90,37 @@ public class BossScreen01 extends BossScreen {
         // Check player body collision with boss
         if (Collisions.playerCollides(player, boss) && !player.exploding) {
             player.takeDamage(10); // Player takes damage when touching boss
+            
+            //We have to stop the boss and player from overlapping
+            
+            int bossCenterX = boss.posX + boss.size / 2;
+            int bossCenterY = boss.posY + boss.size / 2;
+            int playerCenterX = player.posX + player.size / 2;
+            int playerCenterY = player.posY + player.size / 2;
+            
+            // We can calculate a direction to push the player
+            int pushX = playerCenterX - bossCenterX;
+            int pushY = playerCenterY - bossCenterY;
+            if (pushX > 0) pushX = 1;
+            else if (pushX < 0) pushX = -1;
+            else pushX = 0;
+            if (pushY > 0) pushY = 1;
+            else if (pushY < 0) pushY = -1;
+            else pushY = 0;
+            
+            // Send the frog flying 100 pixels
+            int newX = player.posX + (pushX * 100);
+            int newY = player.posY + (pushY * 100);
+            
+            // Don't let the player fly off the screen
+            if (newX < 0) newX = 0;
+            if (newX + player.size > ImaginBlastMain.WIDTH) newX = ImaginBlastMain.WIDTH - player.size;
+            if (newY < 0) newY = 0;
+            if (newY + player.size > ImaginBlastMain.HEIGHT) newY = ImaginBlastMain.HEIGHT - player.size;
+            player.posX = newX;
+            player.posY = newY;
+            
+            
         }
         
         // Check if player reached portal (only if portal is visible)
