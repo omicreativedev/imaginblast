@@ -38,11 +38,11 @@ public class Player extends Creature {
     private boolean isShielded = false;
     
     // WASD MOVEMENT PROPERTIES
-    private int speed = 12;              // Movement speed in pixels per frame
+    private int speed = 18;              // Movement speed in pixels per frame
     private InputHandler inputHandler;  // Reference to input handler for key states
     
     // SHOOTING PROPERTIES
-    private static final int BULLET_SPEED = 12; // Speed of fired projectiles (pixels per frame)
+    private static final int BULLET_SPEED = 20; // Speed of fired projectiles (pixels per frame)
     
     
     

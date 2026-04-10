@@ -21,7 +21,7 @@ public class BossPirate extends Boss {
     // Boss-specific attributes
     private int shootCooldown = 0; // Frames until boss can shoot again (prevents bullet spam)
     private int speed = 10; // Movement speed
-    private static final int BULLET_SPEED = 6; // Speed of boss projectiles (slower than player shots)
+    private static final int BULLET_SPEED = 15; // Speed of boss projectiles (slower than player shots)
     // private MediaPlayer bossLaughSound;
     // private MediaPlayer bossHitSound;
     // private MediaPlayer bossDefeatedSound;
