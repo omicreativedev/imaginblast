@@ -5,6 +5,11 @@ import javafx.scene.canvas.GraphicsContext;
 /**
  * SHOT BASE CLASS - All projectiles extend this
  * Defines the common properties and methods every shot type needs
+ * Source:
+ * Calculating direction vector from shooter to target
+ * Dividing by length and multiplying speed to get velocity
+ * Adding velocity to every frame
+ * https://gamedev.stackexchange.com/questions/122374
  */
 public abstract class Shot {
     

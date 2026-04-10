@@ -11,6 +11,14 @@ import javafx.scene.image.Image;
  * Source(s)
  * Help with Math for WASD
  * https://gamedev.stackexchange.com/questions/122374
+ * Help with Mouse Aiming
+ * - Getting coordinates relative to the canvas
+ * - Calculation for the angle and vector from player>mouse
+ * - Division by 0 issues
+ * https://stackoverflow.com/questions/42806538
+ * Math without LibGDX
+ * https://docs.oracle.com/javase/8/docs/api/java/lang/Math.html
+ * 
  */
 
 public class Player extends Creature {
