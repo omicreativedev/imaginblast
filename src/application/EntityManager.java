@@ -267,7 +267,8 @@ public class EntityManager {
             }
             // Check if shot hits player
             if (Collisions.shotCollides(shot, player) && !player.exploding) {
-                player.takeDamage(5); // Player takes damage
+            	System.out.println("Enemy shot hit player!"); // DEBUG
+            	player.takeDamage(5); // Player takes damage
                 enemyShots.remove(i); // Remove the shot
             }
         }

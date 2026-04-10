@@ -182,6 +182,7 @@ public class BossPirate extends Boss {
      * @param shots List of enemy shots to add the new projectile to
      * @param player Reference to player object for aiming
      */
+    @Override
     public void shootAtPlayer(List<Shot> shots, Player player) {
         // Only shoot if cooldown is zero AND boss isn't exploding
         if (shootCooldown <= 0 && !exploding) {

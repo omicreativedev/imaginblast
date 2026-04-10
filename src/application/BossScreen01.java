@@ -22,7 +22,6 @@ public class BossScreen01 extends BossScreen {
     // private Image backgroundImage;
     
     /**
-     * CONSTRUCTOR
      * Initializes the boss fight with a new BossPirate instance
      * Creates invisible portal and sets up the arena
      */
@@ -76,8 +75,7 @@ public class BossScreen01 extends BossScreen {
         
         // Prevents movement after death. No Zombie Pirate (or maybe??? LOL!)
         if (!boss.isDefeated()) {
-         
-            boss.shoot(enemyShots); // Boss adds new projectiles to enemyShots list
+        	boss.shootAtPlayer(enemyShots, player); // Boss aims at player now
         }
         
         // Check player shots hitting boss (iterate backwards to safely remove)
@@ -87,6 +85,11 @@ public class BossScreen01 extends BossScreen {
                 boss.takeDamage(10); // Each shot does 10 damage to boss
                 playerShots.remove(i); // Remove the shot after it hits
             }
+        }
+        
+        // Check player body collision with boss
+        if (Collisions.playerCollides(player, boss) && !player.exploding) {
+            player.takeDamage(10); // Player takes damage when touching boss
         }
         
         // Check if player reached portal (only if portal is visible)
@@ -99,7 +102,6 @@ public class BossScreen01 extends BossScreen {
      * OVERRIDE DRAW
      * Required by BossScreen.java's abstract draw() method
      * Renders all boss fight elements to the screen
-     * 
      * @param gc Graphics context for drawing
      * @param gameRenderer Game renderer (not heavily used here but available)
      * @param player The player entity (drawn at current position)
@@ -137,20 +139,11 @@ public class BossScreen01 extends BossScreen {
         gc.fillText("Health: " + player.hp + "/" + player.maxHp, 50, 50);
     }
     
-    
-    /*
-     * Boss Player Collission health
-     */
-    if (Collisions.playerCollides(player, boss) && !player.exploding) {
-        player.takeDamage(10);//change amount of damage
-    }
-    
     /**
      * OVERRIDE COMPLETION CHECK
      * Required by BossScreen.java's abstract isComplete() method
      * Returns whether the boss fight has been completed
      * Used by ImaginBlastMain to transition to LEVEL_DONE state
-     * 
      * @return true if player has entered the portal, false otherwise
      */
     @Override

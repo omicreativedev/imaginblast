@@ -17,17 +17,19 @@ public class Collisions {
      */
     public static boolean shotCollides(Shot shot, Creature target) {
         
+        // Determine actual shot size (player shots = 6, enemy shots = 18)
+        int shotSize = (shot instanceof EnemyShot) ? 18 : Shot.SIZE;
+        
         // Calculate distance between centers of shot and enemy
         int distance = distance(
-            shot.posX + Shot.SIZE / 2, 
-            shot.posY + Shot.SIZE / 2, 
+            shot.posX + shotSize / 2, 
+            shot.posY + shotSize / 2, 
             target.posX + target.size / 2, 
             target.posY + target.size / 2
         );
         
         // Return true if distance is less than sum of radii
-        // Fix Bug: Boss too big so bullets don't hit him
-        return distance < target.size / 2;
+        return distance < (target.size / 2 + shotSize / 2);
     } 
     
     /**

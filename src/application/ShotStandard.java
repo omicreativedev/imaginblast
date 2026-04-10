@@ -36,6 +36,8 @@ public class ShotStandard extends Shot {
         // Use directional velocity instead of just moving up
         posX += velX;
         posY += velY;
+      //DEBUG REMOVE
+        System.out.println("Shot Y: " + posY); // DEBUG
     }
     
     @Override
