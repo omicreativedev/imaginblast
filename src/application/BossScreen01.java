@@ -137,6 +137,14 @@ public class BossScreen01 extends BossScreen {
         gc.fillText("Health: " + player.hp + "/" + player.maxHp, 50, 50);
     }
     
+    
+    /*
+     * Boss Player Collission health
+     */
+    if (Collisions.playerCollides(player, boss) && !player.exploding) {
+        player.takeDamage(10);//change amount of damage
+    }
+    
     /**
      * OVERRIDE COMPLETION CHECK
      * Required by BossScreen.java's abstract isComplete() method
