@@ -20,7 +20,7 @@ public class BossPirate extends Boss {
     
     // Boss-specific attributes
     private int shootCooldown = 0; // Frames until boss can shoot again (prevents bullet spam)
-    private int speed = 4; // Movement speed
+    private int speed = 10; // Movement speed
     private static final int BULLET_SPEED = 6; // Speed of boss projectiles (slower than player shots)
     // private MediaPlayer bossLaughSound;
     // private MediaPlayer bossHitSound;
@@ -63,10 +63,7 @@ public class BossPirate extends Boss {
      * @param player Reference to player object (used for tracking/targeting)
      */
     
-    @Override
-    public void update() {
-    	super.update();
-    }
+  
     @Override
     public void update(Player player) {
         super.update(); // Call Creature.java's update method to handle explosion animation
@@ -221,7 +218,11 @@ public class BossPirate extends Boss {
      */
     @Override
     public void takeDamage(int amount) {
+    	//DEBUG REMOVE
+    	System.out.println("Boss took damage! Health was: " + health + " -" + amount);
         health -= amount; // Reduce health by damage amount
+      //DEBUG REMOVE
+        System.out.println("Health now: " + health);
         if (health <= 0) {
             health = 0;
             explode(); // Call Creature.java's explode() method to start death animation
