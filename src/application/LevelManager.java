@@ -33,6 +33,14 @@ public class LevelManager {
         currentLevelDoneScreen = new LevelDone02();
     }
     
+    // Load Level 3
+    private void loadLevel3() {
+        currentLevel = new Level03();
+        currentQuest = new Quest03();
+        currentBossScreen = new BossScreen03();
+        currentLevelDoneScreen = new LevelDone03();
+    }
+    
     // Getters
     public Level getCurrentLevel() { return currentLevel; }
     public Quest getQuest() { return currentQuest; }
@@ -62,6 +70,8 @@ public class LevelManager {
         
         if (currentLevelNum == 2) {
             loadLevel2();
+        } else if (currentLevelNum == 3) {
+            loadLevel3();
         }
         
         bossDefeated = false;

@@ -125,7 +125,7 @@ public class InputHandler {
             }
             break;
         
-        // 
+        
         case LEVEL_DONE:
             levelManager.getLevelDoneScreen().handleClick(clickX, clickY);
             if (levelManager.getLevelDoneScreen().isOkPressed()) {
@@ -135,7 +135,12 @@ public class InputHandler {
                     stateManager.setCurrentState(GameState.QUEST_SCREEN);
                     setupCallback.run();
                 } else if (levelManager.getCurrentLevelNum() == 2) {
-                    // After Level 2, go to start screen (or Level 3 later)
+                    // Advance from Level 2 to Level 3
+                    levelManager.advanceToNextLevel();
+                    stateManager.setCurrentState(GameState.QUEST_SCREEN);
+                    setupCallback.run();
+                } else if (levelManager.getCurrentLevelNum() == 3) {
+                    // After Level 3, go back to start screen
                     stateManager.setCurrentState(GameState.START_SCREEN);
                     setupCallback.run();
                 }

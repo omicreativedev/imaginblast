@@ -55,7 +55,7 @@ public class ImaginBlastMain extends Application {
 	//Enemy images
 	static final Image PILLBUG_IMG = new Image("pill_bug.png"); //level02 enemy
 	static final Image SQUIRREL_IMG = new Image("squirrel_enemy_front_128x128.png"); //level01 enemy
-	
+	static final Image GARLIC_IMG = new Image("garlic.png");
 	static final Image EXPLOSION_IMG = new Image("explosion.png");
 	static final Image ACORN_IMG = new Image("acorn_cap_64x64.png");
 	static final Image DONUT_IMG = new Image("donut.png");

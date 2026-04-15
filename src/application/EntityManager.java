@@ -176,8 +176,10 @@ public class EntityManager {
     public void updateShots() {
         for (int i = shots.size() - 1; i >= 0; i--) {
             Shot shot = shots.get(i);
-            // Remove if off screen (top OR bottom) or marked for removal
-            if (shot.posY + Shot.SIZE < 0 || shot.posY > HEIGHT || shot.toRemove) {
+            // Remove if off screen (any edge) or marked for removal
+            if (shot.posX + Shot.SIZE < 0 || shot.posX > WIDTH || 
+                shot.posY + Shot.SIZE < 0 || shot.posY > HEIGHT || 
+                shot.toRemove) {
                 shots.remove(i);
                 continue;
             }
@@ -192,8 +194,10 @@ public class EntityManager {
     public void updateShotsWithEnemyCollisions(LevelManager levelManager) {
         for (int i = shots.size() - 1; i >= 0; i--) {
             Shot shot = shots.get(i);
-            // Remove if off screen (top OR bottom) or marked for removal
-            if (shot.posY + Shot.SIZE < 0 || shot.posY > HEIGHT || shot.toRemove) {
+            // Remove if off screen (any edge) or marked for removal
+            if (shot.posX + Shot.SIZE < 0 || shot.posX > WIDTH || 
+                shot.posY + Shot.SIZE < 0 || shot.posY > HEIGHT || 
+                shot.toRemove) {
                 shots.remove(i);
                 continue;
             }
@@ -201,11 +205,10 @@ public class EntityManager {
             // Check collision with each enemy
             for (Enemy enemy : enemies) {
                 if (Collisions.shotCollides(shot, enemy) && !enemy.exploding) {
-                	System.out.println("Defeated: " + enemy.getClass().getSimpleName());
-                    score++; // Increase score
+                    score++;
                     levelManager.getCurrentLevel().registerEnemyDefeated(enemy);
-                    enemy.explode(); // Start enemy death animation
-                    shot.toRemove = true; // Mark shot for removal
+                    enemy.explode();
+                    shot.toRemove = true;
                     break;
                 }
             }
@@ -220,15 +223,17 @@ public class EntityManager {
         for (int i = shots.size() - 1; i >= 0; i--) {
             Shot shot = shots.get(i);
             shot.update();
-            // Remove if off screen (top OR bottom) or marked for removal
-            if (shot.posY + Shot.SIZE < 0 || shot.posY > HEIGHT || shot.toRemove) {
+            // Remove if off screen (any edge) or marked for removal
+            if (shot.posX + Shot.SIZE < 0 || shot.posX > WIDTH || 
+                shot.posY + Shot.SIZE < 0 || shot.posY > HEIGHT || 
+                shot.toRemove) {
                 shots.remove(i);
                 continue;
             }
             // Check collision with boss
             if (Collisions.shotCollides(shot, boss) && !boss.exploding) {
-                boss.takeDamage(10); // Boss takes damage
-                shots.remove(i); // Remove the shot
+                boss.takeDamage(10);
+                shots.remove(i);
             }
         }
     }
