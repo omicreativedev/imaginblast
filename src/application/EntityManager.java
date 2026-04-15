@@ -425,6 +425,9 @@ public class EntityManager {
                 if (i instanceof ItemDonut) {
                     ((ItemDonut) i).onCollected();
                 }
+                if (i instanceof ItemCupcake) {
+                    ((ItemCupcake) i).onCollected();
+                }
                 // Future: add else-if for other item types
             }
         });
