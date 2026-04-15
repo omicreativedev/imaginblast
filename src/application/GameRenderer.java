@@ -6,6 +6,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 import javafx.scene.media.AudioClip;
+import java.util.Map;
+
 
 
 /**
@@ -92,37 +94,51 @@ public class GameRenderer {
      * @param acornCount Number of acorns collected in current level
      * @param player Player object (for health display)
      */
-    public void drawHUD(int score, int shotsSize, int maxShots, int acornCount, Player player) {
-        gc.setTextAlign(TextAlignment.LEFT); // Align text to left side of coordinates
-        gc.setFont(Font.font(20)); // Set font size
+    public void drawHUD(int score, int shotsSize, int maxShots, Level level, Player player) {
+        gc.setTextAlign(TextAlignment.LEFT);
+        gc.setFont(Font.font(16));
         
-        // SCORE DISPLAY (top left)
+        // SCORE (top left)
         gc.setFill(Color.WHITE);
-        gc.fillText("Score: " + score, 60, 20);
+        gc.fillText("Score: " + score, 10, 20);
         
-        // AMMO DISPLAY - shows remaining shots available to player
-        // Calculated as maxShots - current active shots
-        gc.fillText("Ammo: " + (maxShots - shotsSize) + "/" + maxShots, 200, 20);
+        // AMMO
+        gc.fillText("Ammo: " + (maxShots - shotsSize) + "/" + maxShots, 150, 20);
         
-        // ACORN COLLECTION DISPLAY - shows progress toward level goal
-        gc.setFill(Color.BROWN); // Brown color for acorn theme
-        gc.fillText("Acorns: " + acornCount, 340, 20);
-        
-        // PLAYER HEALTH BAR
-        // Background (empty health) - red
+        // PLAYER HEALTH
         gc.setFill(Color.RED);
-        gc.fillRect(480, 5, 200, 20);
-        
-        // Foreground (current health) - green, scaled by health percentage
+        gc.fillRect(300, 5, 200, 20);
         gc.setFill(Color.LIMEGREEN);
         double healthPercent = (double)player.hp / player.maxHp;
-        healthPercent = Math.max(0, Math.min(1, healthPercent)); // Clamp between 0 and 1
-        gc.fillRect(480, 5, 200 * healthPercent, 20);
-        
-        // Health text overlay
+        gc.fillRect(300, 5, 200 * healthPercent, 20);
         gc.setFill(Color.WHITE);
-        gc.fillText("HP: " + player.hp + "/" + player.maxHp, 580, 22);
-      
+        gc.fillText("HP: " + player.hp + "/" + player.maxHp, 400, 22);
+        
+        // ITEM GOALS (top center-right)
+        int yOffset = 20;
+        gc.setFill(Color.GOLD);
+        gc.fillText("ITEMS:", 550, yOffset);
+        yOffset += 20;
+        for (Map.Entry<Class<? extends Item>, Integer> goal : level.getItemGoals().entrySet()) {
+            String itemName = goal.getKey().getSimpleName().replace("Item", "");
+            int collected = level.itemsCollected.getOrDefault(goal.getKey(), 0);
+            gc.setFill(Color.WHITE);
+            gc.fillText(itemName + ": " + collected + "/" + goal.getValue(), 570, yOffset);
+            yOffset += 20;
+        }
+        
+        // ENEMY GOALS (top right)
+        yOffset = 20;
+        gc.setFill(Color.RED);
+        gc.fillText("ENEMIES:", 750, yOffset);
+        yOffset += 20;
+        for (Map.Entry<Class<? extends Enemy>, Integer> goal : level.getEnemyGoals().entrySet()) {
+            String enemyName = goal.getKey().getSimpleName().replace("Enemy", "");
+            int defeated = level.enemiesDefeated.getOrDefault(goal.getKey(), 0);
+            gc.setFill(Color.WHITE);
+            gc.fillText(enemyName + ": " + defeated + "/" + goal.getValue(), 770, yOffset);
+            yOffset += 20;
+        }
     }
     
     /*
@@ -221,7 +237,7 @@ public class GameRenderer {
      * 
      * @param quest The Quest01 object containing quest text
      */
-    public void drawQuestScreen(Quest01 quest) {
+    public void drawQuestScreen(Quest quest) {
         // Center text alignment
         gc.setTextAlign(TextAlignment.CENTER);
         
@@ -233,7 +249,7 @@ public class GameRenderer {
         // Quest title
         gc.setFill(Color.YELLOW);
         gc.setFont(Font.font(24));
-        gc.fillText("Level 1 Quest", ImaginBlastMain.WIDTH/2, ImaginBlastMain.HEIGHT/2 - 100);
+        gc.fillText("Level " + quest.getLevelNumber() + " Quest", ImaginBlastMain.WIDTH/2, ImaginBlastMain.HEIGHT/2 - 100);
         
         // Quest description (from Quest01 object)
         gc.setFont(Font.font(18));

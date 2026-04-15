@@ -176,8 +176,8 @@ public class EntityManager {
     public void updateShots() {
         for (int i = shots.size() - 1; i >= 0; i--) {
             Shot shot = shots.get(i);
-            // Remove if off top of screen or marked for removal
-            if (shot.posY < 0 || shot.toRemove) {
+            // Remove if off screen (top OR bottom) or marked for removal
+            if (shot.posY + Shot.SIZE < 0 || shot.posY > HEIGHT || shot.toRemove) {
                 shots.remove(i);
                 continue;
             }
@@ -192,8 +192,8 @@ public class EntityManager {
     public void updateShotsWithEnemyCollisions(LevelManager levelManager) {
         for (int i = shots.size() - 1; i >= 0; i--) {
             Shot shot = shots.get(i);
-            // Remove if off screen or marked
-            if (shot.posY < 0 || shot.toRemove) {
+            // Remove if off screen (top OR bottom) or marked for removal
+            if (shot.posY + Shot.SIZE < 0 || shot.posY > HEIGHT || shot.toRemove) {
                 shots.remove(i);
                 continue;
             }
@@ -201,6 +201,7 @@ public class EntityManager {
             // Check collision with each enemy
             for (Enemy enemy : enemies) {
                 if (Collisions.shotCollides(shot, enemy) && !enemy.exploding) {
+                	System.out.println("Defeated: " + enemy.getClass().getSimpleName());
                     score++; // Increase score
                     levelManager.getCurrentLevel().registerEnemyDefeated(enemy);
                     enemy.explode(); // Start enemy death animation
@@ -219,8 +220,8 @@ public class EntityManager {
         for (int i = shots.size() - 1; i >= 0; i--) {
             Shot shot = shots.get(i);
             shot.update();
-            // Remove if off screen or marked
-            if (shot.posY < 0 || shot.toRemove) {
+            // Remove if off screen (top OR bottom) or marked for removal
+            if (shot.posY + Shot.SIZE < 0 || shot.posY > HEIGHT || shot.toRemove) {
                 shots.remove(i);
                 continue;
             }
@@ -322,11 +323,46 @@ public class EntityManager {
      */
     public void checkEnemyCollisions(GameStateManager stateManager) {
         for (Enemy e : enemies) {
-            if (Collisions.playerCollides(player, e) && !player.exploding) {
-                boolean stillAlive = player.takeDamage(1);
+            if (Collisions.playerCollides(player, e) && !player.exploding && !player.destroyed) {
+                boolean stillAlive = player.takeDamage(5); // Enemy does 10 damage
                 if (!stillAlive) {
                     stateManager.setCurrentState(GameState.GAME_OVER);
+                    return;
                 }
+                
+                // Push player away from enemy (same as boss)
+                int enemyCenterX = e.posX + e.size / 2;
+                int enemyCenterY = e.posY + e.size / 2;
+                int playerCenterX = player.posX + player.size / 2;
+                int playerCenterY = player.posY + player.size / 2;
+                
+                // Calculate push direction (away from enemy center)
+                int pushX = playerCenterX - enemyCenterX;
+                int pushY = playerCenterY - enemyCenterY;
+                
+                // Normalize direction (just use sign)
+                if (pushX > 0) pushX = 1;
+                else if (pushX < 0) pushX = -1;
+                else pushX = 0;
+                
+                if (pushY > 0) pushY = 1;
+                else if (pushY < 0) pushY = -1;
+                else pushY = 0;
+                
+                // Push player 80 pixels away
+                int newX = player.posX + (pushX * 80);
+                int newY = player.posY + (pushY * 80);
+                
+                // Apply boundary constraints
+                if (newX < 0) newX = 0;
+                if (newX + player.size > ImaginBlastMain.WIDTH) newX = ImaginBlastMain.WIDTH - player.size;
+                if (newY < 0) newY = 0;
+                if (newY + player.size > ImaginBlastMain.HEIGHT) newY = ImaginBlastMain.HEIGHT - player.size;
+                
+                player.posX = newX;
+                player.posY = newY;
+                
+                break; // Only collide with one enemy per frame
             }
         }
     }
@@ -375,10 +411,14 @@ public class EntityManager {
         items.forEach(i -> {
             i.update(null);
             if (Collisions.itemCollides(player, i) && !i.collected) {
+            	 System.out.println("Collected: " + i.getClass().getSimpleName());
                 levelManager.getCurrentLevel().registerItemCollected(i);
                 // Call specific item's collection effect
                 if (i instanceof ItemAcorn) {
                     ((ItemAcorn) i).onCollected();
+                }
+                if (i instanceof ItemDonut) {
+                    ((ItemDonut) i).onCollected();
                 }
                 // Future: add else-if for other item types
             }

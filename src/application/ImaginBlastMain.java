@@ -58,6 +58,7 @@ public class ImaginBlastMain extends Application {
 	
 	static final Image EXPLOSION_IMG = new Image("explosion.png");
 	static final Image ACORN_IMG = new Image("acorn_cap_64x64.png");
+	static final Image DONUT_IMG = new Image("donut.png");
 	static final Image CUPCAKE_IMG = new Image("cupcake.png");
 	
 	// Explosion animation properties
@@ -125,12 +126,11 @@ public class ImaginBlastMain extends Application {
 		canvas.setOnKeyPressed(e -> inputHandler.handleKeyPressed(e)); // Handle key down
 		canvas.setOnKeyReleased(e -> inputHandler.handleKeyReleased(e)); // Handle key up
 		
-		// MOUSE INPUT for aiming and shooting
-		// Reference: https://docs.oracle.com/javase/8/javafx/api/javafx/scene/input/MouseEvent.html
+		// MOUSE INPUT for aiming and shooting/scene/input/MouseEvent.html
 		canvas.setOnMouseMoved(e -> inputHandler.handleMouseMoved(e.getX(), e.getY())); // Track mouse for aiming only
 	    
 	    canvas.setOnMouseClicked(e -> { // Handle mouse clicks for shooting and UI
-	        inputHandler.handleMouseClicked(e, this::setup); // Process click callback to setup
+	        inputHandler.handleMouseClicked(e, this::setup, this::resetGame); // Process click callback to setup
 	    });    
 	    
 		// Set up game loop animation (100ms intervals = 10 fps)
@@ -150,24 +150,30 @@ public class ImaginBlastMain extends Application {
 	}
 
 	/**
+	 * RESET GAME METHOD
+	 * Completely resets the game to Level 1 for a fresh start
+	 */
+	private void resetGame() {
+	    levelManager.reset(); // Reset to Level 1
+	    setup(); // Now setup will use the reset Level 1
+	}
+	
+	/**
 	 * SETUP METHOD
 	 * Create new collections and place initial enemies
 	 */
 	private void setup() {
-	    entityManager.resetAll(); // Reset all entities
-	    levelManager.reset(); // Reset level manager
+	    entityManager.resetAll();
+	    // NO levelManager.reset() here - preserves current level
 	    
-	    // Create player
-	    Player player = new Player(WIDTH / 2, HEIGHT - PLAYER_SIZE, PLAYER_SIZE, PLAYER_IMG); // Create player at bottom center
-	    player.resetHealth(); // Reset player health
-	    entityManager.setPlayer(player); // Set player in entity manager
+	    Player player = new Player(WIDTH / 2, HEIGHT - PLAYER_SIZE, PLAYER_SIZE, PLAYER_IMG);
+	    player.resetHealth();
+	    entityManager.setPlayer(player);
 	    
-	    // Create initial set of enemies
 	    for (int i = 0; i < MAX_BOMBS; i++) {
-	    	entityManager.addEnemy(createEnemyForCurrentLevel());
+	        entityManager.addEnemy(createEnemyForCurrentLevel());
 	    }
 	    
-	    // Create initial set of items for current level
 	    for (int i = 0; i < MAX_ITEMS; i++) {
 	        entityManager.addItem(createItemForCurrentLevel());
 	    }
@@ -205,10 +211,10 @@ public class ImaginBlastMain extends Application {
 	            
 	            
 	            // Get the first item goal's class to display
-	            Class<? extends Item> itemType = levelManager.getCurrentLevel().getItemGoals().keySet().iterator().next();
-	            int itemsSoFar = levelManager.getCurrentLevel().itemsCollected.getOrDefault(itemType, 0);
+	            // Class<? extends Item> itemType = levelManager.getCurrentLevel().getItemGoals().keySet().iterator().next();
+	            // int itemsSoFar = levelManager.getCurrentLevel().itemsCollected.getOrDefault(itemType, 0);
 	            
-	            gameRenderer.drawHUD(entityManager.getScore(), entityManager.getShots().size(), MAX_SHOTS, itemsSoFar, entityManager.getPlayer());
+	            gameRenderer.drawHUD(entityManager.getScore(), entityManager.getShots().size(), MAX_SHOTS, levelManager.getCurrentLevel(), entityManager.getPlayer());
 	            
 	            // Draw background effects
 	            entityManager.drawParticles(gc);

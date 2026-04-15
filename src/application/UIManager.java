@@ -22,7 +22,7 @@ public class UIManager {
     	gameRenderer.drawStartScreen(startScreen);
     }
     
-    public void drawQuestScreen(Quest01 quest) { //Needs to be edited to get rid of Quest01
+    public void drawQuestScreen(Quest quest) { //Needs to be edited to get rid of Quest01
     	gameRenderer.drawQuestScreen(quest); //I try to put it as just 'Quest' without the '01', and I get an error
     }
     

@@ -34,7 +34,7 @@ public class Player extends Creature {
 	
 	// These stop rapid health point loss
 	private int invincibilityFrames = 0;
-    private static final int INVINCIBILITY_DURATION = 60;
+    private static final int INVINCIBILITY_DURATION = 10;
     private boolean isShielded = false;
     
     // WASD MOVEMENT PROPERTIES
@@ -42,7 +42,7 @@ public class Player extends Creature {
     private InputHandler inputHandler;  // Reference to input handler for key states
     
     // SHOOTING PROPERTIES
-    private static final int BULLET_SPEED = 20; // Speed of fired projectiles (pixels per frame)
+    private static final int BULLET_SPEED = 12; // Speed of fired projectiles (pixels per frame)
     
 	 /**
      * Take damage from enemy collision, projectile, etc.

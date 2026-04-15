@@ -88,7 +88,7 @@ public class InputHandler {
      * @param e MouseEvent from JavaFX
      * @param Reset game state when needed
      */
-    public void handleMouseClicked(MouseEvent e, Runnable setupCallback) {
+    public void handleMouseClicked(MouseEvent e, Runnable setupCallback, Runnable resetCallback) {
         double clickX = e.getX();
         double clickY = e.getY();
         
@@ -100,7 +100,7 @@ public class InputHandler {
                 gameRenderer.playButtonClick();
                 gameRenderer.stopStartScreenMusic();
                 stateManager.setCurrentState(GameState.QUEST_SCREEN);
-                setupCallback.run();
+                resetCallback.run();
             }
             break;
                 
@@ -108,7 +108,7 @@ public class InputHandler {
             if(clickX >= WIDTH/2 - 100 && clickX <= WIDTH/2 + 100 &&
                clickY >= HEIGHT/2 + 100 && clickY <= HEIGHT/2 + 150) {
                 gameRenderer.playButtonClick();
-                levelManager.resetForNewGame();
+                //levelManager.resetForNewGame();
                 stateManager.setCurrentState(GameState.PLAYING);
                 setupCallback.run();
             }
@@ -124,15 +124,25 @@ public class InputHandler {
                 }
             }
             break;
-                
+        
+        // 
         case LEVEL_DONE:
             levelManager.getLevelDoneScreen().handleClick(clickX, clickY);
             if (levelManager.getLevelDoneScreen().isOkPressed()) {
-                stateManager.setCurrentState(GameState.GAME_OVER);
+                if (levelManager.getCurrentLevelNum() == 1) {
+                    // Advance from Level 1 to Level 2
+                    levelManager.advanceToNextLevel();
+                    stateManager.setCurrentState(GameState.QUEST_SCREEN);
+                    setupCallback.run();
+                } else if (levelManager.getCurrentLevelNum() == 2) {
+                    // After Level 2, go to start screen (or Level 3 later)
+                    stateManager.setCurrentState(GameState.START_SCREEN);
+                    setupCallback.run();
+                }
                 levelManager.getLevelDoneScreen().setOkPressed(false);
             }
             break;
-                
+            
         case GAME_OVER:
             stateManager.setCurrentState(GameState.START_SCREEN);
             setupCallback.run();
