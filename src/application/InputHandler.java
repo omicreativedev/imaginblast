@@ -24,8 +24,9 @@ public class InputHandler {
     private int WIDTH;
     private int HEIGHT;
     
-    // Keyboard tracking W, A, S, D
+    // Keyboard tracking W, A, S, D and Shift (for sprinting!)
     private Set<String> activeKeys = new HashSet<>();
+    //private Set<String> sprintKey = new HashSet<>();
     
     // Track the mouse position
     private double mouseX;
@@ -35,6 +36,10 @@ public class InputHandler {
     public boolean isDownPressed()  { return activeKeys.contains("S"); }
     public boolean isLeftPressed()  { return activeKeys.contains("A"); }
     public boolean isRightPressed() { return activeKeys.contains("D"); }
+    
+    //Sprinting = 'F' key pressed
+    	//Learned that 'shift' key wouldn't work by: Oracle (2015), https://docs.oracle.com/javase/8/javafx/api/javafx/scene/input/KeyEvent.html
+    public boolean isFPressed() {return activeKeys.contains("F");}
     
     public double getMouseX() { return mouseX; }
     public double getMouseY() { return mouseY; }
@@ -58,8 +63,14 @@ public class InputHandler {
     public void handleKeyPressed(KeyEvent e) {
         String key = e.getCode().toString();
         
-        if (key.equals("W") || key.equals("A") || key.equals("S") || key.equals("D")) {
-            activeKeys.add(key);
+        		///OLD CODE 
+        //if (key.equals("W") || key.equals("A") || key.equals("S") || key.equals("D")) {
+            //activeKeys.add(key); OLD CODE
+        //}
+        
+        	///NEW CODE
+        if (key.equals("W") || key.equals("A") || key.equals("S") || key.equals("D") || key.equals("F")) {
+            activeKeys.add(key); 
         }
     }
     
