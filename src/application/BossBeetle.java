@@ -20,8 +20,8 @@ public class BossBeetle extends Boss {
     
     // Boss-specific attributes
     private int shootCooldown = 0; // Frames until boss can shoot again (prevents bullet spam)
-    private int speed = 4; // Movement speed
-    private static final int BULLET_SPEED = 12; // Speed of boss projectiles (slower than player shots)
+    private int speed = 15; // Movement speed
+    private static final int BULLET_SPEED = 19; // Speed of boss projectiles (slower than player shots)
     // private MediaPlayer bossLaughSound;
     // private MediaPlayer bossHitSound;
     // private MediaPlayer bossDefeatedSound;
