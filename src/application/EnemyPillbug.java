@@ -14,7 +14,7 @@ import javafx.scene.image.Image;
 public class EnemyPillbug extends Enemy{
 
 	//Speed of how fast a pillbug will go down by (ppf) pixel per frame
-	int SPEED = 10;
+	int SPEED = 18;
 	
 	/**
      * CONSTRUCTOR - Creates a new squirrel enemy

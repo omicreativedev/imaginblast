@@ -11,7 +11,7 @@ import javafx.scene.image.Image;
 public class EnemySquirrel extends Enemy {
     
     // Squirrel-specific speed
-    int SPEED = 6; // Pixels per frame - controls how fast squirrel falls
+    int SPEED = 7; // Pixels per frame - controls how fast squirrel falls
     
     /**
      * CONSTRUCTOR - Creates a new squirrel enemy
