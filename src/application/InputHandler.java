@@ -63,12 +63,8 @@ public class InputHandler {
     public void handleKeyPressed(KeyEvent e) {
         String key = e.getCode().toString();
         
-        		///OLD CODE 
-        //if (key.equals("W") || key.equals("A") || key.equals("S") || key.equals("D")) {
-            //activeKeys.add(key); OLD CODE
-        //}
         
-        	///NEW CODE
+        	///NEW CODE that includes 'F' key
         if (key.equals("W") || key.equals("A") || key.equals("S") || key.equals("D") || key.equals("F")) {
             activeKeys.add(key); 
         }
