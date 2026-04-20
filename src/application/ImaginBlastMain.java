@@ -217,7 +217,7 @@ public class ImaginBlastMain extends Application {
 	            gameRenderer.drawHUD(entityManager.getScore(), entityManager.getShots().size(), MAX_SHOTS, levelManager.getCurrentLevel(), entityManager.getPlayer());
 	            
 	            // Draw background effects
-	            entityManager.drawParticles(gc);
+	            entityManager.drawParticles(gc); //test
 	            entityManager.updateParticles(gc);
 	        
 	            // Update and draw player (WASD movement now handled inside player.update())
