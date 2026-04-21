@@ -21,6 +21,7 @@ public class GameRenderer {
     private Image startupBgGif;
     private AudioClip startScreenMusic;
     private AudioClip buttonClickSound;
+    private AudioClip gameplayMusic; //new
     private boolean isHoveringPlayButton = false;
     //private Image lvl2BGpng; //Unsure how to exactly create backgrounds for levels
     //private Image lvl1BG;
@@ -40,16 +41,21 @@ public class GameRenderer {
     this.startScreenMusic = new AudioClip(musicUrl);
     this.startScreenMusic.setCycleCount(1);
     this.startScreenMusic.play();   
+
     
     String clickUrl = getClass().getResource("/button_click.wav").toString();
     this.buttonClickSound = new AudioClip(clickUrl);
         
+    //new - Load gameplay music
+    String gameplayUrl = getClass().getResource("/wav_play_screen_music.wav").toString();
+    this.gameplayMusic = new AudioClip(gameplayUrl);
+    this.gameplayMusic.setCycleCount(AudioClip.INDEFINITE); // Loop forever
         
     }
     
     /**
      * Change the button color of the button when hover
-     * There might be an easier way to do this.
+     * There might be a simpler way to do this.
      * Sort of a hack? 
      * @param mouseX Current mouse X coordinate
      * @param mouseY Current mouse Y coordinate
@@ -391,6 +397,20 @@ public class GameRenderer {
     public void playButtonClick() {
         if (buttonClickSound != null) {
             buttonClickSound.play();
+        }
+    }
+    
+    //new - Play gameplay music
+    public void playGameplayMusic() {
+        if (gameplayMusic != null) {
+            gameplayMusic.play();
+        }
+    }
+    
+    //new - Stop gameplay music
+    public void stopGameplayMusic() {
+        if (gameplayMusic != null) {
+            gameplayMusic.stop();
         }
     }
     
