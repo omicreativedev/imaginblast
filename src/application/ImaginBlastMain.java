@@ -217,7 +217,7 @@ public class ImaginBlastMain extends Application {
 	            gameRenderer.drawHUD(entityManager.getScore(), entityManager.getShots().size(), MAX_SHOTS, levelManager.getCurrentLevel(), entityManager.getPlayer());
 	            
 	            // Draw background effects
-	            entityManager.drawParticles(gc);
+	            entityManager.drawParticles(gc); 
 	            entityManager.updateParticles(gc);
 	        
 	            // Update and draw player (WASD movement now handled inside player.update())
@@ -260,6 +260,7 @@ public class ImaginBlastMain extends Application {
 	            break;
 	            
 	        case BOSS_FIGHT:
+	            gameRenderer.stopGameplayMusic(); //new - Stop gameplay music when boss fight starts
 	            // Update player movement (WASD handled inside player.update)
 	        	entityManager.updatePlayer(); // Update player state (includes movement)
 	        	// REMOVED: entityManager.movePlayer() - WASD replaces mouse movement
@@ -301,6 +302,7 @@ public class ImaginBlastMain extends Application {
 	            break;
 	            
 	        case GAME_OVER:
+	        	gameRenderer.stopGameplayMusic(); //new - Stop gameplay music when game over
 	        	uiManager.drawGameOverScreen(entityManager.getScore());
 	            break;
 	    }
