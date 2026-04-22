@@ -435,12 +435,15 @@ public class EntityManager {
                 levelManager.getCurrentLevel().registerItemCollected(i);
                 // Call specific item's collection effect
                 if (i instanceof ItemAcorn) {
+                	((ItemAcorn) i).setGameRenderer(gameRenderer); //new
                     ((ItemAcorn) i).onCollected();
                 }
                 if (i instanceof ItemDonut) {
+                	((ItemDonut) i).setGameRenderer(gameRenderer); //new
                     ((ItemDonut) i).onCollected();
                 }
                 if (i instanceof ItemCupcake) {
+                	((ItemCupcake) i).setGameRenderer(gameRenderer); //new
                     ((ItemCupcake) i).onCollected();
                 }
                 // Future: add else-if for other item types

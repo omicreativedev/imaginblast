@@ -42,6 +42,8 @@ import javafx.util.Duration;
  */
 public class ImaginBlastMain extends Application {
 	
+	private boolean bossMusicStarted = false; //new - Track if boss music already playing
+	
 	// Constants and global variables
 	private static final Random RAND = new Random(); // Random generator
 	public static final int WIDTH = 1280; // Game window width
@@ -157,6 +159,7 @@ public class ImaginBlastMain extends Application {
 	private void resetGame() {
 	    levelManager.reset(); // Reset to Level 1
 	    setup(); // Now setup will use the reset Level 1
+	    bossMusicStarted = false;
 	}
 	
 	/**
@@ -264,7 +267,10 @@ public class ImaginBlastMain extends Application {
 	            
 	        case BOSS_FIGHT:
 	            gameRenderer.stopGameplayMusic(); //new - Stop gameplay music when boss fight starts
-	            gameRenderer.playBossMusic(); //new - Play boss music
+	            if (!bossMusicStarted) { //new - Only play boss music once
+	                gameRenderer.playBossMusic();
+	                bossMusicStarted = true;
+	            }
 	            // Update player movement (WASD handled inside player.update)
 	        	entityManager.updatePlayer(); // Update player state (includes movement)
 	        	// REMOVED: entityManager.movePlayer() - WASD replaces mouse movement

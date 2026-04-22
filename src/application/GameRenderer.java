@@ -6,6 +6,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 import javafx.scene.media.AudioClip;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import java.util.Map;
 
 
@@ -22,13 +24,13 @@ public class GameRenderer {
     private AudioClip startScreenMusic;
     private AudioClip buttonClickSound;
     private AudioClip gameplayMusic; //new
-    //new - Additional sound effects
-    private AudioClip bossMusic; //new
-    private AudioClip itemCollectSound; //new
-    private AudioClip playerShootSound; //new
-    private AudioClip questMusic; //new
-    private AudioClip portalSound; //new
-    private AudioClip playerDamageSound; //new
+    //new - Additional sound effects (converted to MediaPlayer for better sample rate support)
+    private MediaPlayer bossMusic; //new - Changed from AudioClip to MediaPlayer
+    private MediaPlayer itemCollectSound; //new - Changed from AudioClip to MediaPlayer
+    private MediaPlayer playerShootSound; //new - Changed from AudioClip to MediaPlayer
+    private MediaPlayer questMusic; //new - Changed from AudioClip to MediaPlayer
+    private MediaPlayer portalSound; //new - Changed from AudioClip to MediaPlayer
+    private MediaPlayer playerDamageSound; //new - Changed from AudioClip to MediaPlayer
     private boolean isHoveringPlayButton = false;
     //private Image lvl2BGpng; //Unsure how to exactly create backgrounds for levels
     //private Image lvl1BG;
@@ -58,31 +60,68 @@ public class GameRenderer {
     this.gameplayMusic = new AudioClip(gameplayUrl);
     this.gameplayMusic.setCycleCount(AudioClip.INDEFINITE); // Loop forever
     
-    //new - Load boss music
-    String bossMusicUrl = getClass().getResource("/wav_boss_bg_music.wav").toString();
-    this.bossMusic = new AudioClip(bossMusicUrl);
-    this.bossMusic.setCycleCount(AudioClip.INDEFINITE); // Loop forever
+    //new - Load boss music (using MediaPlayer)
+    try {
+        String bossMusicUrl = getClass().getResource("/boss_music.mp3").toString();
+        System.out.println("Loading boss music from: " + bossMusicUrl); // DEBUG
+        Media bossMedia = new Media(bossMusicUrl);
+        this.bossMusic = new MediaPlayer(bossMedia);
+        this.bossMusic.setCycleCount(MediaPlayer.INDEFINITE);
+        this.bossMusic.setRate(1.0);
+        // Preload the audio
+        this.bossMusic.play();
+        this.bossMusic.pause();
+        this.bossMusic.seek(javafx.util.Duration.ZERO);
+        System.out.println("Boss music preloaded"); // DEBUG
+    } catch (Exception e) {
+        System.out.println("Could not load boss music: " + e.getMessage());
+    }
     
-    //new - Load item collect sound
-    String itemCollectUrl = getClass().getResource("/wav_item_collect.wav").toString();
-    this.itemCollectSound = new AudioClip(itemCollectUrl);
+    //new - Load item collect sound (using MediaPlayer)
+    try {
+        String itemCollectUrl = getClass().getResource("/wav_item_collect.wav").toString();
+        Media itemCollectMedia = new Media(itemCollectUrl);
+        this.itemCollectSound = new MediaPlayer(itemCollectMedia);
+    } catch (Exception e) {
+        System.out.println("Could not load item collect sound: " + e.getMessage());
+    }
     
-    //new - Load player shoot sound
-    String playerShootUrl = getClass().getResource("/wav_player_shoot.wav").toString();
-    this.playerShootSound = new AudioClip(playerShootUrl);
+    //new - Load player shoot sound (using MediaPlayer)
+    try {
+        String playerShootUrl = getClass().getResource("/wav_player_shoot.wav").toString();
+        Media playerShootMedia = new Media(playerShootUrl);
+        this.playerShootSound = new MediaPlayer(playerShootMedia);
+    } catch (Exception e) {
+        System.out.println("Could not load player shoot sound: " + e.getMessage());
+    }
     
-    //new - Load quest music
-    String questMusicUrl = getClass().getResource("/wav_quest_music.wav").toString();
-    this.questMusic = new AudioClip(questMusicUrl);
-    this.questMusic.setCycleCount(AudioClip.INDEFINITE); // Loop forever
+    //new - Load quest music (using MediaPlayer)
+    try {
+        String questMusicUrl = getClass().getResource("/wav_quest_music_fixed.wav").toString();
+        Media questMedia = new Media(questMusicUrl);
+        this.questMusic = new MediaPlayer(questMedia);
+        this.questMusic.setCycleCount(MediaPlayer.INDEFINITE);
+    } catch (Exception e) {
+        System.out.println("Could not load quest music: " + e.getMessage());
+    }
     
-    //new - Load portal sound
-    String portalSoundUrl = getClass().getResource("/wav_going_through_portal.wav").toString();
-    this.portalSound = new AudioClip(portalSoundUrl);
+    //new - Load portal sound (using MediaPlayer)
+    try {
+        String portalSoundUrl = getClass().getResource("/wav_going_through_portal.wav").toString();
+        Media portalMedia = new Media(portalSoundUrl);
+        this.portalSound = new MediaPlayer(portalMedia);
+    } catch (Exception e) {
+        System.out.println("Could not load portal sound: " + e.getMessage());
+    }
     
-    //new - Load player damage sound
-    String playerDamageUrl = getClass().getResource("/wav_player_take_damage.wav").toString();
-    this.playerDamageSound = new AudioClip(playerDamageUrl);
+    //new - Load player damage sound (using MediaPlayer)
+    try {
+        String playerDamageUrl = getClass().getResource("/wav_player_take_damage.wav").toString();
+        Media playerDamageMedia = new Media(playerDamageUrl);
+        this.playerDamageSound = new MediaPlayer(playerDamageMedia);
+    } catch (Exception e) {
+        System.out.println("Could not load player damage sound: " + e.getMessage());
+    }
         
     }
     
@@ -447,10 +486,16 @@ public class GameRenderer {
         }
     }
     
-    //new - Play boss music
+  //new - Play boss music (MediaPlayer version)
     public void playBossMusic() {
+        System.out.println("playBossMusic called, bossMusic = " + bossMusic); // DEBUG
         if (bossMusic != null) {
+            System.out.println("Boss music status: " + bossMusic.getStatus()); // DEBUG
+            bossMusic.stop();
             bossMusic.play();
+            System.out.println("After play, status: " + bossMusic.getStatus()); // DEBUG
+        } else {
+            System.out.println("bossMusic is NULL!"); // DEBUG
         }
     }
     
@@ -461,21 +506,23 @@ public class GameRenderer {
         }
     }
     
-    //new - Play item collect sound
+    //new - Play item collect sound (MediaPlayer version)
     public void playItemCollectSound() {
         if (itemCollectSound != null) {
+            itemCollectSound.stop(); //new - Reset to beginning
             itemCollectSound.play();
         }
     }
     
-    //new - Play player shoot sound
+    //new - Play player shoot sound (MediaPlayer version)
     public void playPlayerShootSound() {
         if (playerShootSound != null) {
+            playerShootSound.stop(); //new - Reset to beginning
             playerShootSound.play();
         }
     }
     
-    //new - Play quest music
+    //new - Play quest music (MediaPlayer version)
     public void playQuestMusic() {
         if (questMusic != null) {
             questMusic.play();
@@ -489,16 +536,18 @@ public class GameRenderer {
         }
     }
     
-    //new - Play portal sound
+    //new - Play portal sound (MediaPlayer version)
     public void playPortalSound() {
         if (portalSound != null) {
+            portalSound.stop(); //new - Reset to beginning
             portalSound.play();
         }
     }
     
-    //new - Play player damage sound
+    //new - Play player damage sound (MediaPlayer version)
     public void playPlayerDamageSound() {
         if (playerDamageSound != null) {
+            playerDamageSound.stop(); //new - Reset to beginning
             playerDamageSound.play();
         }
     }
