@@ -119,7 +119,8 @@ public class ImaginBlastMain extends Application {
 		
 		// NEW: Connect input handler to entity manager so player can access key states
 		entityManager.setInputHandler(inputHandler);
-
+		entityManager.setGameRenderer(gameRenderer); //new - Pass game renderer for sounds
+		
 		// KEYBOARD INPUT for WASD movement
 		// Reference: https://docs.oracle.com/javase/8/javafx/api/javafx/scene/input/KeyEvent.html
 		canvas.setFocusTraversable(true); // Make canvas focusable to receive key events
@@ -194,6 +195,7 @@ public class ImaginBlastMain extends Application {
 	            break;
 	            
 	        case QUEST_SCREEN:
+	        	gameRenderer.playQuestMusic(); //new - Play quest music when entering quest screen
 	        	uiManager.drawQuestScreen(levelManager.getQuest());
 	            break;
 	            
@@ -207,6 +209,7 @@ public class ImaginBlastMain extends Application {
 	            //break;
 	            
 	        case PLAYING:
+	        	gameRenderer.stopQuestMusic(); //new - Stop quest music when gameplay starts
 	            gameRenderer.clearScreen();
 	            
 	            
@@ -261,6 +264,7 @@ public class ImaginBlastMain extends Application {
 	            
 	        case BOSS_FIGHT:
 	            gameRenderer.stopGameplayMusic(); //new - Stop gameplay music when boss fight starts
+	            gameRenderer.playBossMusic(); //new - Play boss music
 	            // Update player movement (WASD handled inside player.update)
 	        	entityManager.updatePlayer(); // Update player state (includes movement)
 	        	// REMOVED: entityManager.movePlayer() - WASD replaces mouse movement
@@ -289,11 +293,13 @@ public class ImaginBlastMain extends Application {
 	            // Check if player entered portal
 	            if (levelManager.getBossScreen().isComplete()) { // If boss screen is complete
 	                stateManager.setCurrentState(GameState.LEVEL_DONE); // Set level done state
+	                gameRenderer.stopBossMusic(); //new - Stop boss music when level done
 	            }
 
 	            // Check if player died
 	            if (entityManager.isPlayerDestroyed()) { // If player is destroyed
 	                stateManager.setCurrentState(GameState.GAME_OVER); // Set game over state
+	                gameRenderer.stopBossMusic(); //new - Stop boss music if player dies
 	            }
 	            break;
 	            
@@ -303,6 +309,8 @@ public class ImaginBlastMain extends Application {
 	            
 	        case GAME_OVER:
 	        	gameRenderer.stopGameplayMusic(); //new - Stop gameplay music when game over
+	        	gameRenderer.stopQuestMusic(); //new - Stop quest music if playing
+	        	gameRenderer.stopBossMusic(); //new - Stop boss music if playing
 	        	uiManager.drawGameOverScreen(entityManager.getScore());
 	            break;
 	    }

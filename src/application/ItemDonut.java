@@ -9,6 +9,8 @@ import javafx.scene.image.Image;
  */
 public class ItemDonut extends Item {
 	
+	private GameRenderer gameRenderer; //new - Reference for sound effects
+	
 	// MOVEMENT PROPERTIES
 	int speed = 8;       // Falling speed (pixels per frame)
 	
@@ -23,6 +25,7 @@ public class ItemDonut extends Item {
 	public ItemDonut(int posX, int posY, int size, Image image) {
 		super(posX, posY, size, image);
 		// Donut-specific initialization can go here later
+		// gameRenderer will be set later via setGameRenderer() //new
 	}
 	
 
@@ -33,6 +36,7 @@ public class ItemDonut extends Item {
 	public void onCollected() {
 	    // Mark as collected
 	    this.collected = true;
+	    gameRenderer.playItemCollectSound(); //new - Play collect sound
 	    
 	    // FUTURE: Play sound here
 	    // FUTURE: Add visual effect
@@ -77,5 +81,10 @@ public class ItemDonut extends Item {
 		// - Spin while falling
 		// - Make sound when collected
 		// - Give bonus points
+	}
+	
+	//new - Set game renderer for sound effects
+	public void setGameRenderer(GameRenderer renderer) {
+	    this.gameRenderer = renderer;
 	}
 }

@@ -22,6 +22,13 @@ public class GameRenderer {
     private AudioClip startScreenMusic;
     private AudioClip buttonClickSound;
     private AudioClip gameplayMusic; //new
+    //new - Additional sound effects
+    private AudioClip bossMusic; //new
+    private AudioClip itemCollectSound; //new
+    private AudioClip playerShootSound; //new
+    private AudioClip questMusic; //new
+    private AudioClip portalSound; //new
+    private AudioClip playerDamageSound; //new
     private boolean isHoveringPlayButton = false;
     //private Image lvl2BGpng; //Unsure how to exactly create backgrounds for levels
     //private Image lvl1BG;
@@ -50,6 +57,32 @@ public class GameRenderer {
     String gameplayUrl = getClass().getResource("/wav_play_screen_music.wav").toString();
     this.gameplayMusic = new AudioClip(gameplayUrl);
     this.gameplayMusic.setCycleCount(AudioClip.INDEFINITE); // Loop forever
+    
+    //new - Load boss music
+    String bossMusicUrl = getClass().getResource("/wav_boss_bg_music.wav").toString();
+    this.bossMusic = new AudioClip(bossMusicUrl);
+    this.bossMusic.setCycleCount(AudioClip.INDEFINITE); // Loop forever
+    
+    //new - Load item collect sound
+    String itemCollectUrl = getClass().getResource("/wav_item_collect.wav").toString();
+    this.itemCollectSound = new AudioClip(itemCollectUrl);
+    
+    //new - Load player shoot sound
+    String playerShootUrl = getClass().getResource("/wav_player_shoot.wav").toString();
+    this.playerShootSound = new AudioClip(playerShootUrl);
+    
+    //new - Load quest music
+    String questMusicUrl = getClass().getResource("/wav_quest_music.wav").toString();
+    this.questMusic = new AudioClip(questMusicUrl);
+    this.questMusic.setCycleCount(AudioClip.INDEFINITE); // Loop forever
+    
+    //new - Load portal sound
+    String portalSoundUrl = getClass().getResource("/wav_going_through_portal.wav").toString();
+    this.portalSound = new AudioClip(portalSoundUrl);
+    
+    //new - Load player damage sound
+    String playerDamageUrl = getClass().getResource("/wav_player_take_damage.wav").toString();
+    this.playerDamageSound = new AudioClip(playerDamageUrl);
         
     }
     
@@ -411,6 +444,62 @@ public class GameRenderer {
     public void stopGameplayMusic() {
         if (gameplayMusic != null) {
             gameplayMusic.stop();
+        }
+    }
+    
+    //new - Play boss music
+    public void playBossMusic() {
+        if (bossMusic != null) {
+            bossMusic.play();
+        }
+    }
+    
+    //new - Stop boss music
+    public void stopBossMusic() {
+        if (bossMusic != null) {
+            bossMusic.stop();
+        }
+    }
+    
+    //new - Play item collect sound
+    public void playItemCollectSound() {
+        if (itemCollectSound != null) {
+            itemCollectSound.play();
+        }
+    }
+    
+    //new - Play player shoot sound
+    public void playPlayerShootSound() {
+        if (playerShootSound != null) {
+            playerShootSound.play();
+        }
+    }
+    
+    //new - Play quest music
+    public void playQuestMusic() {
+        if (questMusic != null) {
+            questMusic.play();
+        }
+    }
+    
+    //new - Stop quest music
+    public void stopQuestMusic() {
+        if (questMusic != null) {
+            questMusic.stop();
+        }
+    }
+    
+    //new - Play portal sound
+    public void playPortalSound() {
+        if (portalSound != null) {
+            portalSound.play();
+        }
+    }
+    
+    //new - Play player damage sound
+    public void playPlayerDamageSound() {
+        if (playerDamageSound != null) {
+            playerDamageSound.play();
         }
     }
     

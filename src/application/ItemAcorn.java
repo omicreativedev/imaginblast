@@ -9,6 +9,8 @@ import javafx.scene.image.Image;
  */
 public class ItemAcorn extends Item {
 	
+	private GameRenderer gameRenderer; //new - Reference for sound effects
+	
 	// MOVEMENT PROPERTIES
 	int speed = 8;       // Falling speed (pixels per frame)
 	
@@ -33,6 +35,7 @@ public class ItemAcorn extends Item {
 	public void onCollected() {
 	    // Mark as collected
 	    this.collected = true;
+	    gameRenderer.playItemCollectSound(); //new - Play collect sound
 	    
 	    // FUTURE: Play sound here
 	    // FUTURE: Add visual effect
@@ -77,5 +80,10 @@ public class ItemAcorn extends Item {
 		// - Spin while falling
 		// - Make sound when collected
 		// - Give bonus points
+	}
+	
+	//new - Set game renderer for sound effects
+	public void setGameRenderer(GameRenderer renderer) {
+	    this.gameRenderer = renderer;
 	}
 }

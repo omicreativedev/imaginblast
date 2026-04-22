@@ -35,7 +35,7 @@ public class EntityManager {
     
     // Reference to input handler for player movement (WASD)
     private InputHandler inputHandler; // NEW: Store input handler reference
-    
+    private GameRenderer gameRenderer; //new - Store game renderer reference for sounds
     /**
      * CONSTRUCTOR
      * @param MAX_SHOTS Maximum allowed player shots
@@ -78,7 +78,14 @@ public class EntityManager {
         if (this.player != null && inputHandler != null) {
             this.player.setInputHandler(inputHandler);
         }
+        //new - Connect game renderer for sound effects
+        if (this.player != null && gameRenderer != null) {
+            this.player.setGameRenderer(gameRenderer);
+        }
     }
+    
+
+
     
     /**
      * NEW: Sets the input handler for WASD movement
@@ -90,6 +97,14 @@ public class EntityManager {
         // If player already exists, connect them now
         if (player != null) {
             player.setInputHandler(inputHandler);
+        }
+    }
+    
+    //new - Sets the game renderer for sound effects
+    public void setGameRenderer(GameRenderer renderer) {
+        this.gameRenderer = renderer;
+        if (player != null) {
+            player.setGameRenderer(gameRenderer);
         }
     }
     
