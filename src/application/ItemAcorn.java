@@ -4,6 +4,8 @@ import javafx.scene.canvas.GraphicsContext;
 // import javafx.scene.image.Image;
 import javafx.scene.image.ImageView; //new
 
+
+
 /**
  * ACORN ITEM CLASS
  * Acorns fall straight down and give 1 point when collected
