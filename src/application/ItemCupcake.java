@@ -1,7 +1,8 @@
 package application;
 
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.image.Image;
+// import javafx.scene.image.Image;
+import javafx.scene.image.ImageView; //new
 
 /**
  * CUPCAKE ITEM CLASS
@@ -20,10 +21,10 @@ public class ItemCupcake extends Item {
 	 * @param posX Initial X position (random across screen width)
 	 * @param posY Initial Y position (usually 0 at top of screen)
 	 * @param size Size of the cupcake sprite
-	 * @param image The cupcake image
+	 * @param imageView The cupcake ImageView
 	 */
-	public ItemCupcake(int posX, int posY, int size, Image image) {
-		super(posX, posY, size, image);
+	public ItemCupcake(int posX, int posY, int size, ImageView imageView) { //new - Changed parameter from Image to ImageView
+		super(posX, posY, size, imageView); //new - Pass ImageView instead of Image
 		// Cupcake-specific initialization can go here later
 		  // gameRenderer will be set later via setGameRenderer() //new
 	}

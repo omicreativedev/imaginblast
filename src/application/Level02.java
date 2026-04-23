@@ -2,6 +2,7 @@ package application;
 
 import java.util.HashMap;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView; //new
 import java.util.Random;
 import java.util.Map;
 import java.util.Arrays;
@@ -74,7 +75,7 @@ public class Level02 extends Level{
     }
     
     @Override
-    public Image getEnemyImage(Class<? extends Enemy> enemyClass) {
+    public ImageView getEnemyImage(Class<? extends Enemy> enemyClass) { //new - Changed return type from Image to ImageView
         if (enemyClass == EnemySquirrel.class) {
             return ImaginBlastMain.SQUIRREL_IMG;
         }
@@ -85,7 +86,7 @@ public class Level02 extends Level{
     }
     
     @Override
-    public Image getItemImage(Class<? extends Item> itemClass) {
+    public ImageView getItemImage(Class<? extends Item> itemClass) { //new - Changed return type from Image to ImageView
         if (itemClass == ItemAcorn.class) {
             return ImaginBlastMain.ACORN_IMG;
         }

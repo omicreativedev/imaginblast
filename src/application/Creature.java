@@ -1,7 +1,11 @@
 package application;
 
+// "I wish creatures wouldn't be so easily offended!"
+// ~ The Caterpillar, Alice's Adventures in Wonderland
+
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView; //new
 
 /**
  * CREATURE CLASS
@@ -11,9 +15,6 @@ import javafx.scene.image.Image;
 public class Creature {
 	
 	// EXPLOSION ANIMATION CONSTANTS
-	// These are static because they're shared across all creatures
-	// Can we try to override this with subclasses? Hmmmmm...
-	// Right now all explosions are the same.
 	static final Image EXPLOSION_IMG = new Image("explosion.png");  // Explosion sprite sheet
 	static final int EXPLOSION_W = 128;      // Width of each explosion frame
 	static final int EXPLOSION_ROWS = 3;     // Number of rows in sprite sheet
@@ -30,24 +31,24 @@ public class Creature {
 	boolean destroyed;   // True when explosion animation is complete
 	
 	// IMAGE PROPERTIES
-	Image img;           // The creature's normal image (player or enemy)
+	ImageView imageView; //new - Changed from Image to ImageView (supports animated GIFs)
 	
 	// ANIMATION TRACKING
 	int explosionStep = 0;  // Current frame of explosion animation (0 to EXPLOSION_STEPS)
 	
 	/**
-	 * CONSTRUCTOR
-	 * Creates a new creature
+	 * Creature Constructor
+	 * Constructs new Creature (lulz)
 	 * @param posX Initial X position
 	 * @param posY Initial Y position
 	 * @param size Size of the creature (square)
-	 * @param image The creature's normal image (frog for player, squirrel for enemy)
+	 * @param imageView The creature's ImageView (frog for player, squirrel for enemy, etc.)
 	 */
-	public Creature(int posX, int posY, int size,  Image image) {
+	public Creature(int posX, int posY, int size, ImageView imageView) {
 		this.posX = posX;    // Set X position
 		this.posY = posY;    // Set Y position
 		this.size = size;    // Set size
-		img = image;         // Store the normal image
+		this.imageView = imageView; //new - Store the ImageView
 	}
 	
 	/**
@@ -87,7 +88,7 @@ public class Creature {
 		}
 		else {
 			// DRAW NORMAL CREATURE IMAGE
-			gc.drawImage(img, posX, posY, size, size);
+			gc.drawImage(imageView.getImage(), posX, posY, size, size); //new - Get Image from ImageView
 		}
 	}
 	

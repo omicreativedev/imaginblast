@@ -1,6 +1,6 @@
 package application;
 
-//Hello this is a test to see if pushing works or sinister shenanigans ensue -EV
+// Hello this is a test to see if pushing works or sinister shenanigans ensue -EV
 
 /* 
  * ACKNOWLEDGEMENTS AND SOURCES:
@@ -26,6 +26,7 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView; //new
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -33,9 +34,9 @@ import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
-//Music
-//import javafx.scene.media.Media;
-//import javafx.scene.media.MediaPlayer;
+// "How puzzling all these changes are!
+// I'm never sure what I'm going to be, from one minute to another."
+// ~ Mad Hatter, Alice's Adventures in Wonderland
 
 /**
  * MAIN GAME CLASS
@@ -53,16 +54,16 @@ public class ImaginBlastMain extends Application {
 	// Image resources for game elements
 	// Reference: https://docs.oracle.com/javase/8/javafx/api/javafx/scene/image/Image.html
 	
-	static final Image PLAYER_IMG = new Image("player_frog_static.png");
+	static final ImageView PLAYER_IMG = new ImageView(new Image("player_frog_static.png")); //new - Converted to ImageView
 	
 	//Enemy images
-	static final Image PILLBUG_IMG = new Image("enemy_pillbug.png"); //level02 enemy
-	static final Image SQUIRREL_IMG = new Image("enemy_squirrel.png"); //level01 enemy
-	static final Image GARLIC_IMG = new Image("enemy_garlic.png");
+	static final ImageView PILLBUG_IMG = new ImageView(new Image("enemy_pillbug.png")); //new - Converted to ImageView
+	static final ImageView SQUIRREL_IMG = new ImageView(new Image("enemy_squirrel.png")); //new - Converted to ImageView
+	static final ImageView GARLIC_IMG = new ImageView(new Image("enemy_garlic.png")); //new - Converted to ImageView
 	static final Image EXPLOSION_IMG = new Image("explosion.png");
-	static final Image ACORN_IMG = new Image("item_acorn.png");
-	static final Image DONUT_IMG = new Image("item_donut.png");
-	static final Image CUPCAKE_IMG = new Image("item_cupcake.png");
+	static final ImageView ACORN_IMG = new ImageView(new Image("item_acorn.png")); //new - Converted to ImageView
+	static final ImageView DONUT_IMG = new ImageView(new Image("item_donut.png")); //new - Converted to ImageView
+	static final ImageView CUPCAKE_IMG = new ImageView(new Image("item_cupcake.png")); //new - Converted to ImageView
 	
 	// Explosion animation properties
 	static final int EXPLOSION_W = 128; // Width of explosion sprite

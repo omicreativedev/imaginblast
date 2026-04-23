@@ -129,7 +129,7 @@ public class GameRenderer {
     } catch (Exception e) {
         System.out.println("Could not load player damage sound: " + e.getMessage());
     }
-}
+} 
     
     /**
      * Change the button color of the button when hover

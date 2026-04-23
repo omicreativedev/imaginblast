@@ -1,6 +1,7 @@
 package application;
 
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView; //new
 import java.util.List;
 // import java.io.File;
 // import javafx.scene.media.Media;
@@ -36,7 +37,7 @@ public class BossBroc extends Boss {
      * @param posY Starting Y coordinate
      */
     public BossBroc(int posX, int posY) {
-        super(posX, posY, 256, new Image("boss_broc.png")); // Call Boss.java constructor with large size
+        super(posX, posY, 256, new ImageView(new Image("boss_broc.png"))); //new - Pass ImageView instead of Image
         this.health = 300; // Set current health (inherited from Boss.java)
         this.maxHealth = 300; // Set max health for health bar (inherited from Boss.java)
         // try {

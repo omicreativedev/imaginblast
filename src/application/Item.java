@@ -1,7 +1,8 @@
 package application;
 
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.image.Image;
+// import javafx.scene.image.Image;
+import javafx.scene.image.ImageView; //new
 
 /**
  * ITEM CLASS - Generic base class for all collectible items in the game
@@ -14,9 +15,7 @@ public class Item {
 	// POSITION AND SIZE PROPERTIES
 	int posX, posY;      // Current position of the item on screen
 	int size;            // Width and height of the item (square)
-	Image img;           // The item's image/icon
-	
-
+	ImageView imageView; //new - Changed from Image to ImageView
 	
 	// STATE FLAGS
 	boolean collected = false; // True when player picks up the item
@@ -27,13 +26,13 @@ public class Item {
 	 * @param posX Initial X position (usually random across screen width)
 	 * @param posY Initial Y position (usually 0 at top of screen)
 	 * @param size Size of the item sprite
-	 * @param image The item's image
+	 * @param imageView The item's ImageView
 	 */
-	public Item(int posX, int posY, int size,  Image image) {
+	public Item(int posX, int posY, int size, ImageView imageView) { //new - Changed parameter from Image to ImageView
 		this.posX = posX;    // Set X position
 		this.posY = posY;    // Set Y position
 		this.size = size;    // Set size
-		img = image;         // Set the image
+		this.imageView = imageView; //new - Store the ImageView
 	}
 	
 	/**
@@ -42,7 +41,7 @@ public class Item {
 	 */
 	public void draw(GraphicsContext gc) {
 		// Draw the item image at its current position, scaled to size
-		gc.drawImage(img, posX, posY, size, size);
+		gc.drawImage(imageView.getImage(), posX, posY, size, size); //new - Get Image from ImageView
 	}
 	
 	/**

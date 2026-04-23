@@ -1,7 +1,8 @@
 package application;
 
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.image.Image;
+// import javafx.scene.image.Image;
+import javafx.scene.image.ImageView; //new
 
 /**
  * ACORN ITEM CLASS
@@ -20,10 +21,10 @@ public class ItemAcorn extends Item {
 	 * @param posX Initial X position (random across screen width)
 	 * @param posY Initial Y position (usually 0 at top of screen)
 	 * @param size Size of the acorn sprite
-	 * @param image The acorn image
+	 * @param imageView The acorn ImageView
 	 */
-	public ItemAcorn(int posX, int posY, int size, Image image) {
-		super(posX, posY, size, image);
+	public ItemAcorn(int posX, int posY, int size, ImageView imageView) { //new - Changed parameter from Image to ImageView
+		super(posX, posY, size, imageView); //new - Pass ImageView instead of Image
 		// Acorn-specific initialization can go here later
 	}
 	

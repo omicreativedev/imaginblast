@@ -66,10 +66,7 @@ public class BossScreen02 extends BossScreen {
         if (boss.isDefeated() && !portalVisible) {
             portalVisible = true; // Make portal appear when boss dies
             gameRenderer.playExplodeSound();
-            // Stop boss music when defeated
-            // if (bossMusicPlayer != null) {
-            //     bossMusicPlayer.stop();
-            // }
+
         }
         
         // Moved out of isDefeated
