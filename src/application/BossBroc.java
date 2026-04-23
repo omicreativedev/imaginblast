@@ -216,6 +216,7 @@ public class BossBroc extends Boss {
         if (health <= 0) {
             health = 0;
             explode(); // Call Creature.java's explode() method to start death animation
+            
         }
         // if (bossHitSound != null) {
         //     bossHitSound.stop();

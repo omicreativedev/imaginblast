@@ -11,7 +11,6 @@ import javafx.scene.media.MediaPlayer;
 import java.util.Map;
 
 
-
 /**
  * GAME RENDERER CLASS
  * Separates rendering logic from game logic
@@ -21,20 +20,21 @@ public class GameRenderer {
    
     private GraphicsContext gc;
     private Image startupBgGif;
+    
+    // AudioClip works for Music but some isn't working
     private AudioClip startScreenMusic;
     private AudioClip buttonClickSound;
-    private AudioClip gameplayMusic; //new
-    //new - Additional sound effects (converted to MediaPlayer for better sample rate support)
-    private MediaPlayer bossMusic; //new - Changed from AudioClip to MediaPlayer
-    private MediaPlayer itemCollectSound; //new - Changed from AudioClip to MediaPlayer
-    private MediaPlayer playerShootSound; //new - Changed from AudioClip to MediaPlayer
-    private MediaPlayer questMusic; //new - Changed from AudioClip to MediaPlayer
-    private MediaPlayer portalSound; //new - Changed from AudioClip to MediaPlayer
-    private MediaPlayer playerDamageSound; //new - Changed from AudioClip to MediaPlayer
-    private boolean isHoveringPlayButton = false;
-    //private Image lvl2BGpng; //Unsure how to exactly create backgrounds for levels
-    //private Image lvl1BG;
-  
+    private AudioClip gameplayMusic;
+    // Media Player is working for some encoding better. We don't know why.
+    private MediaPlayer bossMusic;
+    private MediaPlayer itemCollectSound;
+    private MediaPlayer playerShootSound;
+    private MediaPlayer questMusic;
+    private MediaPlayer portalSound;
+    private MediaPlayer playerDamageSound;
+    private MediaPlayer explodeSound;
+    
+    private boolean isHoveringPlayButton = false;  
     
     /**
      * CONSTRUCTOR
@@ -42,28 +42,27 @@ public class GameRenderer {
      */
     public GameRenderer(GraphicsContext gc) {
         this.gc = gc;
-        this.startupBgGif = new Image("blinking_bg_startup.gif");
+        this.startupBgGif = new Image("bg_blinking_startup.gif");
         
       
-        
-    String musicUrl = getClass().getResource("/start_screen_music.wav").toString();
+    // Music for start up screen
+    String musicUrl = getClass().getResource("/wav_start_screen_music.wav").toString();
     this.startScreenMusic = new AudioClip(musicUrl);
     this.startScreenMusic.setCycleCount(1);
-    this.startScreenMusic.play();   
-
+    this.startScreenMusic.play();
     
-    String clickUrl = getClass().getResource("/button_click.wav").toString();
+    // Sound effect for clicking buttons
+    String clickUrl = getClass().getResource("/wav_button_click.wav").toString();
     this.buttonClickSound = new AudioClip(clickUrl);
-        
-    //new - Load gameplay music
+    
+    // Music for the play screens (all screens currently using the same music)
     String gameplayUrl = getClass().getResource("/wav_play_screen_music.wav").toString();
     this.gameplayMusic = new AudioClip(gameplayUrl);
-    this.gameplayMusic.setCycleCount(AudioClip.INDEFINITE); // Loop forever
+    this.gameplayMusic.setCycleCount(AudioClip.INDEFINITE);
     
-    //new - Load boss music (using MediaPlayer)
+    // Music for the boss screens
     try {
-        String bossMusicUrl = getClass().getResource("/boss_music.mp3").toString();
-        System.out.println("Loading boss music from: " + bossMusicUrl); // DEBUG
+        String bossMusicUrl = getClass().getResource("/mp3_boss_music.mp3").toString();
         Media bossMedia = new Media(bossMusicUrl);
         this.bossMusic = new MediaPlayer(bossMedia);
         this.bossMusic.setCycleCount(MediaPlayer.INDEFINITE);
@@ -72,12 +71,11 @@ public class GameRenderer {
         this.bossMusic.play();
         this.bossMusic.pause();
         this.bossMusic.seek(javafx.util.Duration.ZERO);
-        System.out.println("Boss music preloaded"); // DEBUG
     } catch (Exception e) {
         System.out.println("Could not load boss music: " + e.getMessage());
     }
     
-    //new - Load item collect sound (using MediaPlayer)
+    // Collecting item sound effects
     try {
         String itemCollectUrl = getClass().getResource("/wav_item_collect.wav").toString();
         Media itemCollectMedia = new Media(itemCollectUrl);
@@ -86,7 +84,7 @@ public class GameRenderer {
         System.out.println("Could not load item collect sound: " + e.getMessage());
     }
     
-    //new - Load player shoot sound (using MediaPlayer)
+    // Player shooting sound
     try {
         String playerShootUrl = getClass().getResource("/wav_player_shoot.wav").toString();
         Media playerShootMedia = new Media(playerShootUrl);
@@ -95,7 +93,7 @@ public class GameRenderer {
         System.out.println("Could not load player shoot sound: " + e.getMessage());
     }
     
-    //new - Load quest music (using MediaPlayer)
+    // Quest background music
     try {
         String questMusicUrl = getClass().getResource("/wav_quest_music_fixed.wav").toString();
         Media questMedia = new Media(questMusicUrl);
@@ -105,7 +103,16 @@ public class GameRenderer {
         System.out.println("Could not load quest music: " + e.getMessage());
     }
     
-    //new - Load portal sound (using MediaPlayer)
+    // Explosion sound
+    try {
+        String explodeUrl = getClass().getResource("/wav_explode.wav").toString();
+        Media explodeMedia = new Media(explodeUrl);
+        this.explodeSound = new MediaPlayer(explodeMedia);
+    } catch (Exception e) {
+        System.out.println("Could not load explosion sound: " + e.getMessage());
+    }
+    
+    // Portal sound
     try {
         String portalSoundUrl = getClass().getResource("/wav_going_through_portal.wav").toString();
         Media portalMedia = new Media(portalSoundUrl);
@@ -114,7 +121,7 @@ public class GameRenderer {
         System.out.println("Could not load portal sound: " + e.getMessage());
     }
     
-    //new - Load player damage sound (using MediaPlayer)
+    // Player damage sound
     try {
         String playerDamageUrl = getClass().getResource("/wav_player_take_damage.wav").toString();
         Media playerDamageMedia = new Media(playerDamageUrl);
@@ -122,13 +129,11 @@ public class GameRenderer {
     } catch (Exception e) {
         System.out.println("Could not load player damage sound: " + e.getMessage());
     }
-        
-    }
+}
     
     /**
      * Change the button color of the button when hover
-     * There might be a simpler way to do this.
-     * Sort of a hack? 
+     * 
      * @param mouseX Current mouse X coordinate
      * @param mouseY Current mouse Y coordinate
      */
@@ -163,7 +168,7 @@ public class GameRenderer {
     }
     
     /**
-     * DRAW
+     * drawHUD
      * Shows player information during normal gameplay PLAYING state
      * 
      * @param score Current player score
@@ -219,32 +224,15 @@ public class GameRenderer {
         }
     }
     
-    /*
-     * I honestly got confused how to implement background images to levels
-     * I was wondering if it was similar to how quest and startup screens worked
-     * Also the startup png is just a placeholder for level 1 background
-   	Draw Level 1 Screen
-    public void drawLevel2Screen() {
-    	this.lvl1BG = new Image("startup_bg.png");
-    	gc.drawImage(lvl1BG, 0, 0, ImaginBlastMain.WIDTH, ImaginBlastMain.HEIGHT);
-   }
-    Draw Level 2 Screen
-    public void drawLevel2Screen() {
-     *	 gc.drawImage(lvl2BGpng,0 ,0 ImaginBlastMain.WIDTH, ImaginBlastMain.HEIGHT);
-     * }
-     */
     
     /**
-     * DRAW START SCREEN
-     * Renders the main menu with PLAY button
-     * Note: This is ugly but it works. We will fix it later.
+     * drawStartScreen
+     * Draws the start screen with PLAY button
      * 
      * @param startScreen The StartScreen object-not heavily used yet...
      */
     public void drawStartScreen(StartScreen startScreen) {
-        // Forest green background (same as gameplay)
-        // gc.setFill(Color.FORESTGREEN);
-        // gc.fillRect(0, 0, ImaginBlastMain.WIDTH, ImaginBlastMain.HEIGHT);
+
     	gc.drawImage(startupBgGif, 0, 0, ImaginBlastMain.WIDTH, ImaginBlastMain.HEIGHT);
     	
         // Center text alignment for menu elements
@@ -278,13 +266,9 @@ public class GameRenderer {
         gc.fillText("Instructions: Move your mouse cursor to move, left-click on mouse to shoot!", 
                     centerX, ImaginBlastMain.HEIGHT/2 + 40);
         
-        
-        
-        
         // PLAY GAME button - green rectangle
         gc.setFill(Color.GREEN);
         gc.fillRect(ImaginBlastMain.WIDTH/2 - 100, ImaginBlastMain.HEIGHT/2 + 100, 200, 50);
-        
         
         // On Mouse over Button
         if (isHoveringPlayButton) {
@@ -293,10 +277,7 @@ public class GameRenderer {
             gc.setFill(Color.GREEN);
         }
         gc.fillRect(ImaginBlastMain.WIDTH/2 - 100, ImaginBlastMain.HEIGHT/2 + 100, 200, 50);  
-        
-        
-        
-        
+                
         // Button text
         gc.setFill(Color.BLACK);
         gc.setFont(Font.font(18));
@@ -309,9 +290,8 @@ public class GameRenderer {
     }
     
     /**
-     * DRAW QUEST SCREEN
+     * drawQuestScreen
      * Shows the level objective/quest text before gameplay begins
-     * Note: This is ugly but it works. We will fix it later.
      * 
      * @param quest The Quest01 object containing quest text
      */
@@ -376,8 +356,8 @@ public class GameRenderer {
     }
 
     /**
-     * DRAW BOSS HEADS-UP DISPLAY
-     * Special HUD for boss fights (no acorn count, includes boss health)
+     * DRAW BOSS HEADS-UP DISPLAY (HUD)
+     * Special HUD for boss fights (no item count, includes boss health)
      * Called by drawBossScreen()
      * 
      * @param score Current player score
@@ -503,6 +483,15 @@ public class GameRenderer {
     public void stopBossMusic() {
         if (bossMusic != null) {
             bossMusic.stop();
+        }
+    }
+    
+    
+  //new - Play explosion sound
+    public void playExplodeSound() {
+        if (explodeSound != null) {
+            explodeSound.stop(); // Reset to beginning
+            explodeSound.play();
         }
     }
     

@@ -36,7 +36,7 @@ public class BossPirate extends Boss {
      * @param posY Starting Y coordinate
      */
     public BossPirate(int posX, int posY) {
-        super(posX, posY, 256, new Image("catPirate_boss_cropped.png")); // Call Boss.java constructor with large size
+        super(posX, posY, 256, new Image("boss_pirate.png")); // Call Boss.java constructor with large size
         	//Cat pirate boss png has been updated 04/04 9:26 PM by Ev
         this.health = 200; // Set current health (inherited from Boss.java)
         this.maxHealth = 200; // Set max health for health bar (inherited from Boss.java)
@@ -227,6 +227,7 @@ public class BossPirate extends Boss {
         if (health <= 0) {
             health = 0;
             explode(); // Call Creature.java's explode() method to start death animation
+
         }
         //if (health == 0) { health=0; }
         //if (health == 0) { explode();} //I removed the health=0; since if the boss is gone, then the health would never go below 0

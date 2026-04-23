@@ -52,16 +52,17 @@ public class ImaginBlastMain extends Application {
 	
 	// Image resources for game elements
 	// Reference: https://docs.oracle.com/javase/8/javafx/api/javafx/scene/image/Image.html
-	static final Image PLAYER_IMG = new Image("frog_player_128x128.png");
+	
+	static final Image PLAYER_IMG = new Image("player_frog_static.png");
 	
 	//Enemy images
-	static final Image PILLBUG_IMG = new Image("pill_bug.png"); //level02 enemy
-	static final Image SQUIRREL_IMG = new Image("squirrel_enemy_front_128x128.png"); //level01 enemy
-	static final Image GARLIC_IMG = new Image("garlic.png");
+	static final Image PILLBUG_IMG = new Image("enemy_pillbug.png"); //level02 enemy
+	static final Image SQUIRREL_IMG = new Image("enemy_squirrel.png"); //level01 enemy
+	static final Image GARLIC_IMG = new Image("enemy_garlic.png");
 	static final Image EXPLOSION_IMG = new Image("explosion.png");
-	static final Image ACORN_IMG = new Image("acorn_cap_64x64.png");
-	static final Image DONUT_IMG = new Image("donut.png");
-	static final Image CUPCAKE_IMG = new Image("cupcake.png");
+	static final Image ACORN_IMG = new Image("item_acorn.png");
+	static final Image DONUT_IMG = new Image("item_donut.png");
+	static final Image CUPCAKE_IMG = new Image("item_cupcake.png");
 	
 	// Explosion animation properties
 	static final int EXPLOSION_W = 128; // Width of explosion sprite

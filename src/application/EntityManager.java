@@ -29,7 +29,6 @@ public class EntityManager {
     private int score;         // Player's current score
     
     // Width and height for off-screen checks
-    @SuppressWarnings("unused")
     private int WIDTH;  // Game screen width
     private int HEIGHT; // Game screen height
     
@@ -223,6 +222,7 @@ public class EntityManager {
                     score++;
                     levelManager.getCurrentLevel().registerEnemyDefeated(enemy);
                     enemy.explode();
+                    gameRenderer.playExplodeSound(); //new - Play explosion sound
                     shot.toRemove = true;
                     break;
                 }
