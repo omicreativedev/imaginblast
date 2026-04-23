@@ -7,6 +7,18 @@ import javafx.scene.image.Image;
  * Represents the player character in the game
  * Extends Creature to inherit basic creature properties and behaviors
  * Adds player-specific attributes like health and item collection
+ * 
+ * Source(s)
+ * Help with Math for WASD
+ * https://gamedev.stackexchange.com/questions/122374
+ * Help with Mouse Aiming
+ * - Getting coordinates relative to the canvas
+ * - Calculation for the angle and vector from player>mouse
+ * - Division by 0 issues
+ * https://stackoverflow.com/questions/42806538
+ * Math without LibGDX
+ * https://docs.oracle.com/javase/8/docs/api/java/lang/Math.html
+ * 
  */
 
 public class Player extends Creature {
@@ -22,10 +34,15 @@ public class Player extends Creature {
 	
 	// These stop rapid health point loss
 	private int invincibilityFrames = 0;
-    private static final int INVINCIBILITY_DURATION = 60;
+    private static final int INVINCIBILITY_DURATION = 10;
     private boolean isShielded = false;
-	
     
+    // WASD MOVEMENT PROPERTIES
+    private int speed = 18;              // Movement speed in pixels per frame
+    private InputHandler inputHandler;  // Reference to input handler for key states
+    
+    // SHOOTING PROPERTIES
+    private static final int BULLET_SPEED = 12; // Speed of fired projectiles (pixels per frame)
     
 	 /**
      * Take damage from enemy collision, projectile, etc.
@@ -94,13 +111,95 @@ public class Player extends Creature {
      * UPDATE METHOD
      * Called every frame to update player state
      * Overrides Creature.update() to add invincibility countdown
+     * NEW: Also handles WASD movement
      */
     @Override
     public void update() {
         super.update(); // Call Creature's update (handles explosion)
         updateInvincibility(); // Count down invincibility frames
+        handleMovement(); // NEW: Handle WASD key movement
     }
-	
+    
+    /**
+     * HANDLE MOVEMENT
+     * Reads input handler for WASD
+     * Moves player in the corresponding direction each frame
+     * Source: https://gamedev.stackexchange.com/questions/122374
+     */
+    private void handleMovement() {
+        // Skip movement if player is exploding
+        if (exploding) return;
+        
+        // Store original position for boundary checking
+        int newX = posX;
+        int newY = posY;
+        
+        // Apply movement based on active keys
+        if (inputHandler != null) {
+            if (inputHandler.isUpPressed())    newY -= speed;
+            if (inputHandler.isDownPressed())  newY += speed;
+            if (inputHandler.isLeftPressed())  newX -= speed;
+            if (inputHandler.isRightPressed()) newX += speed;
+            //Sprint movement based on 'f' key
+            	//Learned that 'shift' key wouldn't work by: Oracle 2015), https://docs.oracle.com/javase/8/javafx/api/javafx/scene/input/KeyEvent.html
+            if (inputHandler.isFPressed()) {speed = 30;}else{speed=18;};
+           
+           
+        }
+        
+        // Apply boundary constraints (keep player within screen)
+        if (newX < 0) newX = 0;
+        if (newX + size > ImaginBlastMain.WIDTH) newX = ImaginBlastMain.WIDTH - size;
+        if (newY < 0) newY = 0;
+        if (newY + size > ImaginBlastMain.HEIGHT) newY = ImaginBlastMain.HEIGHT - size;
+        
+        // Update position
+        posX = newX;
+        posY = newY;
+    }
+    
+    /**
+     * SET INPUT HANDLER
+     * Called by EntityManager after player creation
+     * @param handler The InputHandler instance
+     */
+    public void setInputHandler(InputHandler handler) {
+        this.inputHandler = handler;
+    }
+    
+    /**
+     * CALCULATE DIRECTION VECTOR
+     * Computes normal direction from player to target (mouse cursor)
+     * Used for aiming shots
+     * Source: Vector math from https://gamedev.stackexchange.com/questions/122374
+     * @param targetX Target X coordinate (mouse cursor)
+     * @param targetY Target Y coordinate (mouse cursor)
+     * @return double array where [0] = normalized X direction, [1] = normalized Y direction
+     */
+    private double[] calculateDirection(double targetX, double targetY) {
+        // Get player center coordinates (where shot originates)
+        double fromX = posX + size / 2;
+        double fromY = posY + size / 2;
+        
+        // Calculate difference between target and shooter
+        double dx = targetX - fromX;
+        double dy = targetY - fromY;
+        
+        // Calculate distance (length of the vector)
+        double length = Math.sqrt(dx * dx + dy * dy);
+        
+        // Normalize (avoid division by zero)
+        if (length != 0) {
+            dx /= length;
+            dy /= length;
+        } else {
+            // If target is exactly at player center, shoot upward as default
+            dx = 0;
+            dy = -1;
+        }
+        
+        return new double[]{dx, dy};
+    }
 	
 	
 	
@@ -116,6 +215,7 @@ public class Player extends Creature {
 		// Call parent Creature constructor to set up position, size, and image
 		super(posX, posY, size, image);
 		// hp and col_items keep their default values
+		// inputHandler will be set later via setInputHandler()
 	}
 	
 	
@@ -124,13 +224,29 @@ public class Player extends Creature {
 	 * SHOOT METHOD
 	 * Creates a projectile fired by the player
 	 * Overrides the Creature.shoot() method to customize shot position
-	 * @return A new Shot object positioned at the player's center
+	 * NEW: Shoots toward mouse cursor position instead of straight up
+	 * @return A new Shot object positioned at the player's center, aimed at cursor
 	 */
 	@Override
 	public Shot shoot() {
-		// Calculate shot position:
-		// X: player's center (posX + size/2) minus half the shot width
-		// Y: directly above the player (posY - full shot height)
-		return new ShotStandard(posX + size / 2 - Shot.SIZE / 2, posY - Shot.SIZE);
+		// Get mouse position from input handler (for aiming)
+		double mouseX = 0;
+		double mouseY = 0;
+		if (inputHandler != null) {
+			mouseX = inputHandler.getMouseX();
+			mouseY = inputHandler.getMouseY();
+		}
+		
+		// Calculate direction from player center to mouse cursor
+		double[] direction = calculateDirection(mouseX, mouseY);
+		double velX = direction[0] * BULLET_SPEED;
+		double velY = direction[1] * BULLET_SPEED;
+		
+		// Calculate shot starting position (center of player)
+		int shotX = posX + size / 2 - Shot.SIZE / 2;
+		int shotY = posY + size / 2 - Shot.SIZE / 2;
+		
+		// Create and return a new directional shot
+		return new ShotStandard(shotX, shotY, velX, velY);
 	}
 }

@@ -9,11 +9,11 @@ import javafx.scene.text.Font;
 import java.util.List;
 
 /**
- * BOSS SCREEN Level 1
+ * BOSS SCREEN Level 3
  * Implementation of the BossScreen abstract class BossScreen.java
- * Manages the first boss fight (BossPirate.java)
+ * Manages the third boss fight (BossBroc.java)
  */
-public class BossScreen01 extends BossScreen {
+public class BossScreen03 extends BossScreen {
     
     // Background music for this boss fight
     // private MediaPlayer bossMusicPlayer;
@@ -22,21 +22,22 @@ public class BossScreen01 extends BossScreen {
     // private Image backgroundImage;
     
     /**
-     * Initializes the boss fight with a new BossPirate instance
+     * CONSTRUCTOR
+     * Initializes the boss fight with a new BossBroc instance
      * Creates invisible portal and sets up the arena
      */
-    public BossScreen01() {
-        boss = new BossPirate(ImaginBlastMain.WIDTH/2 - 128, 100); // Create boss centered near top of screen
+    public BossScreen03() {
+        boss = new BossBroc(ImaginBlastMain.WIDTH/2 - 128, 100); // Create boss centered near top of screen
         portal = new Portal(); // Create exit portal
         portalVisible = false; // Portal starts hidden until boss is defeated
         levelComplete = false; // Fight starts incomplete
         
         // Load the background image for this specific boss
-        // backgroundImage = new Image("boss_screen_01_background.png");
+        // backgroundImage = new Image("boss_screen_03_background.png");
         
         // Load and play boss music when screen is created
         // try {
-        //     Media music = new Media(new File("boss_music.mp3").toURI().toString());
+        //     Media music = new Media(new File("boss_music_3.mp3").toURI().toString());
         //     bossMusicPlayer = new MediaPlayer(music);
         //     bossMusicPlayer.setCycleCount(MediaPlayer.INDEFINITE); // Loop forever
         //     bossMusicPlayer.play(); // Start playing
@@ -69,13 +70,12 @@ public class BossScreen01 extends BossScreen {
             // }
         }
         
-        // Moved out of isDefeated
+        // Always update boss to advance explosion animation
         boss.update(player); // Update boss position and behavior
         
-        
-        // Prevents movement after death. No Zombie Pirate (or maybe??? LOL!)
+        // Prevents movement after death. No Zombie Broc (or maybe??? LOL!)
         if (!boss.isDefeated()) {
-        	boss.shootAtPlayer(enemyShots, player); // Boss aims at player now
+            boss.shootAtPlayer(enemyShots, player); // Boss aims at player
         }
         
         // Check player shots hitting boss (iterate backwards to safely remove)
@@ -91,36 +91,38 @@ public class BossScreen01 extends BossScreen {
         if (Collisions.playerCollides(player, boss) && !player.exploding) {
             player.takeDamage(10); // Player takes damage when touching boss
             
-            //We have to stop the boss and player from overlapping
-            
+            // Push player away from boss (fly off)
+            // Determine which direction to push based on player position relative to boss center
             int bossCenterX = boss.posX + boss.size / 2;
             int bossCenterY = boss.posY + boss.size / 2;
             int playerCenterX = player.posX + player.size / 2;
             int playerCenterY = player.posY + player.size / 2;
             
-            // We can calculate a direction to push the player
+            // Calculate push direction (away from boss center)
             int pushX = playerCenterX - bossCenterX;
             int pushY = playerCenterY - bossCenterY;
+            
+            // Normalize direction (simplified - just use sign)
             if (pushX > 0) pushX = 1;
             else if (pushX < 0) pushX = -1;
             else pushX = 0;
+            
             if (pushY > 0) pushY = 1;
             else if (pushY < 0) pushY = -1;
             else pushY = 0;
             
-            // Send the frog flying 100 pixels
+            // Push player 100 pixels away
             int newX = player.posX + (pushX * 100);
             int newY = player.posY + (pushY * 100);
             
-            // Don't let the player fly off the screen
+            // Apply boundary constraints
             if (newX < 0) newX = 0;
             if (newX + player.size > ImaginBlastMain.WIDTH) newX = ImaginBlastMain.WIDTH - player.size;
             if (newY < 0) newY = 0;
             if (newY + player.size > ImaginBlastMain.HEIGHT) newY = ImaginBlastMain.HEIGHT - player.size;
+            
             player.posX = newX;
             player.posY = newY;
-            
-            
         }
         
         // Check if player reached portal (only if portal is visible)
@@ -133,6 +135,7 @@ public class BossScreen01 extends BossScreen {
      * OVERRIDE DRAW
      * Required by BossScreen.java's abstract draw() method
      * Renders all boss fight elements to the screen
+     * 
      * @param gc Graphics context for drawing
      * @param gameRenderer Game renderer (not heavily used here but available)
      * @param player The player entity (drawn at current position)
@@ -175,6 +178,7 @@ public class BossScreen01 extends BossScreen {
      * Required by BossScreen.java's abstract isComplete() method
      * Returns whether the boss fight has been completed
      * Used by ImaginBlastMain to transition to LEVEL_DONE state
+     * 
      * @return true if player has entered the portal, false otherwise
      */
     @Override

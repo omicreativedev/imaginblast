@@ -19,7 +19,6 @@ public abstract class Boss extends Creature {
     protected boolean portalActive;  // Is the portal currently active/collidable?
     
     /**
-     * BOSS CONSTRUCTOR
      * Creates a new boss at specified position with given size and image
      * Calls parent constructor (Creature) to handle basic entity setup
      * 
@@ -33,6 +32,16 @@ public abstract class Boss extends Creature {
     public Boss(int posX, int posY, int size, Image image) {
         super(posX, posY, size, image); // Pass parameters to Creature constructor
     }
+    
+    /**
+     * SHOOT AT PLAYER METHOD
+     * Each boss implements aiming at the player
+     * Shoots projectiles toward the player's current position
+     * 
+     * @param shots List of enemy shots to add new projectiles to
+     * @param player Reference to player for targeting
+     */
+    public abstract void shootAtPlayer(List<Shot> shots, Player player);
     
     /**
      * ABSTRACT UPDATE METHOD

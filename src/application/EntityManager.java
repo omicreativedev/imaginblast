@@ -29,8 +29,12 @@ public class EntityManager {
     private int score;         // Player's current score
     
     // Width and height for off-screen checks
+    @SuppressWarnings("unused")
     private int WIDTH;  // Game screen width
     private int HEIGHT; // Game screen height
+    
+    // Reference to input handler for player movement (WASD)
+    private InputHandler inputHandler; // NEW: Store input handler reference
     
     /**
      * CONSTRUCTOR
@@ -70,6 +74,23 @@ public class EntityManager {
      */
     public void setPlayer(Player player) {
         this.player = player;
+        // NEW: If we have an input handler, connect it to the player right away
+        if (this.player != null && inputHandler != null) {
+            this.player.setInputHandler(inputHandler);
+        }
+    }
+    
+    /**
+     * NEW: Sets the input handler for WASD movement
+     * Called by ImaginBlastMain after creating EntityManager
+     * @param handler The InputHandler instance
+     */
+    public void setInputHandler(InputHandler handler) {
+        this.inputHandler = handler;
+        // If player already exists, connect them now
+        if (player != null) {
+            player.setInputHandler(inputHandler);
+        }
     }
     
     /**
@@ -101,14 +122,17 @@ public class EntityManager {
     /**
      * Moves player horizontally based on mouse position
      * @param mouseX Current mouse X coordinate
+     * 
+     * DEPRECATED: WASD movement now handles player positioning.
+     * Keeping this method for backward compatibility but it is no longer called.
+     * We might remove it later if nothing breaks.
      */
     public void movePlayer(int mouseX) {
-        if (player != null) {
-            player.posX = mouseX;
-            // Keep player within screen bounds
-            if (player.posX < 0) player.posX = 0;
-            if (player.posX + player.size > WIDTH) player.posX = WIDTH - player.size;
-        }
+        // WASD movement has replaced mouse movement.
+        // This method is intentionally left empty but not deleted.
+        // If called, it does nothing. The player now moves via handleMovement() in Player.java.
+        // Keeping the method signature so existing code that calls it doesn't break.
+        // TODO: Remove this method entirely after confirming ImaginBlastMain no longer calls it.
     }
     
     /**
@@ -152,8 +176,10 @@ public class EntityManager {
     public void updateShots() {
         for (int i = shots.size() - 1; i >= 0; i--) {
             Shot shot = shots.get(i);
-            // Remove if off top of screen or marked for removal
-            if (shot.posY < 0 || shot.toRemove) {
+            // Remove if off screen (any edge) or marked for removal
+            if (shot.posX + Shot.SIZE < 0 || shot.posX > WIDTH || 
+                shot.posY + Shot.SIZE < 0 || shot.posY > HEIGHT || 
+                shot.toRemove) {
                 shots.remove(i);
                 continue;
             }
@@ -168,8 +194,10 @@ public class EntityManager {
     public void updateShotsWithEnemyCollisions(LevelManager levelManager) {
         for (int i = shots.size() - 1; i >= 0; i--) {
             Shot shot = shots.get(i);
-            // Remove if off screen or marked
-            if (shot.posY < 0 || shot.toRemove) {
+            // Remove if off screen (any edge) or marked for removal
+            if (shot.posX + Shot.SIZE < 0 || shot.posX > WIDTH || 
+                shot.posY + Shot.SIZE < 0 || shot.posY > HEIGHT || 
+                shot.toRemove) {
                 shots.remove(i);
                 continue;
             }
@@ -177,10 +205,10 @@ public class EntityManager {
             // Check collision with each enemy
             for (Enemy enemy : enemies) {
                 if (Collisions.shotCollides(shot, enemy) && !enemy.exploding) {
-                    score++; // Increase score
+                    score++;
                     levelManager.getCurrentLevel().registerEnemyDefeated(enemy);
-                    enemy.explode(); // Start enemy death animation
-                    shot.toRemove = true; // Mark shot for removal
+                    enemy.explode();
+                    shot.toRemove = true;
                     break;
                 }
             }
@@ -195,15 +223,17 @@ public class EntityManager {
         for (int i = shots.size() - 1; i >= 0; i--) {
             Shot shot = shots.get(i);
             shot.update();
-            // Remove if off screen or marked
-            if (shot.posY < 0 || shot.toRemove) {
+            // Remove if off screen (any edge) or marked for removal
+            if (shot.posX + Shot.SIZE < 0 || shot.posX > WIDTH || 
+                shot.posY + Shot.SIZE < 0 || shot.posY > HEIGHT || 
+                shot.toRemove) {
                 shots.remove(i);
                 continue;
             }
             // Check collision with boss
             if (Collisions.shotCollides(shot, boss) && !boss.exploding) {
-                boss.takeDamage(10); // Boss takes damage
-                shots.remove(i); // Remove the shot
+                boss.takeDamage(10);
+                shots.remove(i);
             }
         }
     }
@@ -243,7 +273,8 @@ public class EntityManager {
             }
             // Check if shot hits player
             if (Collisions.shotCollides(shot, player) && !player.exploding) {
-                player.takeDamage(5); // Player takes damage
+            	System.out.println("Enemy shot hit player!"); // DEBUG
+            	player.takeDamage(5); // Player takes damage
                 enemyShots.remove(i); // Remove the shot
             }
         }
@@ -297,11 +328,46 @@ public class EntityManager {
      */
     public void checkEnemyCollisions(GameStateManager stateManager) {
         for (Enemy e : enemies) {
-            if (Collisions.playerCollides(player, e) && !player.exploding) {
-                boolean stillAlive = player.takeDamage(1);
+            if (Collisions.playerCollides(player, e) && !player.exploding && !player.destroyed) {
+                boolean stillAlive = player.takeDamage(5); // Enemy does 10 damage
                 if (!stillAlive) {
                     stateManager.setCurrentState(GameState.GAME_OVER);
+                    return;
                 }
+                
+                // Push player away from enemy (same as boss)
+                int enemyCenterX = e.posX + e.size / 2;
+                int enemyCenterY = e.posY + e.size / 2;
+                int playerCenterX = player.posX + player.size / 2;
+                int playerCenterY = player.posY + player.size / 2;
+                
+                // Calculate push direction (away from enemy center)
+                int pushX = playerCenterX - enemyCenterX;
+                int pushY = playerCenterY - enemyCenterY;
+                
+                // Normalize direction (just use sign)
+                if (pushX > 0) pushX = 1;
+                else if (pushX < 0) pushX = -1;
+                else pushX = 0;
+                
+                if (pushY > 0) pushY = 1;
+                else if (pushY < 0) pushY = -1;
+                else pushY = 0;
+                
+                // Push player 80 pixels away
+                int newX = player.posX + (pushX * 80);
+                int newY = player.posY + (pushY * 80);
+                
+                // Apply boundary constraints
+                if (newX < 0) newX = 0;
+                if (newX + player.size > ImaginBlastMain.WIDTH) newX = ImaginBlastMain.WIDTH - player.size;
+                if (newY < 0) newY = 0;
+                if (newY + player.size > ImaginBlastMain.HEIGHT) newY = ImaginBlastMain.HEIGHT - player.size;
+                
+                player.posX = newX;
+                player.posY = newY;
+                
+                break; // Only collide with one enemy per frame
             }
         }
     }
@@ -350,10 +416,17 @@ public class EntityManager {
         items.forEach(i -> {
             i.update(null);
             if (Collisions.itemCollides(player, i) && !i.collected) {
+            	 System.out.println("Collected: " + i.getClass().getSimpleName());
                 levelManager.getCurrentLevel().registerItemCollected(i);
                 // Call specific item's collection effect
                 if (i instanceof ItemAcorn) {
                     ((ItemAcorn) i).onCollected();
+                }
+                if (i instanceof ItemDonut) {
+                    ((ItemDonut) i).onCollected();
+                }
+                if (i instanceof ItemCupcake) {
+                    ((ItemCupcake) i).onCollected();
                 }
                 // Future: add else-if for other item types
             }

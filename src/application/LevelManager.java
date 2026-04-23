@@ -5,26 +5,47 @@ package application;
  */
 public class LevelManager {
     private int currentLevelNum;
-    private Level01 currentLevel;
-    private Quest01 quest01;
-    private BossScreen01 bossScreen;
-    private LevelDone01 levelDoneScreen;
+    private Level currentLevel;
+    private Quest currentQuest;
+    private BossScreen currentBossScreen;
+    private LevelDone currentLevelDoneScreen;
     private boolean bossDefeated;
     
     public LevelManager() {
         currentLevelNum = 1;
-        currentLevel = new Level01();
-        quest01 = new Quest01();
-        bossScreen = new BossScreen01();
-        levelDoneScreen = new LevelDone01();
+        loadLevel1();
         bossDefeated = false;
     }
     
+    // Load Level 1
+    private void loadLevel1() {
+        currentLevel = new Level01();
+        currentQuest = new Quest01();
+        currentBossScreen = new BossScreen01();
+        currentLevelDoneScreen = new LevelDone01();
+    }
+    
+    // Load Level 2
+    private void loadLevel2() {
+        currentLevel = new Level02();
+        currentQuest = new Quest02();
+        currentBossScreen = new BossScreen02();
+        currentLevelDoneScreen = new LevelDone02();
+    }
+    
+    // Load Level 3
+    private void loadLevel3() {
+        currentLevel = new Level03();
+        currentQuest = new Quest03();
+        currentBossScreen = new BossScreen03();
+        currentLevelDoneScreen = new LevelDone03();
+    }
+    
     // Getters
-    public Level01 getCurrentLevel() { return currentLevel; }
-    public Quest01 getQuest() { return quest01; }
-    public BossScreen01 getBossScreen() { return bossScreen; }
-    public LevelDone01 getLevelDoneScreen() { return levelDoneScreen; }
+    public Level getCurrentLevel() { return currentLevel; }
+    public Quest getQuest() { return currentQuest; }
+    public BossScreen getBossScreen() { return currentBossScreen; }
+    public LevelDone getLevelDoneScreen() { return currentLevelDoneScreen; }
     public boolean isBossDefeated() { return bossDefeated; }
     public int getCurrentLevelNum() { return currentLevelNum; }
     
@@ -33,26 +54,26 @@ public class LevelManager {
     
     public void resetForNewGame() {
         bossDefeated = false;
-        bossScreen = new BossScreen01();
-        // Reset other level-specific things if needed
+        currentLevelNum = 1;
+        loadLevel1();
     }
     
     public void reset() {
         currentLevelNum = 1;
-        currentLevel = new Level01();
-        quest01 = new Quest01();
-        bossScreen = new BossScreen01();
-        levelDoneScreen = new LevelDone01();
+        loadLevel1();
         bossDefeated = false;
     }
     
-    // For future Level 2
+    // Advance to next level
     public void advanceToNextLevel() {
         currentLevelNum++;
-        // In future: switch to load revelant level classes
-        // currentLevel = new Level02();
-        // quest01 = new Quest02();
-        // bossScreen = new BossScreen02();
-        // levelDoneScreen = new LevelDone02();
+        
+        if (currentLevelNum == 2) {
+            loadLevel2();
+        } else if (currentLevelNum == 3) {
+            loadLevel3();
+        }
+        
+        bossDefeated = false;
     }
 }

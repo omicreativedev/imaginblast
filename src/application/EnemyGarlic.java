@@ -3,29 +3,29 @@ package application;
 import javafx.scene.image.Image;
 
 /**
- * SQUIRREL ENEMY CLASS
+ * GARLIC ENEMY CLASS
  * Specific type of enemy
  * Moves straight down at a set speed
  * Extends the Enemy class to inherit basic enemy properties
  */
-public class EnemySquirrel extends Enemy {
+public class EnemyGarlic extends Enemy {
     
-    // Squirrel-specific speed
-    int SPEED = 7; // Pixels per frame - controls how fast squirrel falls
+    // Garlic-specific speed
+    int SPEED = 10; // Pixels per frame - controls how fast garlic falls
     
     /**
-     * CONSTRUCTOR - Creates a new squirrel enemy
+     * CONSTRUCTOR - Creates a new garlic enemy
      * @param posX Initial X position (random across screen width)
      * @param posY Initial Y position (usually 0 at top of screen)
      * @param size Size of the enemy (typically PLAYER_SIZE = 60)
-     * @param image The squirrel image (SQUIRREL_IMG)
+     * @param image The garlic image (GARLIC_IMG)
      */
-    public EnemySquirrel(int posX, int posY, int size, Image image) {
+    public EnemyGarlic(int posX, int posY, int size, Image image) {
         super(posX, posY, size, image); // Call Enemy.java constructor
     }
     
     /**
-     * UPDATE METHOD - Squirrel-specific movement
+     * UPDATE METHOD - Garlic-specific movement
      * Called every frame by EntityManager
      * Moves straight down until it goes off screen
      * Overrides Enemy.update() which overrides Creature.update()

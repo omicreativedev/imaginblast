@@ -8,28 +8,30 @@ import java.util.Arrays;
 import java.util.List;
 
 /* 
- * 03/29 - 9:25 PM
- * Every 'block' or required componets of the level are included here, 
- * I just need to update enemy images and background image
+ * Level 4 - Final Level
+ * Enemies: Squirrels, Pillbugs, Garlic (Garlic is only needed for quest)
+ * Items: Acorns, Donuts, Cassettes
+ * Boss: Angry Grandma
  */
-public class Level02 extends Level{	
+public class Level04 extends Level{	
 	
-	public Level02() {
-		super(2, "Muddy Ponds");
+	public Level04() {
+		super(4, "Old Timey Fields");
 		
-		this.background = new Image("lvl2_1280x720_bg.png"); //TBD = To Be Done, what needs to be changed once I get files/info for these.
+		this.background = new Image("startup_bg.png"); // Use same background for now
 	}
 	
 	@Override
     public String getQuestText() {
-        return "Collect 10 acorns, 10 donuts, defeat 10 squirrels, and defeat 10 pillbugs";
+        return "Fourth quest is to collect 50 donuts and cassettes! Also, defeat 20 garlic monsters. If you achieve this you'll battle the Angry Grandma! Enter the portal if you succeed.";
     }
     
     @Override
     public Map<Class<? extends Enemy>, Integer> getEnemyGoals() {
         Map<Class<? extends Enemy>, Integer> goals = new HashMap<>();
-        goals.put(EnemySquirrel.class, 10);
-        goals.put(EnemyPillbug.class, 10); 
+        goals.put(EnemySquirrel.class, 0);
+        goals.put(EnemyPillbug.class, 0); //Due to design plan not listing squirrels or pillbugs necessary to quest, I put them at 0
+        goals.put(EnemyGarlic.class, 20);
         return goals;
     }
     
@@ -38,18 +40,20 @@ public class Level02 extends Level{
         Map<Class<? extends Item>, Integer> goals = new HashMap<>();
         goals.put(ItemAcorn.class, 10);
         goals.put(ItemDonut.class, 10);
+        goals.put(ItemCupcake.class, 10);
+        //CASSETTES COMING SOON
         return goals;
     }
     
     @Override
     public List<Class<? extends Enemy>> getPossibleEnemies() {
-        return Arrays.asList(EnemySquirrel.class, EnemyPillbug.class);
-    }
+        return Arrays.asList(EnemySquirrel.class, EnemyPillbug.class, EnemyGarlic.class);
+    } ///TODO Add cassettes
     
     @Override
     public List<Class<? extends Item>> getPossibleItems() {
-        return Arrays.asList(ItemAcorn.class, ItemDonut.class);
-    }
+        return Arrays.asList(ItemAcorn.class, ItemDonut.class, ItemCupcake.class);
+    } ///TODO Add cassettes
     
     @Override
     public Enemy createEnemy(Random rand, int width, int playerSize, Class<? extends Enemy> enemyClass) {
@@ -58,6 +62,9 @@ public class Level02 extends Level{
         }
         if (enemyClass == EnemyPillbug.class) {
             return new EnemyPillbug(50 + rand.nextInt(width - 100), 0, playerSize, getEnemyImage(enemyClass));
+        }
+        if (enemyClass == EnemyGarlic.class) {
+            return new EnemyGarlic(50 + rand.nextInt(width - 100), 0, playerSize, getEnemyImage(enemyClass));
         }
         return null;
     }
@@ -70,6 +77,9 @@ public class Level02 extends Level{
         if (itemClass == ItemDonut.class) {
             return new ItemDonut(50 + rand.nextInt(width - 100), 0, playerSize, getItemImage(itemClass));
         }
+        if (itemClass == ItemCupcake.class) {
+            return new ItemCupcake(50 + rand.nextInt(width - 100), 0, playerSize, getItemImage(itemClass));
+        } ///TODO Add cassettes
         return null;
     }
     
@@ -81,6 +91,9 @@ public class Level02 extends Level{
         if (enemyClass == EnemyPillbug.class) {
             return ImaginBlastMain.PILLBUG_IMG;
         }
+        if (enemyClass == EnemyGarlic.class) {
+            return ImaginBlastMain.GARLIC_IMG; // You'll need to add this
+        }
         return null;
     }
     
@@ -90,8 +103,11 @@ public class Level02 extends Level{
             return ImaginBlastMain.ACORN_IMG;
         }
         if (itemClass == ItemDonut.class) {
-            return ImaginBlastMain.DONUT_IMG; // You'll need to add this to ImaginBlastMain
+            return ImaginBlastMain.DONUT_IMG;
         }
+        if (itemClass == ItemCupcake.class) {
+            return ImaginBlastMain.CUPCAKE_IMG;
+        } ///TODO Add cassettes
         return null;
     }
     
@@ -104,5 +120,4 @@ public class Level02 extends Level{
     public int getItemSpawnRate() {
         return 5;
     }
-	
 }

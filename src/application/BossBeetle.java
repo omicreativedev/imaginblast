@@ -9,48 +9,47 @@ import java.util.List;
 // "We're all mad here." ~ Cheshire Cat
 
 /**
- * BOSS PIRATE CLASS
+ * BOSS BEETLE CLASS
  * Implementation of the Boss abstract class Boss.java
- * Cheshire cat pirate boss that follows the player horizontally
+ * Beetle boss that follows the player horizontally
  * Extends Boss.java which extends Creature.java, inheriting explosion behavior
  * We may change this later to offer different explosions for different Bosses
  * NEW: Boss now shoots at the player's current position (aimed shots)
  */
-public class BossPirate extends Boss {
+public class BossBeetle extends Boss {
     
     // Boss-specific attributes
     private int shootCooldown = 0; // Frames until boss can shoot again (prevents bullet spam)
-    private int speed = 10; // Movement speed
-    private static final int BULLET_SPEED = 17; // Speed of boss projectiles (slower than player shots)
+    private int speed = 15; // Movement speed
+    private static final int BULLET_SPEED = 19; // Speed of boss projectiles (slower than player shots)
     // private MediaPlayer bossLaughSound;
     // private MediaPlayer bossHitSound;
     // private MediaPlayer bossDefeatedSound;
     // private MediaPlayer bossShootSound;
     
     /**
-     * BOSS PIRATE CONSTRUCTOR
-     * Calls Boss.java constructor with predefined size (256x256) and pirate image
+     * BOSS BEETLE CONSTRUCTOR
+     * Calls Boss.java constructor with predefined size (256x256) and beetle image
      * Sets health values required by Boss.java (health, maxHealth)
      * 
      * @param posX Starting X coordinate
      * @param posY Starting Y coordinate
      */
-    public BossPirate(int posX, int posY) {
-        super(posX, posY, 256, new Image("catPirate_boss_cropped.png")); // Call Boss.java constructor with large size
-        	//Cat pirate boss png has been updated 04/04 9:26 PM by Ev
-        this.health = 200; // Set current health (inherited from Boss.java)
-        this.maxHealth = 200; // Set max health for health bar (inherited from Boss.java)
+    public BossBeetle(int posX, int posY) {
+        super(posX, posY, 256, new Image("beetle_boss.png")); // Call Boss.java constructor with large size
+        this.health = 250; // Set current health (inherited from Boss.java)
+        this.maxHealth = 250; // Set max health for health bar (inherited from Boss.java)
         // try {
-        //     Media laugh = new Media(new File("pirate_laugh.wav").toURI().toString());
+        //     Media laugh = new Media(new File("beetle_laugh.wav").toURI().toString());
         //     bossLaughSound = new MediaPlayer(laugh);
-        //     Media hit = new Media(new File("pirate_hit.wav").toURI().toString());
+        //     Media hit = new Media(new File("beetle_hit.wav").toURI().toString());
         //     bossHitSound = new MediaPlayer(hit);
-        //     Media defeated = new Media(new File("pirate_defeated.wav").toURI().toString());
+        //     Media defeated = new Media(new File("beetle_defeated.wav").toURI().toString());
         //     bossDefeatedSound = new MediaPlayer(defeated);
-        //     Media shoot = new Media(new File("pirate_shoot.wav").toURI().toString());
+        //     Media shoot = new Media(new File("beetle_shoot.wav").toURI().toString());
         //     bossShootSound = new MediaPlayer(shoot);
         // } catch (Exception e) {
-        //     System.out.println("Pirate sound effects aint loading dude!");
+        //     System.out.println("Beetle sound effects aint loading dude!");
         // }
     }
     
@@ -149,7 +148,6 @@ public class BossPirate extends Boss {
      * Creates an enemy projectile aimed at the player's current position
      * Shots originate from center of boss sprite
      * @param shots List of enemy shots to add the new projectile to
-     * @param player Reference to player for aiming (passed from BossScreen)
      */
     @Override
     public void shoot(List<Shot> shots) {
@@ -160,24 +158,19 @@ public class BossPirate extends Boss {
             //     bossShootSound.play();
             // }
             
-            // We need the player reference to aim. Since shoot() doesn't take a player param,
-            // we'll need to store a reference or get it another way.
-            // For now, this shoots straight down. The BossScreen will need to pass player to shoot.
-            // TEMPORARY: Shoot straight down until we can pass player reference
-            
             // Calculate shot starting position (center of boss)
             int shotX = posX + size / 2 - EnemyShot.getEnemyShotSize() / 2;
             int shotY = posY + size / 2 - EnemyShot.getEnemyShotSize() / 2;
             
             // Create new enemy shot at center of boss (straight down for now)
             shots.add(new EnemyShot(shotX, shotY));
-            shootCooldown = 30; // Reset cooldown (30 frames between shots)
+            shootCooldown = 20; // Reset cooldown (20 frames between shots)
         }
     }
     
     /**
      * OVERRIDE SHOOT WITH PLAYER METHOD
-     * Acept player reference for aiming
+     * Accepts player reference for aiming
      * Called by BossScreen with player position
      * @param shots List of enemy shots to add the new projectile to
      * @param player Reference to player object for aiming
@@ -206,7 +199,7 @@ public class BossPirate extends Boss {
             
             // Create new aimed enemy shot
             shots.add(new EnemyShot(shotX, shotY, velX, velY));
-            shootCooldown = 30; // Reset cooldown (30 frames between shots)
+            shootCooldown = 20; // Reset cooldown (20 frames between shots)
         }
     }
     
@@ -219,31 +212,14 @@ public class BossPirate extends Boss {
      */
     @Override
     public void takeDamage(int amount) {
-    	//DEBUG REMOVE
-    	System.out.println("Boss took damage! Health was: " + health + " -" + amount);
         health -= amount; // Reduce health by damage amount
-      //DEBUG REMOVE
-        System.out.println("Health now: " + health);
         if (health <= 0) {
             health = 0;
             explode(); // Call Creature.java's explode() method to start death animation
         }
-        //if (health == 0) { health=0; }
-        //if (health == 0) { explode();} //I removed the health=0; since if the boss is gone, then the health would never go below 0
-        //Y U NO EXPLODE \(>~<)/
-        
         // if (bossHitSound != null) {
         //     bossHitSound.stop();
         //     bossHitSound.play();
         // }
-        
-        // Check if boss is defeated (health depleted)
-        //if (health == 0) {explode();}
-            // if (bossDefeatedSound != null) {// Call Creature.java's explode() method to start death animation
-            //     bossDefeatedSound.play();
-            // }
-            //; 
-            // ^^^ I think this is broken/bug
-        
     }
 }

@@ -7,13 +7,13 @@ import javafx.scene.text.Font;
 // import javafx.scene.media.Media;
 // import javafx.scene.media.MediaPlayer;
 import java.util.List;
-
+//Redo of push comment
 /**
- * BOSS SCREEN Level 2
+ * BOSS SCREEN Level 3
  * Implementation of the BossScreen abstract class BossScreen.java
- * Manages the second boss fight (BossBeetle.java)
+ * Manages the third boss fight (BossBroc.java)
  */
-public class BossScreen02 extends BossScreen {
+public class BossScreen04 extends BossScreen {
     
     // Background music for this boss fight
     // private MediaPlayer bossMusicPlayer;
@@ -23,21 +23,22 @@ public class BossScreen02 extends BossScreen {
     
     /**
      * CONSTRUCTOR
-     * Initializes the boss fight with a new BossBeetle instance
+     * Initializes the boss fight with a new BossBroc instance
      * Creates invisible portal and sets up the arena
      */
-    public BossScreen02() {
-        boss = new BossBeetle(ImaginBlastMain.WIDTH/2 - 128, 100); // Create boss centered near top of screen
+    public BossScreen04() {
+    	///TODO add boss sprites and make new boss class
+        boss = new BossBroc(ImaginBlastMain.WIDTH/2 - 128, 100); // Create boss centered near top of screen
         portal = new Portal(); // Create exit portal
         portalVisible = false; // Portal starts hidden until boss is defeated
         levelComplete = false; // Fight starts incomplete
         
         // Load the background image for this specific boss
-        // backgroundImage = new Image("boss_screen_02_background.png");
+        // backgroundImage = new Image("boss_screen_03_background.png");
         
         // Load and play boss music when screen is created
         // try {
-        //     Media music = new Media(new File("boss_music_2.mp3").toURI().toString());
+        //     Media music = new Media(new File("boss_music_3.mp3").toURI().toString());
         //     bossMusicPlayer = new MediaPlayer(music);
         //     bossMusicPlayer.setCycleCount(MediaPlayer.INDEFINITE); // Loop forever
         //     bossMusicPlayer.play(); // Start playing
@@ -70,13 +71,11 @@ public class BossScreen02 extends BossScreen {
             // }
         }
         
-        // Moved out of isDefeated
+        // Always update boss to advance explosion animation
         boss.update(player); // Update boss position and behavior
         
-        
-        // Prevents movement after death. No Zombie Beetle (or maybe??? LOL!)
+        // Prevents movement after death. No Zombie Broc (or maybe??? LOL!)
         if (!boss.isDefeated()) {
-         
             boss.shootAtPlayer(enemyShots, player); // Boss aims at player
         }
         
@@ -186,5 +185,4 @@ public class BossScreen02 extends BossScreen {
     @Override
     public boolean isComplete() {
         return levelComplete;
-    }
-}
+    } }
