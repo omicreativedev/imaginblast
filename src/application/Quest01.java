@@ -1,5 +1,7 @@
 package application;
 
+import javafx.scene.image.Image;
+
 /**
  * QUEST 1
  * Instructions for Level 1
@@ -8,6 +10,7 @@ public class Quest01 extends Quest {
     
     public Quest01() {
         super(1, "Collect 10 acorns and defeat 10 squirrels to go to the next level");
+        this.background = new Image("quest_bg_01.png"); //new
     }
     
     @Override

@@ -1,6 +1,7 @@
 package application;
 
-import javafx.scene.image.Image;
+// import javafx.scene.image.Image;
+import javafx.scene.image.ImageView; //new
 
 /**
  * SQUIRREL ENEMY CLASS
@@ -18,10 +19,10 @@ public class EnemySquirrel extends Enemy {
      * @param posX Initial X position (random across screen width)
      * @param posY Initial Y position (usually 0 at top of screen)
      * @param size Size of the enemy (typically PLAYER_SIZE = 60)
-     * @param image The squirrel image (SQUIRREL_IMG)
+     * @param imageView The squirrel ImageView (SQUIRREL_IMG)
      */
-    public EnemySquirrel(int posX, int posY, int size, Image image) {
-        super(posX, posY, size, image); // Call Enemy.java constructor
+    public EnemySquirrel(int posX, int posY, int size, ImageView imageView) { //new - Changed parameter from Image to ImageView
+        super(posX, posY, size, imageView); // Call Enemy.java constructor
     }
     
     /**

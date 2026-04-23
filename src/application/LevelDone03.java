@@ -26,11 +26,11 @@ public class LevelDone03 extends LevelDone {
         
         gc.setFill(Color.WHITE);
         gc.setFont(Font.font(18));
-        gc.fillText("You have completed all 3 levels!", ImaginBlastMain.WIDTH/2, ImaginBlastMain.HEIGHT/2 - 50);
+        gc.fillText("You have completed level 3!", ImaginBlastMain.WIDTH/2, ImaginBlastMain.HEIGHT/2 - 50);
         
         gc.setFill(Color.WHITE);
         gc.setFont(Font.font(16));
-        gc.fillText("Click OK to return to the Start Screen", ImaginBlastMain.WIDTH/2, ImaginBlastMain.HEIGHT/2 - 20);
+        gc.fillText("Click OK to go to level 4.", ImaginBlastMain.WIDTH/2, ImaginBlastMain.HEIGHT/2 - 20);
         
         // Draw OK button
         gc.setFill(Color.GREEN);

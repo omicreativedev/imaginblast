@@ -21,6 +21,8 @@ public class BossScreen02 extends BossScreen {
     // Background image specific to this boss screen
     // private Image backgroundImage;
     
+    private GameRenderer gameRenderer; //Store gameRenderer for sound effects
+    
     /**
      * CONSTRUCTOR
      * Initializes the boss fight with a new BossBeetle instance
@@ -61,14 +63,13 @@ public class BossScreen02 extends BossScreen {
     public void update(Player player, List<Shot> playerShots, List<Shot> enemyShots) {
 
         // Check if boss is defeated and portal hasn't been spawned yet
-        if (boss.isDefeated() && !portalVisible) {
-            portalVisible = true; // Make portal appear when boss dies
-            
-            // Stop boss music when defeated
-            // if (bossMusicPlayer != null) {
-            //     bossMusicPlayer.stop();
-            // }
-        }
+    	   if (boss.isDefeated() && !portalVisible) {
+               portalVisible = true; // Make portal appear when boss dies
+               if (gameRenderer != null) {
+                   gameRenderer.playExplodeSound();
+               }
+              
+           }
         
         // Moved out of isDefeated
         boss.update(player); // Update boss position and behavior
@@ -129,6 +130,7 @@ public class BossScreen02 extends BossScreen {
         
         // Check if player reached portal (only if portal is visible)
         if (portalVisible && portal.checkCollision(player)) {
+            gameRenderer.playPortalSound(); //new - Play portal sound
             levelComplete = true; // Mark level as complete when player enters portal
         }
     }
@@ -145,6 +147,8 @@ public class BossScreen02 extends BossScreen {
      */
     @Override
     public void draw(GraphicsContext gc, GameRenderer gameRenderer, Player player, int score) {
+    	
+    	this.gameRenderer = gameRenderer; //new - Store gameRenderer reference
     	
         // Draw background image first so everything else appears on top
         // gc.drawImage(backgroundImage, 0, 0, ImaginBlastMain.WIDTH, ImaginBlastMain.HEIGHT);

@@ -1,6 +1,7 @@
 package application;
 
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView; //new
 import java.util.List;
 // import java.io.File;
 // import javafx.scene.media.Media;
@@ -36,7 +37,7 @@ public class BossBeetle extends Boss {
      * @param posY Starting Y coordinate
      */
     public BossBeetle(int posX, int posY) {
-        super(posX, posY, 256, new Image("beetle_boss.png")); // Call Boss.java constructor with large size
+        super(posX, posY, 256, new ImageView(new Image("boss_beetle.png"))); //new - Pass ImageView instead of Image
         this.health = 250; // Set current health (inherited from Boss.java)
         this.maxHealth = 250; // Set max health for health bar (inherited from Boss.java)
         // try {
@@ -216,6 +217,7 @@ public class BossBeetle extends Boss {
         if (health <= 0) {
             health = 0;
             explode(); // Call Creature.java's explode() method to start death animation
+        
         }
         // if (bossHitSound != null) {
         //     bossHitSound.stop();

@@ -1,13 +1,16 @@
 package application;
 
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.image.Image;
+// import javafx.scene.image.Image;
+import javafx.scene.image.ImageView; //new
 
 /**
  * CUPCAKE ITEM CLASS
  * Cupcakes fall straight down and give points when collected
  */
 public class ItemCupcake extends Item {
+	
+	private GameRenderer gameRenderer; //new - Reference for sound effects
 	
 	// MOVEMENT PROPERTIES
 	int speed = 8;       // Falling speed (pixels per frame)
@@ -18,11 +21,12 @@ public class ItemCupcake extends Item {
 	 * @param posX Initial X position (random across screen width)
 	 * @param posY Initial Y position (usually 0 at top of screen)
 	 * @param size Size of the cupcake sprite
-	 * @param image The cupcake image
+	 * @param imageView The cupcake ImageView
 	 */
-	public ItemCupcake(int posX, int posY, int size, Image image) {
-		super(posX, posY, size, image);
+	public ItemCupcake(int posX, int posY, int size, ImageView imageView) { //new - Changed parameter from Image to ImageView
+		super(posX, posY, size, imageView); //new - Pass ImageView instead of Image
 		// Cupcake-specific initialization can go here later
+		  // gameRenderer will be set later via setGameRenderer() //new
 	}
 	
 
@@ -33,6 +37,7 @@ public class ItemCupcake extends Item {
 	public void onCollected() {
 	    // Mark as collected
 	    this.collected = true;
+	    gameRenderer.playItemCollectSound(); //new - Play collect sound
 	    
 	    // FUTURE: Play sound here
 	    // FUTURE: Add visual effect
@@ -78,4 +83,10 @@ public class ItemCupcake extends Item {
 		// - Make sound when collected
 		// - Give bonus points
 	}
+	
+	//new - Set game renderer for sound effects
+	public void setGameRenderer(GameRenderer renderer) {
+	    this.gameRenderer = renderer;
+	}
+
 }

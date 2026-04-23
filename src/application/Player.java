@@ -1,6 +1,10 @@
 package application;
 
-import javafx.scene.image.Image;
+// "A dream is not reality but who's to say which is which?"
+// ~ Mad Hatter, Alice's Adventures in Wonderland
+
+// import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 
 /**
  * PLAYER CLASS
@@ -40,6 +44,7 @@ public class Player extends Creature {
     // WASD MOVEMENT PROPERTIES
     private int speed = 18;              // Movement speed in pixels per frame
     private InputHandler inputHandler;  // Reference to input handler for key states
+    private GameRenderer gameRenderer; //new - Reference to game renderer for sounds
     
     // SHOOTING PROPERTIES
     private static final int BULLET_SPEED = 12; // Speed of fired projectiles (pixels per frame)
@@ -56,6 +61,7 @@ public class Player extends Creature {
         }
         
         hp -= amount;
+        gameRenderer.playPlayerDamageSound(); //new omi
         
         // Future: Trigger hit animation or sound
         
@@ -166,6 +172,10 @@ public class Player extends Creature {
     public void setInputHandler(InputHandler handler) {
         this.inputHandler = handler;
     }
+  //new - Set game renderer for sound effects
+    public void setGameRenderer(GameRenderer renderer) {
+        this.gameRenderer = renderer;
+    }
     
     /**
      * CALCULATE DIRECTION VECTOR
@@ -209,13 +219,14 @@ public class Player extends Creature {
 	 * @param posX Initial X position (typically center of screen)
 	 * @param posY Initial Y position (near bottom of screen)
 	 * @param size Size of the player sprite
-	 * @param image The player's image (thee frogboy) Note: We should name him.
+	 * @param imageView The player's ImageView (thee frogboy) Note: We should name him.
 	 */
-	public Player(int posX, int posY, int size, Image image) {
-		// Call parent Creature constructor to set up position, size, and image
-		super(posX, posY, size, image);
+	public Player(int posX, int posY, int size, ImageView imageView) { //new - Changed parameter from Image to ImageView
+		// Call parent Creature constructor to set up position, size, and imageView
+		super(posX, posY, size, imageView); //new - Pass ImageView instead of Image
 		// hp and col_items keep their default values
 		// inputHandler will be set later via setInputHandler()
+		 // gameRenderer will be set later via setGameRenderer() //new
 	}
 	
 	

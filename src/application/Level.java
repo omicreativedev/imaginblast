@@ -2,6 +2,7 @@ package application;
 
 import java.util.HashMap;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView; //new
 import java.util.Random;
 import java.util.Map;
 import java.util.List;
@@ -49,11 +50,11 @@ public abstract class Level {
     // Create a specific item type
     public abstract Item createItem(Random rand, int width, int playerSize, Class<? extends Item> itemClass);
     
-    // Get image for a specific enemy type
-    public abstract Image getEnemyImage(Class<? extends Enemy> enemyClass);
+    // Get ImageView for a specific enemy type //new - Changed from Image to ImageView
+    public abstract ImageView getEnemyImage(Class<? extends Enemy> enemyClass);
     
-    // Get image for a specific item type
-    public abstract Image getItemImage(Class<? extends Item> itemClass);
+    // Get ImageView for a specific item type //new - Changed from Image to ImageView
+    public abstract ImageView getItemImage(Class<? extends Item> itemClass);
     
     // TRACKING METHODS
     public void registerItemCollected(Item item) {
@@ -92,6 +93,6 @@ public abstract class Level {
     public abstract int getItemSpawnRate();
 
     //public String getBackground() { return background; }
-    public Image getBackground() {return background;}
+    public Image getBackground() { return background; } // Already there
     public int getLevelNumber() { return levelNumber; }
 }

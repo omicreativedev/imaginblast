@@ -20,6 +20,8 @@ public class BossScreen03 extends BossScreen {
 	
     // Background image specific to this boss screen
     // private Image backgroundImage;
+	
+	private GameRenderer gameRenderer;
     
     /**
      * CONSTRUCTOR
@@ -61,14 +63,13 @@ public class BossScreen03 extends BossScreen {
     public void update(Player player, List<Shot> playerShots, List<Shot> enemyShots) {
 
         // Check if boss is defeated and portal hasn't been spawned yet
-        if (boss.isDefeated() && !portalVisible) {
-            portalVisible = true; // Make portal appear when boss dies
-            
-            // Stop boss music when defeated
-            // if (bossMusicPlayer != null) {
-            //     bossMusicPlayer.stop();
-            // }
-        }
+    	   if (boss.isDefeated() && !portalVisible) {
+               portalVisible = true; // Make portal appear when boss dies
+               if (gameRenderer != null) {
+                   gameRenderer.playExplodeSound();
+               }
+              
+           }
         
         // Always update boss to advance explosion animation
         boss.update(player); // Update boss position and behavior
@@ -127,6 +128,7 @@ public class BossScreen03 extends BossScreen {
         
         // Check if player reached portal (only if portal is visible)
         if (portalVisible && portal.checkCollision(player)) {
+        	gameRenderer.playPortalSound();
             levelComplete = true; // Mark level as complete when player enters portal
         }
     }
@@ -143,6 +145,9 @@ public class BossScreen03 extends BossScreen {
      */
     @Override
     public void draw(GraphicsContext gc, GameRenderer gameRenderer, Player player, int score) {
+    	
+    	
+    	this.gameRenderer = gameRenderer;
     	
         // Draw background image first so everything else appears on top
         // gc.drawImage(backgroundImage, 0, 0, ImaginBlastMain.WIDTH, ImaginBlastMain.HEIGHT);

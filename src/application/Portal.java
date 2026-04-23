@@ -6,7 +6,7 @@ import javafx.scene.image.Image;
 public class Portal {
     private int posX, posY;
     private int size = 256;
-    private Image portalImg = new Image("portal_256x256.png");
+    private Image portalImg = new Image("portal.png");
     private boolean active = true;
     
     public Portal() {

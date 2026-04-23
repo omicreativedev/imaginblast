@@ -1,6 +1,7 @@
 package application;
 
-import javafx.scene.image.Image;
+// import javafx.scene.image.Image;
+import javafx.scene.image.ImageView; //new
 import java.util.List;
 
 /**
@@ -27,10 +28,10 @@ public abstract class Boss extends Creature {
      * @param posX  Initial X coordinate
      * @param posY  Initial Y coordinate
      * @param size  Width/height of boss sprite (assumed square)
-     * @param image Visual representation of the boss
+     * @param imageView Visual representation of the boss (ImageView)
      */
-    public Boss(int posX, int posY, int size, Image image) {
-        super(posX, posY, size, image); // Pass parameters to Creature constructor
+    public Boss(int posX, int posY, int size, ImageView imageView) { //new - Changed parameter from Image to ImageView
+        super(posX, posY, size, imageView); // Pass parameters to Creature constructor
     }
     
     /**

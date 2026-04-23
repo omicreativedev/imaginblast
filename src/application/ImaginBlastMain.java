@@ -1,6 +1,6 @@
 package application;
 
-//Hello this is a test to see if pushing works or sinister shenanigans ensue -EV
+// Hello this is a test to see if pushing works or sinister shenanigans ensue -EV
 
 /* 
  * ACKNOWLEDGEMENTS AND SOURCES:
@@ -26,6 +26,7 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView; //new
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -33,14 +34,16 @@ import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
-//Music
-//import javafx.scene.media.Media;
-//import javafx.scene.media.MediaPlayer;
+// "How puzzling all these changes are!
+// I'm never sure what I'm going to be, from one minute to another."
+// ~ Mad Hatter, Alice's Adventures in Wonderland
 
 /**
  * MAIN GAME CLASS
  */
 public class ImaginBlastMain extends Application {
+	
+	private boolean bossMusicStarted = false; //new - Track if boss music already playing
 	
 	// Constants and global variables
 	private static final Random RAND = new Random(); // Random generator
@@ -50,17 +53,19 @@ public class ImaginBlastMain extends Application {
 	
 	// Image resources for game elements
 	// Reference: https://docs.oracle.com/javase/8/javafx/api/javafx/scene/image/Image.html
-	static final Image PLAYER_IMG = new Image("frog_player_128x128.png");
+	
+	static final ImageView PLAYER_IMG = new ImageView(new Image("player_frog_static.png")); //new - Converted to ImageView
 	
 	//Enemy images
-	static final Image PILLBUG_IMG = new Image("pill_bug.png"); //level02 enemy
-	static final Image SQUIRREL_IMG = new Image("squirrel_enemy_front_128x128.png"); //level01 enemy
-	static final Image GARLIC_IMG = new Image("garlic.png");
+	static final ImageView PILLBUG_IMG = new ImageView(new Image("enemy_pillbug.png")); //new - Converted to ImageView
+	static final ImageView SQUIRREL_IMG = new ImageView(new Image("enemy_squirrel.png")); //new - Converted to ImageView
+	static final ImageView GARLIC_IMG = new ImageView(new Image("enemy_garlic.png")); //new - Converted to ImageView
 	static final Image EXPLOSION_IMG = new Image("explosion.png");
-	static final Image ACORN_IMG = new Image("acorn_cap_64x64.png");
-	static final Image DONUT_IMG = new Image("donut.png");
-	static final Image CUPCAKE_IMG = new Image("cupcake.png");
-	
+	static final ImageView ACORN_IMG = new ImageView(new Image("item_acorn.png")); //new - Converted to ImageView
+	static final ImageView DONUT_IMG = new ImageView(new Image("item_donut.png")); //new - Converted to ImageView
+	static final ImageView CUPCAKE_IMG = new ImageView(new Image("item_cupcake.png")); //new - Converted to ImageView
+	static final ImageView URCHIN_IMG = new ImageView(new Image("item_urchin.png")); //new
+	static final ImageView CASSETTE_IMG = new ImageView(new Image("item_cassette.png")); //new
 	// Explosion animation properties
 	static final int EXPLOSION_W = 128; // Width of explosion sprite
 	static final int EXPLOSION_ROWS = 3; // Rows in explosion sprite sheet
@@ -115,11 +120,12 @@ public class ImaginBlastMain extends Application {
 		entityManager = new EntityManager(MAX_SHOTS, WIDTH, HEIGHT, MAX_BOMBS, MAX_ITEMS);
 		uiManager = new UIManager(gameRenderer);
 		setup(); // setup will now use EntityManager.java
-		inputHandler = new InputHandler(stateManager, levelManager, entityManager, gameRenderer, MAX_SHOTS, WIDTH, HEIGHT);
+		inputHandler = new InputHandler(stateManager, levelManager, entityManager, gameRenderer, uiManager, MAX_SHOTS, WIDTH, HEIGHT);
 		
 		// NEW: Connect input handler to entity manager so player can access key states
 		entityManager.setInputHandler(inputHandler);
-
+		entityManager.setGameRenderer(gameRenderer); //new - Pass game renderer for sounds
+		
 		// KEYBOARD INPUT for WASD movement
 		// Reference: https://docs.oracle.com/javase/8/javafx/api/javafx/scene/input/KeyEvent.html
 		canvas.setFocusTraversable(true); // Make canvas focusable to receive key events
@@ -156,6 +162,7 @@ public class ImaginBlastMain extends Application {
 	private void resetGame() {
 	    levelManager.reset(); // Reset to Level 1
 	    setup(); // Now setup will use the reset Level 1
+	    bossMusicStarted = false;
 	}
 	
 	/**
@@ -194,6 +201,7 @@ public class ImaginBlastMain extends Application {
 	            break;
 	            
 	        case QUEST_SCREEN:
+	        	gameRenderer.playQuestMusic(); //new - Play quest music when entering quest screen
 	        	uiManager.drawQuestScreen(levelManager.getQuest());
 	            break;
 	            
@@ -207,8 +215,9 @@ public class ImaginBlastMain extends Application {
 	            //break;
 	            
 	        case PLAYING:
-	            gameRenderer.clearScreen();
-	            
+	        	gameRenderer.stopQuestMusic(); //new - Stop quest music when gameplay starts
+	            //gameRenderer.clearScreen();
+	            gc.drawImage(levelManager.getCurrentLevel().getBackground(), 0, 0, WIDTH, HEIGHT);
 	            
 	            // Get the first item goal's class to display
 	            // Class<? extends Item> itemType = levelManager.getCurrentLevel().getItemGoals().keySet().iterator().next();
@@ -260,6 +269,11 @@ public class ImaginBlastMain extends Application {
 	            break;
 	            
 	        case BOSS_FIGHT:
+	            gameRenderer.stopGameplayMusic(); //new - Stop gameplay music when boss fight starts
+	            if (!bossMusicStarted) { //new - Only play boss music once
+	                gameRenderer.playBossMusic();
+	                bossMusicStarted = true;
+	            }
 	            // Update player movement (WASD handled inside player.update)
 	        	entityManager.updatePlayer(); // Update player state (includes movement)
 	        	// REMOVED: entityManager.movePlayer() - WASD replaces mouse movement
@@ -288,11 +302,15 @@ public class ImaginBlastMain extends Application {
 	            // Check if player entered portal
 	            if (levelManager.getBossScreen().isComplete()) { // If boss screen is complete
 	                stateManager.setCurrentState(GameState.LEVEL_DONE); // Set level done state
+	                gameRenderer.stopBossMusic(); //new - Stop boss music when level done
+	                bossMusicStarted = false;
 	            }
 
 	            // Check if player died
 	            if (entityManager.isPlayerDestroyed()) { // If player is destroyed
 	                stateManager.setCurrentState(GameState.GAME_OVER); // Set game over state
+	                gameRenderer.stopBossMusic(); //new - Stop boss music if player dies
+	                bossMusicStarted = false;
 	            }
 	            break;
 	            
@@ -300,9 +318,18 @@ public class ImaginBlastMain extends Application {
 	        	uiManager.drawLevelDoneScreen(levelManager.getLevelDoneScreen());
 	            break;
 	            
+	        case END_SCREEN:
+	            uiManager.drawEndScreen(entityManager.getScore(), true); // true = game won
+	            break;
+	            
 	        case GAME_OVER:
+	        	gameRenderer.stopGameplayMusic(); //new - Stop gameplay music when game over
+	        	gameRenderer.stopQuestMusic(); //new - Stop quest music if playing
+	        	gameRenderer.stopBossMusic(); //new - Stop boss music if playing
 	        	uiManager.drawGameOverScreen(entityManager.getScore());
 	            break;
+	            
+	          
 	    }
 	}
 

@@ -29,13 +29,12 @@ public class EntityManager {
     private int score;         // Player's current score
     
     // Width and height for off-screen checks
-    @SuppressWarnings("unused")
     private int WIDTH;  // Game screen width
     private int HEIGHT; // Game screen height
     
     // Reference to input handler for player movement (WASD)
     private InputHandler inputHandler; // NEW: Store input handler reference
-    
+    private GameRenderer gameRenderer; //new - Store game renderer reference for sounds
     /**
      * CONSTRUCTOR
      * @param MAX_SHOTS Maximum allowed player shots
@@ -78,7 +77,14 @@ public class EntityManager {
         if (this.player != null && inputHandler != null) {
             this.player.setInputHandler(inputHandler);
         }
+        //new - Connect game renderer for sound effects
+        if (this.player != null && gameRenderer != null) {
+            this.player.setGameRenderer(gameRenderer);
+        }
     }
+    
+
+
     
     /**
      * NEW: Sets the input handler for WASD movement
@@ -90,6 +96,14 @@ public class EntityManager {
         // If player already exists, connect them now
         if (player != null) {
             player.setInputHandler(inputHandler);
+        }
+    }
+    
+    //new - Sets the game renderer for sound effects
+    public void setGameRenderer(GameRenderer renderer) {
+        this.gameRenderer = renderer;
+        if (player != null) {
+            player.setGameRenderer(gameRenderer);
         }
     }
     
@@ -208,11 +222,15 @@ public class EntityManager {
                     score++;
                     levelManager.getCurrentLevel().registerEnemyDefeated(enemy);
                     enemy.explode();
+                    gameRenderer.playExplodeSound();
                     shot.toRemove = true;
                     break;
                 }
             }
+            
+            
         }
+        
     }
     
     /**
@@ -420,13 +438,19 @@ public class EntityManager {
                 levelManager.getCurrentLevel().registerItemCollected(i);
                 // Call specific item's collection effect
                 if (i instanceof ItemAcorn) {
+                	((ItemAcorn) i).setGameRenderer(gameRenderer); //new
                     ((ItemAcorn) i).onCollected();
                 }
                 if (i instanceof ItemDonut) {
+                	((ItemDonut) i).setGameRenderer(gameRenderer); //new
                     ((ItemDonut) i).onCollected();
                 }
                 if (i instanceof ItemCupcake) {
+                	((ItemCupcake) i).setGameRenderer(gameRenderer); //new
                     ((ItemCupcake) i).onCollected();
+                }
+                if (i instanceof ItemCassette) {
+                    ((ItemCassette) i).onCollected();
                 }
                 // Future: add else-if for other item types
             }

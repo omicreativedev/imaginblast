@@ -41,6 +41,22 @@ public class LevelManager {
         currentLevelDoneScreen = new LevelDone03();
     }
     
+    // Load Level 4
+    private void loadLevel4() {
+        currentLevel = new Level04();
+        currentQuest = new Quest04();
+        currentBossScreen = new BossScreen04();
+        currentLevelDoneScreen = new LevelDone04();
+    }
+    
+ // Load Final Level
+    private void loadFinalLevel() {
+        currentLevel = new LevelFinal();
+        currentQuest = new QuestFinal();
+        currentBossScreen = new FinalBossScreen();
+        currentLevelDoneScreen = null; // Will use EndScreen instead
+    }
+    
     // Getters
     public Level getCurrentLevel() { return currentLevel; }
     public Quest getQuest() { return currentQuest; }
@@ -72,6 +88,10 @@ public class LevelManager {
             loadLevel2();
         } else if (currentLevelNum == 3) {
             loadLevel3();
+        } else if (currentLevelNum == 4) {
+            loadLevel4();
+        } else if (currentLevelNum == 5) {
+            loadFinalLevel();
         }
         
         bossDefeated = false;
