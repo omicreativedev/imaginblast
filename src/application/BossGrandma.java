@@ -1,6 +1,7 @@
 package application;
 
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView; //new
 import java.util.List;
 // import java.io.File;
 // import javafx.scene.media.Media;
@@ -14,14 +15,14 @@ import java.util.List;
  * Grandma Boss that follows the player horizontally
  * Extends Boss.java which extends Creature.java, inheriting explosion behavior
  * We may change this later to offer different explosions for different Bosses
- 
+ * NEW: Boss now shoots at the player's current position (aimed shots)
  */
 public class BossGrandma extends Boss {
     
     // Boss-specific attributes
     private int shootCooldown = 0; // Frames until boss can shoot again (prevents bullet spam)
     private int speed = 25; // Movement speed
-    private static final int BULLET_SPEED = 30; // Speed of boss projectiles (slower than player shots)
+    private static final int BULLET_SPEED = 30; // Speed of boss projectiles
     // private MediaPlayer bossLaughSound;
     // private MediaPlayer bossHitSound;
     // private MediaPlayer bossDefeatedSound;
@@ -29,27 +30,27 @@ public class BossGrandma extends Boss {
     
     /**
      * BOSS GRANDMA CONSTRUCTOR
-     * Calls Boss.java constructor with predefined size (256x256) and beetle image
+     * Calls Boss.java constructor with predefined size (256x256) and grandma image
      * Sets health values required by Boss.java (health, maxHealth)
      * 
      * @param posX Starting X coordinate
      * @param posY Starting Y coordinate
      */
     public BossGrandma(int posX, int posY) {
-        super(posX, posY, 256, new Image("grumpy_grandma_boss.png")); // Call Boss.java constructor with large size
+        super(posX, posY, 256, new ImageView(new Image("boss_beetle.png"))); //new - Pass ImageView instead of Image
         this.health = 550; // Set current health (inherited from Boss.java)
         this.maxHealth = 550; // Set max health for health bar (inherited from Boss.java)
         // try {
-        //     Media laugh = new Media(new File("beetle_laugh.wav").toURI().toString());
+        //     Media laugh = new Media(new File("grandma_laugh.wav").toURI().toString());
         //     bossLaughSound = new MediaPlayer(laugh);
-        //     Media hit = new Media(new File("beetle_hit.wav").toURI().toString());
+        //     Media hit = new Media(new File("grandma_hit.wav").toURI().toString());
         //     bossHitSound = new MediaPlayer(hit);
-        //     Media defeated = new Media(new File("beetle_defeated.wav").toURI().toString());
+        //     Media defeated = new Media(new File("grandma_defeated.wav").toURI().toString());
         //     bossDefeatedSound = new MediaPlayer(defeated);
-        //     Media shoot = new Media(new File("beetle_shoot.wav").toURI().toString());
+        //     Media shoot = new Media(new File("grandma_shoot.wav").toURI().toString());
         //     bossShootSound = new MediaPlayer(shoot);
         // } catch (Exception e) {
-        //     System.out.println("Beetle sound effects aint loading dude!");
+        //     System.out.println("Grandma sound effects aint loading dude!");
         // }
     }
     
@@ -212,7 +213,11 @@ public class BossGrandma extends Boss {
      */
     @Override
     public void takeDamage(int amount) {
+        //DEBUG REMOVE
+        System.out.println("Boss took damage! Health was: " + health + " -" + amount);
         health -= amount; // Reduce health by damage amount
+        //DEBUG REMOVE
+        System.out.println("Health now: " + health);
         if (health <= 0) {
             health = 0;
             explode(); // Call Creature.java's explode() method to start death animation
