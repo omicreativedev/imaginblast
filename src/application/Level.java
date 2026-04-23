@@ -93,6 +93,6 @@ public abstract class Level {
     public abstract int getItemSpawnRate();
 
     //public String getBackground() { return background; }
-    public Image getBackground() {return background;}
+    public Image getBackground() { return background; } // Already there
     public int getLevelNumber() { return levelNumber; }
 }

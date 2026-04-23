@@ -449,6 +449,9 @@ public class EntityManager {
                 	((ItemCupcake) i).setGameRenderer(gameRenderer); //new
                     ((ItemCupcake) i).onCollected();
                 }
+                if (i instanceof ItemCassette) {
+                    ((ItemCassette) i).onCollected();
+                }
                 // Future: add else-if for other item types
             }
         });

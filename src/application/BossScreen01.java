@@ -1,6 +1,7 @@
 package application;
 
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image; //new
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 // import java.io.File;
@@ -19,7 +20,7 @@ public class BossScreen01 extends BossScreen {
     // private MediaPlayer bossMusicPlayer;
 	
     // Background image specific to this boss screen
-    // private Image backgroundImage;
+    private Image background; //new - Background image for boss screen
     
     private GameRenderer gameRenderer; //new - Store gameRenderer for sound effects
     
@@ -32,20 +33,7 @@ public class BossScreen01 extends BossScreen {
         portal = new Portal(); // Create exit portal
         portalVisible = false; // Portal starts hidden until boss is defeated
         levelComplete = false; // Fight starts incomplete
-        
-        // Load the background image for this specific boss
-        // backgroundImage = new Image("boss_screen_01_background.png");
-        
-        // Load and play boss music when screen is created
-        // try {
-        //     Media music = new Media(new File("boss_music.mp3").toURI().toString());
-        //     bossMusicPlayer = new MediaPlayer(music);
-        //     bossMusicPlayer.setCycleCount(MediaPlayer.INDEFINITE); // Loop forever
-        //     bossMusicPlayer.play(); // Start playing
-        // } catch (Exception e) {
-        //     System.out.println("Could not load boss music");
-        // }
-        
+        background = new Image("boss_bg_01.png"); //new - Load background
     }
     
     /**
@@ -67,7 +55,6 @@ public class BossScreen01 extends BossScreen {
             if (gameRenderer != null) {
                 gameRenderer.playExplodeSound();
             }
-           
         }
         
         // Moved out of isDefeated
@@ -126,7 +113,9 @@ public class BossScreen01 extends BossScreen {
         
         // Check if player reached portal (only if portal is visible)
         if (portalVisible && portal.checkCollision(player)) {
-            gameRenderer.playPortalSound(); //new - Play portal sound
+            if (gameRenderer != null) {
+                gameRenderer.playPortalSound();
+            }
             levelComplete = true; // Mark level as complete when player enters portal
         }
     }
@@ -145,12 +134,8 @@ public class BossScreen01 extends BossScreen {
     	
     	this.gameRenderer = gameRenderer; //new - Store gameRenderer reference
     	
-        // Draw background image first so everything else appears on top
-        // gc.drawImage(backgroundImage, 0, 0, ImaginBlastMain.WIDTH, ImaginBlastMain.HEIGHT);
-        
-        // Clear screen with dark background for boss fight atmosphere
-        gc.setFill(Color.DARKSLATEBLUE);
-        gc.fillRect(0, 0, ImaginBlastMain.WIDTH, ImaginBlastMain.HEIGHT);
+        // Draw background image
+        gc.drawImage(background, 0, 0, ImaginBlastMain.WIDTH, ImaginBlastMain.HEIGHT); //new - Draw background instead of solid color
         
         // Draw boss (uses Creature's draw method)
         boss.draw(gc);

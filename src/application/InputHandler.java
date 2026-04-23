@@ -20,6 +20,7 @@ public class InputHandler {
     private LevelManager levelManager;
     private EntityManager entityManager;
     private GameRenderer gameRenderer;
+    private UIManager uiManager; //new - For end screen handling
     private int MAX_SHOTS;
     private int WIDTH;
     private int HEIGHT;
@@ -45,16 +46,17 @@ public class InputHandler {
     public double getMouseY() { return mouseY; }
     
     public InputHandler(GameStateManager stateManager, LevelManager levelManager, 
-                        EntityManager entityManager, GameRenderer gameRenderer,
-                        int MAX_SHOTS, int WIDTH, int HEIGHT) {
-        this.stateManager = stateManager;
-        this.levelManager = levelManager;
-        this.entityManager = entityManager;
-        this.gameRenderer = gameRenderer;
-        this.MAX_SHOTS = MAX_SHOTS;
-        this.WIDTH = WIDTH;
-        this.HEIGHT = HEIGHT;
-    }
+            EntityManager entityManager, GameRenderer gameRenderer, UIManager uiManager,
+            int MAX_SHOTS, int WIDTH, int HEIGHT) {
+    		this.stateManager = stateManager;
+    		this.levelManager = levelManager;
+    		this.entityManager = entityManager;
+    		this.gameRenderer = gameRenderer;
+    		this.uiManager = uiManager; //new
+    		this.MAX_SHOTS = MAX_SHOTS;
+    		this.WIDTH = WIDTH;
+    		this.HEIGHT = HEIGHT;
+    		}
     
     /**
      * HANDLE KEY PRESSED
@@ -146,26 +148,36 @@ public class InputHandler {
             levelManager.getLevelDoneScreen().handleClick(clickX, clickY);
             if (levelManager.getLevelDoneScreen().isOkPressed()) {
                 if (levelManager.getCurrentLevelNum() == 1) {
-                    // Advance from Level 1 to Level 2
                     levelManager.advanceToNextLevel();
                     stateManager.setCurrentState(GameState.QUEST_SCREEN);
                     setupCallback.run();
                 } else if (levelManager.getCurrentLevelNum() == 2) {
-                    // Advance from Level 2 to Level 3
                     levelManager.advanceToNextLevel();
                     stateManager.setCurrentState(GameState.QUEST_SCREEN);
                     setupCallback.run();
                 } else if (levelManager.getCurrentLevelNum() == 3) {
-                    // Advance from Level 3 to Level 4
                     levelManager.advanceToNextLevel();
                     stateManager.setCurrentState(GameState.QUEST_SCREEN);
                     setupCallback.run();
                 } else if (levelManager.getCurrentLevelNum() == 4) {
-                    // After Level 4, go back to start screen
-                    stateManager.setCurrentState(GameState.START_SCREEN);
+                    levelManager.advanceToNextLevel();
+                    stateManager.setCurrentState(GameState.QUEST_SCREEN);
+                    setupCallback.run();
+                } else if (levelManager.getCurrentLevelNum() == 5) {
+                    // After final level, show EndScreen
+                    stateManager.setCurrentState(GameState.END_SCREEN);
                     setupCallback.run();
                 }
                 levelManager.getLevelDoneScreen().setOkPressed(false);
+            }
+            break;
+            
+        case END_SCREEN:
+            uiManager.handleEndScreenClick(clickX, clickY);
+            if (uiManager.isEndScreenOkPressed()) {
+                stateManager.setCurrentState(GameState.START_SCREEN);
+                resetCallback.run();
+                uiManager.resetEndScreenOkPressed();
             }
             break;
             

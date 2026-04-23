@@ -183,22 +183,22 @@ public class GameRenderer {
         
         // SCORE (top left)
         gc.setFill(Color.WHITE);
-        gc.fillText("Score: " + score, 10, 20);
+        gc.fillText("Score: " + score, 10, 45); // Halfway between 20 and 70
         
         // AMMO
-        gc.fillText("Ammo: " + (maxShots - shotsSize) + "/" + maxShots, 150, 20);
+        gc.fillText("Ammo: " + (maxShots - shotsSize) + "/" + maxShots, 150, 45); // Halfway between 20 and 70
         
         // PLAYER HEALTH
         gc.setFill(Color.RED);
-        gc.fillRect(300, 5, 200, 20);
+        gc.fillRect(300, 30, 200, 20); // Halfway between 5 and 55
         gc.setFill(Color.LIMEGREEN);
         double healthPercent = (double)player.hp / player.maxHp;
-        gc.fillRect(300, 5, 200 * healthPercent, 20);
+        gc.fillRect(300, 30, 200 * healthPercent, 20); // Halfway between 5 and 55
         gc.setFill(Color.WHITE);
-        gc.fillText("HP: " + player.hp + "/" + player.maxHp, 400, 22);
+        gc.fillText("HP: " + player.hp + "/" + player.maxHp, 400, 47); // Halfway between 22 and 72
         
         // ITEM GOALS (top center-right)
-        int yOffset = 20;
+        int yOffset = 45; // Halfway between 20 and 70
         gc.setFill(Color.GOLD);
         gc.fillText("ITEMS:", 550, yOffset);
         yOffset += 20;
@@ -211,7 +211,7 @@ public class GameRenderer {
         }
         
         // ENEMY GOALS (top right)
-        yOffset = 20;
+        yOffset = 45; // Halfway between 20 and 70
         gc.setFill(Color.RED);
         gc.fillText("ENEMIES:", 750, yOffset);
         yOffset += 20;
@@ -296,6 +296,9 @@ public class GameRenderer {
      * @param quest The Quest01 object containing quest text
      */
     public void drawQuestScreen(Quest quest) {
+        // Draw quest background - ADD THIS LINE
+        gc.drawImage(quest.getBackground(), 0, 0, ImaginBlastMain.WIDTH, ImaginBlastMain.HEIGHT);
+        
         // Center text alignment
         gc.setTextAlign(TextAlignment.CENTER);
         
@@ -309,21 +312,18 @@ public class GameRenderer {
         gc.setFont(Font.font(24));
         gc.fillText("Level " + quest.getLevelNumber() + " Quest", ImaginBlastMain.WIDTH/2, ImaginBlastMain.HEIGHT/2 - 100);
         
-        // Quest description (from Quest01 object)
+        // Quest description
         gc.setFont(Font.font(18));
         gc.setFill(Color.WHITE);
         gc.fillText(quest.getQuestText(), ImaginBlastMain.WIDTH/2, ImaginBlastMain.HEIGHT/2 - 50);
         
-        // OK button to dismiss quest screen
+        // OK button
         gc.setFill(Color.GREEN);
         gc.fillRect(ImaginBlastMain.WIDTH/2 - 100, ImaginBlastMain.HEIGHT/2 + 100, 200, 50);
         
-        // Button text
         gc.setFill(Color.BLACK);
-        gc.setFont(Font.font(18));
         gc.fillText("OK", ImaginBlastMain.WIDTH/2, ImaginBlastMain.HEIGHT/2 + 130);
         
-        // Button border
         gc.setStroke(Color.WHITE);
         gc.setLineWidth(2);
         gc.strokeRect(ImaginBlastMain.WIDTH/2 - 100, ImaginBlastMain.HEIGHT/2 + 100, 200, 50);

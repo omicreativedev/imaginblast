@@ -2,29 +2,22 @@ package application;
 
 import java.util.HashMap;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView; //new
+import javafx.scene.image.ImageView;
 import java.util.Random;
 import java.util.Map;
 import java.util.Arrays;
 import java.util.List;
 
-/* 
- * Level 4 - Old Timey Fields
- * Enemies: Squirrels, Pillbugs, Garlic, Urchins
- * Items: Acorns, Donuts, Cupcakes, Cassettes
- * Boss: Angry Grandma
- */
-public class Level04 extends Level{	
-	
-	public Level04() {
-		super(4, "Old Timey Fields");
-		
-		this.background = new Image("level_bg_04.png");
-	}
-	
-	@Override
+public class LevelFinal extends Level {
+    
+    public LevelFinal() {
+        super(5, "Final Battle");
+        this.background = new Image("level_bg_final.png");
+    }
+    
+    @Override
     public String getQuestText() {
-        return "Collect 10 acorns, 10 donuts, 10 cupcakes, 10 cassettes, defeat 10 squirrels, 10 pillbugs, 10 garlic, and 10 urchins to battle the Angry Grandma!";
+        return "Defeat the Final Boss Bunny to complete the game!";
     }
     
     @Override
@@ -93,35 +86,19 @@ public class Level04 extends Level{
     
     @Override
     public ImageView getEnemyImage(Class<? extends Enemy> enemyClass) {
-        if (enemyClass == EnemySquirrel.class) {
-            return ImaginBlastMain.SQUIRREL_IMG;
-        }
-        if (enemyClass == EnemyPillbug.class) {
-            return ImaginBlastMain.PILLBUG_IMG;
-        }
-        if (enemyClass == EnemyGarlic.class) {
-            return ImaginBlastMain.GARLIC_IMG;
-        }
-        if (enemyClass == EnemyUrchin.class) {
-            return ImaginBlastMain.URCHIN_IMG;
-        }
+        if (enemyClass == EnemySquirrel.class) return ImaginBlastMain.SQUIRREL_IMG;
+        if (enemyClass == EnemyPillbug.class) return ImaginBlastMain.PILLBUG_IMG;
+        if (enemyClass == EnemyGarlic.class) return ImaginBlastMain.GARLIC_IMG;
+        if (enemyClass == EnemyUrchin.class) return ImaginBlastMain.URCHIN_IMG;
         return null;
     }
     
     @Override
     public ImageView getItemImage(Class<? extends Item> itemClass) {
-        if (itemClass == ItemAcorn.class) {
-            return ImaginBlastMain.ACORN_IMG;
-        }
-        if (itemClass == ItemDonut.class) {
-            return ImaginBlastMain.DONUT_IMG;
-        }
-        if (itemClass == ItemCupcake.class) {
-            return ImaginBlastMain.CUPCAKE_IMG;
-        }
-        if (itemClass == ItemCassette.class) {
-            return ImaginBlastMain.CASSETTE_IMG;
-        }
+        if (itemClass == ItemAcorn.class) return ImaginBlastMain.ACORN_IMG;
+        if (itemClass == ItemDonut.class) return ImaginBlastMain.DONUT_IMG;
+        if (itemClass == ItemCupcake.class) return ImaginBlastMain.CUPCAKE_IMG;
+        if (itemClass == ItemCassette.class) return ImaginBlastMain.CASSETTE_IMG;
         return null;
     }
     

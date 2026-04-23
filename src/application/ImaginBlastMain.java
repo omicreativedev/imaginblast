@@ -64,7 +64,8 @@ public class ImaginBlastMain extends Application {
 	static final ImageView ACORN_IMG = new ImageView(new Image("item_acorn.png")); //new - Converted to ImageView
 	static final ImageView DONUT_IMG = new ImageView(new Image("item_donut.png")); //new - Converted to ImageView
 	static final ImageView CUPCAKE_IMG = new ImageView(new Image("item_cupcake.png")); //new - Converted to ImageView
-	
+	static final ImageView URCHIN_IMG = new ImageView(new Image("item_urchin.png")); //new
+	static final ImageView CASSETTE_IMG = new ImageView(new Image("item_cassette.png")); //new
 	// Explosion animation properties
 	static final int EXPLOSION_W = 128; // Width of explosion sprite
 	static final int EXPLOSION_ROWS = 3; // Rows in explosion sprite sheet
@@ -119,7 +120,7 @@ public class ImaginBlastMain extends Application {
 		entityManager = new EntityManager(MAX_SHOTS, WIDTH, HEIGHT, MAX_BOMBS, MAX_ITEMS);
 		uiManager = new UIManager(gameRenderer);
 		setup(); // setup will now use EntityManager.java
-		inputHandler = new InputHandler(stateManager, levelManager, entityManager, gameRenderer, MAX_SHOTS, WIDTH, HEIGHT);
+		inputHandler = new InputHandler(stateManager, levelManager, entityManager, gameRenderer, uiManager, MAX_SHOTS, WIDTH, HEIGHT);
 		
 		// NEW: Connect input handler to entity manager so player can access key states
 		entityManager.setInputHandler(inputHandler);
@@ -215,8 +216,8 @@ public class ImaginBlastMain extends Application {
 	            
 	        case PLAYING:
 	        	gameRenderer.stopQuestMusic(); //new - Stop quest music when gameplay starts
-	            gameRenderer.clearScreen();
-	            
+	            //gameRenderer.clearScreen();
+	            gc.drawImage(levelManager.getCurrentLevel().getBackground(), 0, 0, WIDTH, HEIGHT);
 	            
 	            // Get the first item goal's class to display
 	            // Class<? extends Item> itemType = levelManager.getCurrentLevel().getItemGoals().keySet().iterator().next();
@@ -317,12 +318,18 @@ public class ImaginBlastMain extends Application {
 	        	uiManager.drawLevelDoneScreen(levelManager.getLevelDoneScreen());
 	            break;
 	            
+	        case END_SCREEN:
+	            uiManager.drawEndScreen(entityManager.getScore(), true); // true = game won
+	            break;
+	            
 	        case GAME_OVER:
 	        	gameRenderer.stopGameplayMusic(); //new - Stop gameplay music when game over
 	        	gameRenderer.stopQuestMusic(); //new - Stop quest music if playing
 	        	gameRenderer.stopBossMusic(); //new - Stop boss music if playing
 	        	uiManager.drawGameOverScreen(entityManager.getScore());
 	            break;
+	            
+	          
 	    }
 	}
 

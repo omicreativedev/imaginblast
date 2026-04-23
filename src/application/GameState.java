@@ -11,5 +11,6 @@ public enum GameState {
     PLAYING,
     BOSS_FIGHT,
     LEVEL_DONE,
-    GAME_OVER
+    GAME_OVER,
+    END_SCREEN
 }
