@@ -37,7 +37,7 @@ public class BossGrandma extends Boss {
      * @param posY Starting Y coordinate
      */
     public BossGrandma(int posX, int posY) {
-        super(posX, posY, 256, new ImageView(new Image("boss_grama.png"))); //new - Pass ImageView instead of Image
+        super(posX, posY, 256, new ImageView(new Image("boss_beetle.png"))); //new - Pass ImageView instead of Image
         this.health = 550; // Set current health (inherited from Boss.java)
         this.maxHealth = 550; // Set max health for health bar (inherited from Boss.java)
         // try {

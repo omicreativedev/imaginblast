@@ -129,6 +129,7 @@ public class InputHandler {
             break;            
                 
         case PLAYING:
+        	
         case BOSS_FIGHT:
             // Left click creates a new player shot
             if(entityManager.getShots().size() < MAX_SHOTS) {

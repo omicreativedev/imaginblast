@@ -19,7 +19,7 @@ public class Level04 extends Level{
 	public Level04() {
 		super(4, "Old Timey Fields");
 		
-		this.background = new Image("startup_bg.png"); // Use same background for now
+		this.background = new Image("level_bg_04.png"); // Use same background for now
 	}
 	
 	@Override

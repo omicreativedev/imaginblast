@@ -302,12 +302,14 @@ public class ImaginBlastMain extends Application {
 	            if (levelManager.getBossScreen().isComplete()) { // If boss screen is complete
 	                stateManager.setCurrentState(GameState.LEVEL_DONE); // Set level done state
 	                gameRenderer.stopBossMusic(); //new - Stop boss music when level done
+	                bossMusicStarted = false;
 	            }
 
 	            // Check if player died
 	            if (entityManager.isPlayerDestroyed()) { // If player is destroyed
 	                stateManager.setCurrentState(GameState.GAME_OVER); // Set game over state
 	                gameRenderer.stopBossMusic(); //new - Stop boss music if player dies
+	                bossMusicStarted = false;
 	            }
 	            break;
 	            

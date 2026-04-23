@@ -63,11 +63,13 @@ public class BossScreen02 extends BossScreen {
     public void update(Player player, List<Shot> playerShots, List<Shot> enemyShots) {
 
         // Check if boss is defeated and portal hasn't been spawned yet
-        if (boss.isDefeated() && !portalVisible) {
-            portalVisible = true; // Make portal appear when boss dies
-            gameRenderer.playExplodeSound();
-
-        }
+    	   if (boss.isDefeated() && !portalVisible) {
+               portalVisible = true; // Make portal appear when boss dies
+               if (gameRenderer != null) {
+                   gameRenderer.playExplodeSound();
+               }
+              
+           }
         
         // Moved out of isDefeated
         boss.update(player); // Update boss position and behavior
