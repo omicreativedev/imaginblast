@@ -21,7 +21,7 @@ public class BossScreen02 extends BossScreen {
     // Background image specific to this boss screen
     // private Image backgroundImage;
     
-    private GameRenderer gameRenderer; //new - Store gameRenderer for sound effects
+    private GameRenderer gameRenderer; //Store gameRenderer for sound effects
     
     /**
      * CONSTRUCTOR

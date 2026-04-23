@@ -146,6 +146,9 @@ public class Player extends Creature {
             if (inputHandler.isDownPressed())  newY += speed;
             if (inputHandler.isLeftPressed())  newX -= speed;
             if (inputHandler.isRightPressed()) newX += speed;
+            //Sprint movement based on 'f' key
+        	//Learned that 'shift' key wouldn't work by: Oracle 2015), https://docs.oracle.com/javase/8/javafx/api/javafx/scene/input/KeyEvent.html
+            if (inputHandler.isFPressed()) {speed = 30;}else{speed=18;};
         }
         
         // Apply boundary constraints (keep player within screen)

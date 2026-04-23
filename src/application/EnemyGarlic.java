@@ -12,7 +12,7 @@ import javafx.scene.image.ImageView; //new
 public class EnemyGarlic extends Enemy {
     
     // Garlic-specific speed
-    int SPEED = 8; // Pixels per frame - controls how fast garlic falls
+    int SPEED = 10; // Pixels per frame - controls how fast garlic falls
     
     /**
      * CONSTRUCTOR - Creates a new garlic enemy

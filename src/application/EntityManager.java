@@ -222,12 +222,15 @@ public class EntityManager {
                     score++;
                     levelManager.getCurrentLevel().registerEnemyDefeated(enemy);
                     enemy.explode();
-                    gameRenderer.playExplodeSound(); //new - Play explosion sound
+                    gameRenderer.playExplodeSound();
                     shot.toRemove = true;
                     break;
                 }
             }
+            
+            
         }
+        
     }
     
     /**

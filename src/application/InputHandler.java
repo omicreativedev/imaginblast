@@ -65,6 +65,12 @@ public class InputHandler {
         
         
         	///NEW CODE that includes 'F' key
+ 		///OLD CODE
+        //if (key.equals("W") || key.equals("A") || key.equals("S") || key.equals("D")) {
+            //activeKeys.add(key); OLD CODE
+        //}
+        
+        	///NEW CODE
         if (key.equals("W") || key.equals("A") || key.equals("S") || key.equals("D") || key.equals("F")) {
             activeKeys.add(key); 
         }
@@ -149,7 +155,12 @@ public class InputHandler {
                     stateManager.setCurrentState(GameState.QUEST_SCREEN);
                     setupCallback.run();
                 } else if (levelManager.getCurrentLevelNum() == 3) {
-                    // After Level 3, go back to start screen
+                    // Advance from Level 3 to Level 4
+                    levelManager.advanceToNextLevel();
+                    stateManager.setCurrentState(GameState.QUEST_SCREEN);
+                    setupCallback.run();
+                } else if (levelManager.getCurrentLevelNum() == 4) {
+                    // After Level 4, go back to start screen
                     stateManager.setCurrentState(GameState.START_SCREEN);
                     setupCallback.run();
                 }
