@@ -7,8 +7,7 @@ package application;
 public class Quest04 extends Quest {
     
     public Quest04() {
-    	super(4, "Collect 10 acorns, 10 donuts, 10 cupcakes, 10 cassettes, defeat 10 squirrels, 10 pillbugs, 10 garlic, and 10 urchins to battle the Angry Grandma!");
-    
+        super(4, "Fourth quest is to collect 50 donuts and cassettes and defeat 20 garlic monsters. If you achieve this, you'll battle the Angry Grandma! Enter the portal if you succeed.");
     }
     
     @Override

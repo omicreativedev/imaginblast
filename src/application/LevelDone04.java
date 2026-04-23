@@ -22,15 +22,15 @@ public class LevelDone04 extends LevelDone {
         // Draw completion text
         gc.setFill(Color.YELLOW);
         gc.setFont(Font.font(24));
-        gc.fillText("Level 4 Complete!", ImaginBlastMain.WIDTH/2, ImaginBlastMain.HEIGHT/2 - 100);
+        gc.fillText("Congratulations!", ImaginBlastMain.WIDTH/2, ImaginBlastMain.HEIGHT/2 - 100);
         
         gc.setFill(Color.WHITE);
         gc.setFont(Font.font(18));
-        gc.fillText("You have defeated the Angry Grandma!", ImaginBlastMain.WIDTH/2, ImaginBlastMain.HEIGHT/2 - 50);
+        gc.fillText("You have completed all 3 levels!", ImaginBlastMain.WIDTH/2, ImaginBlastMain.HEIGHT/2 - 50);
         
         gc.setFill(Color.WHITE);
         gc.setFont(Font.font(16));
-        gc.fillText("Click OK to battle the final boss!", ImaginBlastMain.WIDTH/2, ImaginBlastMain.HEIGHT/2 - 20);
+        gc.fillText("Click OK to return to the Start Screen", ImaginBlastMain.WIDTH/2, ImaginBlastMain.HEIGHT/2 - 20);
         
         // Draw OK button
         gc.setFill(Color.GREEN);

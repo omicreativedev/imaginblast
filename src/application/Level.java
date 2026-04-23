@@ -13,7 +13,7 @@ import java.util.List;
  * Each level defines its own goals, enemies, and items
  */
 
-//EV- Added image backgrounds
+//Added image backgrounds
 public abstract class Level {
     protected int levelNumber;
     protected String levelName;

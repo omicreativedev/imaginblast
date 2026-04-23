@@ -67,12 +67,6 @@ public class InputHandler {
         
         
         	///NEW CODE that includes 'F' key
- 		///OLD CODE
-        //if (key.equals("W") || key.equals("A") || key.equals("S") || key.equals("D")) {
-            //activeKeys.add(key); OLD CODE
-        //}
-        
-        	///NEW CODE
         if (key.equals("W") || key.equals("A") || key.equals("S") || key.equals("D") || key.equals("F")) {
             activeKeys.add(key); 
         }

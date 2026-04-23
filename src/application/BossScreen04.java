@@ -7,11 +7,11 @@ import javafx.scene.text.Font;
 // import javafx.scene.media.Media;
 // import javafx.scene.media.MediaPlayer;
 import java.util.List;
-
+//Redo of push comment
 /**
- * BOSS SCREEN Level 4
+ * BOSS SCREEN Level 3
  * Implementation of the BossScreen abstract class BossScreen.java
- * Manages the fourth boss fight (BossGrandma.java)
+ * Manages the third boss fight (BossBroc.java)
  */
 public class BossScreen04 extends BossScreen {
     
@@ -20,26 +20,25 @@ public class BossScreen04 extends BossScreen {
 	
     // Background image specific to this boss screen
     // private Image backgroundImage;
-	
-	private GameRenderer gameRenderer; //new - Store gameRenderer for sound effects
     
     /**
      * CONSTRUCTOR
-     * Initializes the boss fight with a new BossGrandma instance
+     * Initializes the boss fight with a new BossBroc instance
      * Creates invisible portal and sets up the arena
      */
     public BossScreen04() {
-        boss = new BossGrandma(ImaginBlastMain.WIDTH/2 - 128, 100); // Create boss centered near top of screen
+    	///TODO add boss sprites and make new boss class
+        boss = new BossBroc(ImaginBlastMain.WIDTH/2 - 128, 100); // Create boss centered near top of screen
         portal = new Portal(); // Create exit portal
         portalVisible = false; // Portal starts hidden until boss is defeated
         levelComplete = false; // Fight starts incomplete
         
         // Load the background image for this specific boss
-        // backgroundImage = new Image("boss_screen_04_background.png");
+        // backgroundImage = new Image("boss_screen_03_background.png");
         
         // Load and play boss music when screen is created
         // try {
-        //     Media music = new Media(new File("boss_music_4.mp3").toURI().toString());
+        //     Media music = new Media(new File("boss_music_3.mp3").toURI().toString());
         //     bossMusicPlayer = new MediaPlayer(music);
         //     bossMusicPlayer.setCycleCount(MediaPlayer.INDEFINITE); // Loop forever
         //     bossMusicPlayer.play(); // Start playing
@@ -63,18 +62,19 @@ public class BossScreen04 extends BossScreen {
     public void update(Player player, List<Shot> playerShots, List<Shot> enemyShots) {
 
         // Check if boss is defeated and portal hasn't been spawned yet
-    	   if (boss.isDefeated() && !portalVisible) {
-               portalVisible = true; // Make portal appear when boss dies
-               if (gameRenderer != null) {
-                   gameRenderer.playExplodeSound();
-               }
-              
-           }
+        if (boss.isDefeated() && !portalVisible) {
+            portalVisible = true; // Make portal appear when boss dies
+            
+            // Stop boss music when defeated
+            // if (bossMusicPlayer != null) {
+            //     bossMusicPlayer.stop();
+            // }
+        }
         
         // Always update boss to advance explosion animation
         boss.update(player); // Update boss position and behavior
         
-        // Prevents movement after death. No Zombie Grandma (or maybe??? LOL!)
+        // Prevents movement after death. No Zombie Broc (or maybe??? LOL!)
         if (!boss.isDefeated()) {
             boss.shootAtPlayer(enemyShots, player); // Boss aims at player
         }
@@ -128,7 +128,6 @@ public class BossScreen04 extends BossScreen {
         
         // Check if player reached portal (only if portal is visible)
         if (portalVisible && portal.checkCollision(player)) {
-        	gameRenderer.playPortalSound();
             levelComplete = true; // Mark level as complete when player enters portal
         }
     }
@@ -145,8 +144,6 @@ public class BossScreen04 extends BossScreen {
      */
     @Override
     public void draw(GraphicsContext gc, GameRenderer gameRenderer, Player player, int score) {
-    	
-    	this.gameRenderer = gameRenderer; //new - Store gameRenderer reference
     	
         // Draw background image first so everything else appears on top
         // gc.drawImage(backgroundImage, 0, 0, ImaginBlastMain.WIDTH, ImaginBlastMain.HEIGHT);
@@ -188,5 +185,4 @@ public class BossScreen04 extends BossScreen {
     @Override
     public boolean isComplete() {
         return levelComplete;
-    }
-}
+    } }
