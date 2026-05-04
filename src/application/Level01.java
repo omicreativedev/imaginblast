@@ -21,7 +21,7 @@ public class Level01 extends Level {
     
     @Override
     public String getQuestText() {
-        return "Collect 10 acorns and defeat 10 squirrels";
+        return "Collect 5 acorns and defeat 5 squirrels";
     }
     
     @Override

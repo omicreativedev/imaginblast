@@ -23,22 +23,22 @@ public class Level02 extends Level{
 	
 	@Override
     public String getQuestText() {
-        return "Collect 10 acorns, 10 donuts, defeat 10 squirrels, and defeat 10 pillbugs";
+        return "Collect 3 acorns, 3 donuts, defeat 3 squirrels, and defeat 3 pillbugs";
     }
     
     @Override
     public Map<Class<? extends Enemy>, Integer> getEnemyGoals() {
         Map<Class<? extends Enemy>, Integer> goals = new HashMap<>();
-        goals.put(EnemySquirrel.class, 10);
-        goals.put(EnemyPillbug.class, 10); 
+        goals.put(EnemySquirrel.class, 3);
+        goals.put(EnemyPillbug.class, 3); 
         return goals;
     }
     
     @Override
     public Map<Class<? extends Item>, Integer> getItemGoals() {
         Map<Class<? extends Item>, Integer> goals = new HashMap<>();
-        goals.put(ItemAcorn.class, 10);
-        goals.put(ItemDonut.class, 10);
+        goals.put(ItemAcorn.class, 3);
+        goals.put(ItemDonut.class, 3);
         return goals;
     }
     
