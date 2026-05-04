@@ -37,10 +37,10 @@ public class EndScreen {
             gc.fillText("Congratulations! You defeated the Final Boss!", 
                         ImaginBlastMain.WIDTH/2, ImaginBlastMain.HEIGHT/2 - 30);
             
-            gc.setFill(Color.YELLOW);
-            gc.setFont(Font.font(20));
-            gc.fillText("Final Score: " + finalScore, 
-                        ImaginBlastMain.WIDTH/2, ImaginBlastMain.HEIGHT/2 + 20);
+            //gc.setFill(Color.YELLOW);
+            //gc.setFont(Font.font(20));
+            //gc.fillText("Final Score: " + finalScore, 
+                        //ImaginBlastMain.WIDTH/2, ImaginBlastMain.HEIGHT/2 + 20);
         } else {
             gc.setFill(Color.RED);
             gc.setFont(Font.font(36));
