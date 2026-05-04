@@ -26,7 +26,7 @@ public class LevelDone03 extends LevelDone {
         
         gc.setFill(Color.WHITE);
         gc.setFont(Font.font(18));
-        gc.fillText("You have completed level 3!", ImaginBlastMain.WIDTH/2, ImaginBlastMain.HEIGHT/2 - 50);
+        gc.fillText("Level 3 Complete!", ImaginBlastMain.WIDTH/2, ImaginBlastMain.HEIGHT/2 - 50);
         
         gc.setFill(Color.WHITE);
         gc.setFont(Font.font(16));

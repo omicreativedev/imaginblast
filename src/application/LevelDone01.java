@@ -26,7 +26,7 @@ public class LevelDone01 extends LevelDone {
         
         gc.setFill(Color.WHITE);
         gc.setFont(Font.font(18));
-        gc.fillText("Do you want to go to Level 2?", ImaginBlastMain.WIDTH/2, ImaginBlastMain.HEIGHT/2 - 50);
+        gc.fillText("Click OK to go to Level 2.", ImaginBlastMain.WIDTH/2, ImaginBlastMain.HEIGHT/2 - 50);
         
         // Draw OK button
         gc.setFill(Color.GREEN);
