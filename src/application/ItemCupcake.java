@@ -75,13 +75,7 @@ public class ItemCupcake extends Item {
 		if(posY > ImaginBlastMain.HEIGHT) {
 			gone = true; // Mark for removal
 		}
-		
-		// FUTURE:
-		// Examples:
-		// - Bounce slightly
-		// - Spin while falling
-		// - Make sound when collected
-		// - Give bonus points
+	
 	}
 	
 	//new - Set game renderer for sound effects

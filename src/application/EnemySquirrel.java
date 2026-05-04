@@ -21,7 +21,7 @@ public class EnemySquirrel extends Enemy {
      * @param size Size of the enemy (typically PLAYER_SIZE = 60)
      * @param imageView The squirrel ImageView (SQUIRREL_IMG)
      */
-    public EnemySquirrel(int posX, int posY, int size, ImageView imageView) { //new - Changed parameter from Image to ImageView
+    public EnemySquirrel(int posX, int posY, int size, ImageView imageView) { 
         super(posX, posY, size, imageView); // Call Enemy.java constructor
     }
     

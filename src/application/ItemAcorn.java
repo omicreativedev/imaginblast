@@ -77,12 +77,7 @@ public class ItemAcorn extends Item {
 			gone = true; // Mark for removal
 		}
 		
-		// FUTURE:
-		// Examples:
-		// - Bounce slightly
-		// - Spin while falling
-		// - Make sound when collected
-		// - Give bonus points
+	
 	}
 	
 	//new - Set game renderer for sound effects

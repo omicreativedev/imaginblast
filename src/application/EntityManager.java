@@ -452,6 +452,10 @@ public class EntityManager {
                 if (i instanceof ItemCassette) {
                     ((ItemCassette) i).onCollected();
                 }
+                if (i instanceof ItemBubble) {
+                    player.resetHealth(); // Full heal
+                    ((ItemBubble) i).onCollected();
+                }
                 // Future: add else-if for other item types
             }
         });

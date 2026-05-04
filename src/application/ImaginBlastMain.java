@@ -57,10 +57,10 @@ public class ImaginBlastMain extends Application {
 	private static final int PLAYER_SIZE = 60;
 	
 	//Player images
-	static final ImageView PLAYER_IMG = new ImageView(new Image("player_frog_static.png"));
+	static final ImageView PLAYER_IMG = new ImageView(new Image("player_frog_walk.gif"));
 	//Enemy images
 	static final ImageView PILLBUG_IMG = new ImageView(new Image("enemy_pillbug.png"));
-	static final ImageView SQUIRREL_IMG = new ImageView(new Image("enemy_squirrel.png"));
+	static final ImageView SQUIRREL_IMG = new ImageView(new Image("enemy_squirrel_walk.gif"));
 	static final ImageView GARLIC_IMG = new ImageView(new Image("enemy_garlic.png"));
 	static final Image EXPLOSION_IMG = new Image("explosion.png");
 	static final ImageView ACORN_IMG = new ImageView(new Image("item_acorn.png"));
@@ -68,6 +68,7 @@ public class ImaginBlastMain extends Application {
 	static final ImageView CUPCAKE_IMG = new ImageView(new Image("item_cupcake.png"));
 	static final ImageView URCHIN_IMG = new ImageView(new Image("item_urchin.png"));
 	static final ImageView CASSETTE_IMG = new ImageView(new Image("item_cassette.png"));
+	static final ImageView BUBBLE_IMG = new ImageView(new Image("item_bubble.png"));
 	
 	// Explosion animation properties
 	static final int EXPLOSION_W = 128; // Width of explosion sprite

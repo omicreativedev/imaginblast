@@ -49,9 +49,12 @@ public class Level02 extends Level{
         return Arrays.asList(EnemySquirrel.class, EnemyPillbug.class);
     }
     
+    // We want the bubble class to appear less frequent so we're using
+    // a workaround to just render it once per 3 other items
+    // Returns a list of item types that can appear in this level
     @Override
     public List<Class<? extends Item>> getPossibleItems() {
-        return Arrays.asList(ItemAcorn.class, ItemDonut.class);
+        return Arrays.asList(ItemAcorn.class, ItemDonut.class, ItemAcorn.class, ItemDonut.class, ItemAcorn.class, ItemDonut.class, ItemBubble.class);
     }
     
     @Override
@@ -73,7 +76,11 @@ public class Level02 extends Level{
         if (itemClass == ItemDonut.class) {
             return new ItemDonut(50 + rand.nextInt(width - 100), 0, playerSize, getItemImage(itemClass));
         }
+        if (itemClass == ItemBubble.class) {
+            return new ItemBubble(50 + rand.nextInt(width - 100), 0, playerSize, getItemImage(itemClass));
+        }
         return null;
+        
     }
     
     @Override
@@ -94,6 +101,9 @@ public class Level02 extends Level{
         }
         if (itemClass == ItemDonut.class) {
             return ImaginBlastMain.DONUT_IMG;
+        }
+        if (itemClass == ItemBubble.class) {
+            return ImaginBlastMain.BUBBLE_IMG;
         }
         return null;
     }

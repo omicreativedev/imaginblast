@@ -51,10 +51,13 @@ public class Level01 extends Level {
         return Arrays.asList(EnemySquirrel.class);
     }
     
+    
+    // We want the bubble class to appear less frequent so we're using
+    // a workaround to just render it once per 3 other items
     // Returns a list of item types that can appear in this level
     @Override
     public List<Class<? extends Item>> getPossibleItems() {
-        return Arrays.asList(ItemAcorn.class);
+        return Arrays.asList(ItemAcorn.class, ItemAcorn.class, ItemAcorn.class, ItemBubble.class);
     }
     
     // Creates a new enemy instance at a random X position near the top of the screen
@@ -72,8 +75,13 @@ public class Level01 extends Level {
         if (itemClass == ItemAcorn.class) {
             return new ItemAcorn(50 + rand.nextInt(width - 100), 0, playerSize, getItemImage(itemClass));
         }
+        if (itemClass == ItemBubble.class) {
+            return new ItemBubble(50 + rand.nextInt(width - 100), 0, playerSize, getItemImage(itemClass));
+        }
         return null;
     }
+    
+    
     
     // Returns the appropriate ImageView for a given enemy type
     @Override
@@ -89,6 +97,9 @@ public class Level01 extends Level {
     public ImageView getItemImage(Class<? extends Item> itemClass) {
         if (itemClass == ItemAcorn.class) {
             return ImaginBlastMain.ACORN_IMG;
+        }
+        if (itemClass == ItemBubble.class) {
+            return ImaginBlastMain.BUBBLE_IMG;
         }
         return null;
     }
