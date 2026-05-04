@@ -17,7 +17,7 @@ import java.util.List;
 public class BossScreen04 extends BossScreen {
     
     private Image background; 
-    private GameRenderer gameRenderer;
+
 
     /**
      * CONSTRUCTOR

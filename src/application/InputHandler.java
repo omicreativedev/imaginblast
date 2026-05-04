@@ -161,7 +161,7 @@ public class InputHandler {
                         stateManager.setCurrentState(GameState.QUEST_SCREEN);
                         setupCallback.run();
                     } else if (levelManager.getCurrentLevelNum() == 4) {
-                        levelManager.advanceToNextLevel();
+                    	levelManager.loadFinalBoss();
                         stateManager.setCurrentState(GameState.QUEST_SCREEN);
                         setupCallback.run();
                     }
