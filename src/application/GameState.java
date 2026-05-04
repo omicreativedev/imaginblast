@@ -2,7 +2,6 @@ package application;
 
 /**
  * Game States
- * Moved from ImaginBlastMain.java
  */
 
 public enum GameState {
