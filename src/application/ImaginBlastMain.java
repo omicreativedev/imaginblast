@@ -86,7 +86,6 @@ public class ImaginBlastMain extends Application {
 	
 	/**
 	 * GAME STATE MANAGEMENT
-	 * Moved to GameState.java and GameStateManager.java
 	 */
 	GameStateManager stateManager;
 	
@@ -202,7 +201,7 @@ public class ImaginBlastMain extends Application {
 	        case PLAYING:
 	        	gameRenderer.stopQuestMusic();
 
-
+	        	// Draw background image
 	        	if (levelManager.getCurrentLevel() != null) {
 	        	    gc.drawImage(levelManager.getCurrentLevel().getBackground(), 0, 0, WIDTH, HEIGHT);
 	        	} else {
@@ -211,6 +210,7 @@ public class ImaginBlastMain extends Application {
 	        	    gc.fillRect(0, 0, WIDTH, HEIGHT);
 	        	}
 	        	
+	        	// Draw the HUD
 	            gameRenderer.drawHUD(entityManager.getScore(), entityManager.getShots().size(), MAX_SHOTS, levelManager.getCurrentLevel(), entityManager.getPlayer());
 	            
 	            // Draw background effects
@@ -334,7 +334,7 @@ public class ImaginBlastMain extends Application {
 	 * This function is called whenever a new enemy needs to be spawned in the game,
 	 * such as during initial level setup or when replacing destroyed enemies.
 	 * 
-	 * Asking the current level what enemy types are allowed to appear (can be many!)
+	 * Asking the current level what enemy types are allowed to appear (can be many)
 	 * Randomly selecting one of those enemy types
 	 * Delegating the actual creation to the level (since different levels might
 	 *    want to create the same enemy type with different properties)
