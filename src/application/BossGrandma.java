@@ -23,10 +23,7 @@ public class BossGrandma extends Boss {
     private int shootCooldown = 0; // Frames until boss can shoot again (prevents bullet spam)
     private int speed = 25; // Movement speed
     private static final int BULLET_SPEED = 30; // Speed of boss projectiles
-    // private MediaPlayer bossLaughSound;
-    // private MediaPlayer bossHitSound;
-    // private MediaPlayer bossDefeatedSound;
-    // private MediaPlayer bossShootSound;
+
     
     /**
      * BOSS GRANDMA CONSTRUCTOR
@@ -89,13 +86,7 @@ public class BossGrandma extends Boss {
         // Counts down until boss can shoot again
         if (shootCooldown > 0) shootCooldown--;
         
-        // Phase transition sound when boss enters new phase i.e. evil mode when almost dead?
-        // if (phase == 1 && health < maxHealth/2) {
-        //     if (bossLaughSound != null) {
-        //         bossLaughSound.stop();
-        //         bossLaughSound.play();
-        //     }
-        // }
+
     }
     
     /**
@@ -143,11 +134,7 @@ public class BossGrandma extends Boss {
     public void shoot(List<Shot> shots) {
         // Only shoot if cooldown is zero AND boss isn't exploding
         if (shootCooldown <= 0 && !exploding) {
-            // if (bossShootSound != null) {
-            //     bossShootSound.stop();
-            //     bossShootSound.play();
-            // }
-            
+
             // Calculate shot starting position (center of boss)
             int shotX = posX + size / 2 - EnemyShot.getEnemyShotSize() / 2;
             int shotY = posY + size / 2 - EnemyShot.getEnemyShotSize() / 2;
@@ -169,10 +156,7 @@ public class BossGrandma extends Boss {
     public void shootAtPlayer(List<Shot> shots, Player player) {
         // Only shoot if cooldown is zero AND boss isn't exploding
         if (shootCooldown <= 0 && !exploding) {
-            // if (bossShootSound != null) {
-            //     bossShootSound.stop();
-            //     bossShootSound.play();
-            // }
+
             
             // Get player center position
             double playerCenterX = player.posX + player.size / 2;
@@ -211,9 +195,6 @@ public class BossGrandma extends Boss {
             health = 0;
             explode(); // Call Creature.java's explode() method to start death animation
         }
-        // if (bossHitSound != null) {
-        //     bossHitSound.stop();
-        //     bossHitSound.play();
-        // }
+
     }
 }

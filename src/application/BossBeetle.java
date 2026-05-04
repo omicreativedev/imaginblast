@@ -3,9 +3,7 @@ package application;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView; //new
 import java.util.List;
-// import java.io.File;
-// import javafx.scene.media.Media;
-// import javafx.scene.media.MediaPlayer;
+
 
 // "We're all mad here." ~ Cheshire Cat
 
@@ -15,7 +13,7 @@ import java.util.List;
  * Beetle boss that follows the player horizontally
  * Extends Boss.java which extends Creature.java, inheriting explosion behavior
  * We may change this later to offer different explosions for different Bosses
- * NEW: Boss now shoots at the player's current position (aimed shots)
+ * Boss now shoots at the player's current position (aimed shots)
  */
 public class BossBeetle extends Boss {
     
@@ -40,18 +38,6 @@ public class BossBeetle extends Boss {
         super(posX, posY, 256, new ImageView(new Image("boss_beetle.png"))); //new - Pass ImageView instead of Image
         this.health = 250; // Set current health (inherited from Boss.java)
         this.maxHealth = 250; // Set max health for health bar (inherited from Boss.java)
-        // try {
-        //     Media laugh = new Media(new File("beetle_laugh.wav").toURI().toString());
-        //     bossLaughSound = new MediaPlayer(laugh);
-        //     Media hit = new Media(new File("beetle_hit.wav").toURI().toString());
-        //     bossHitSound = new MediaPlayer(hit);
-        //     Media defeated = new Media(new File("beetle_defeated.wav").toURI().toString());
-        //     bossDefeatedSound = new MediaPlayer(defeated);
-        //     Media shoot = new Media(new File("beetle_shoot.wav").toURI().toString());
-        //     bossShootSound = new MediaPlayer(shoot);
-        // } catch (Exception e) {
-        //     System.out.println("Beetle sound effects aint loading dude!");
-        // }
     }
     
     /**
@@ -62,8 +48,7 @@ public class BossBeetle extends Boss {
      * https://forum.jogamp.org/Can-JOGL-be-used-without-requiring-GLAutoDrawable-instances-tt4034953.html#a4034966
      * @param player Reference to player object (used for tracking/targeting)
      */
-    
-  
+
     @Override
     public void update(Player player) {
         super.update(); // Call Creature.java's update method to handle explosion animation
@@ -100,13 +85,7 @@ public class BossBeetle extends Boss {
         // Counts down until boss can shoot again
         if (shootCooldown > 0) shootCooldown--;
         
-        // Phase transition sound when boss enters new phase i.e. evil mode when almost dead?
-        // if (phase == 1 && health < maxHealth/2) {
-        //     if (bossLaughSound != null) {
-        //         bossLaughSound.stop();
-        //         bossLaughSound.play();
-        //     }
-        // }
+ 
     }
     
     /**
@@ -154,10 +133,7 @@ public class BossBeetle extends Boss {
     public void shoot(List<Shot> shots) {
         // Only shoot if cooldown is zero AND boss isn't exploding
         if (shootCooldown <= 0 && !exploding) {
-            // if (bossShootSound != null) {
-            //     bossShootSound.stop();
-            //     bossShootSound.play();
-            // }
+         
             
             // Calculate shot starting position (center of boss)
             int shotX = posX + size / 2 - EnemyShot.getEnemyShotSize() / 2;
@@ -219,9 +195,6 @@ public class BossBeetle extends Boss {
             explode(); // Call Creature.java's explode() method to start death animation
         
         }
-        // if (bossHitSound != null) {
-        //     bossHitSound.stop();
-        //     bossHitSound.play();
-        // }
+      
     }
 }

@@ -16,13 +16,10 @@ import java.util.List;
  */
 public class BossScreenFinal extends BossScreen {
     
-    // Background music for this boss fight
-    // private MediaPlayer bossMusicPlayer;
-	
-    // Background image specific to this boss screen
+
     private Image background;
     
-    private GameRenderer gameRenderer; //new - Store gameRenderer for sound effects
+    private GameRenderer gameRenderer;
     
     /**
      * CONSTRUCTOR

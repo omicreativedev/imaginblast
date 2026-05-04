@@ -74,10 +74,7 @@ public class Creature {
 	 */
 	public void draw(GraphicsContext gc) {
 		if(exploding) {
-			// DRAW EXPLOSION ANIMATION
-			// Calculate which frame of the sprite sheet to display
-			// explosionStep % EXPLOSION_COL = column (0,1,2 repeating)
-			// (explosionStep / EXPLOSION_ROWS) = row (0,1,2,3,4...)
+
 			gc.drawImage(EXPLOSION_IMG, 
 					// Source rectangle in sprite sheet
 					explosionStep % EXPLOSION_COL * EXPLOSION_W,           // Source X

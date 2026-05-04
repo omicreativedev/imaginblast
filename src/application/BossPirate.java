@@ -3,9 +3,7 @@ package application;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView; //new
 import java.util.List;
-// import java.io.File;
-// import javafx.scene.media.Media;
-// import javafx.scene.media.MediaPlayer;
+
 
 // "We're all mad here." ~ Cheshire Cat
 
@@ -23,10 +21,7 @@ public class BossPirate extends Boss {
     private int shootCooldown = 0; // Frames until boss can shoot again (prevents bullet spam)
     private int speed = 10; // Movement speed
     private static final int BULLET_SPEED = 17; // Speed of boss projectiles (slower than player shots)
-    // private MediaPlayer bossLaughSound;
-    // private MediaPlayer bossHitSound;
-    // private MediaPlayer bossDefeatedSound;
-    // private MediaPlayer bossShootSound;
+
     
     /**
      * BOSS PIRATE CONSTRUCTOR
@@ -41,18 +36,7 @@ public class BossPirate extends Boss {
         	//Cat pirate boss png has been updated 04/04 9:26 PM by Ev
         this.health = 200; // Set current health (inherited from Boss.java)
         this.maxHealth = 200; // Set max health for health bar (inherited from Boss.java)
-        // try {
-        //     Media laugh = new Media(new File("pirate_laugh.wav").toURI().toString());
-        //     bossLaughSound = new MediaPlayer(laugh);
-        //     Media hit = new Media(new File("pirate_hit.wav").toURI().toString());
-        //     bossHitSound = new MediaPlayer(hit);
-        //     Media defeated = new Media(new File("pirate_defeated.wav").toURI().toString());
-        //     bossDefeatedSound = new MediaPlayer(defeated);
-        //     Media shoot = new Media(new File("pirate_shoot.wav").toURI().toString());
-        //     bossShootSound = new MediaPlayer(shoot);
-        // } catch (Exception e) {
-        //     System.out.println("Pirate sound effects aint loading dude!");
-        // }
+
     }
     
     /**
@@ -101,13 +85,7 @@ public class BossPirate extends Boss {
         // Counts down until boss can shoot again
         if (shootCooldown > 0) shootCooldown--;
         
-        // Phase transition sound when boss enters new phase i.e. evil mode when almost dead?
-        // if (phase == 1 && health < maxHealth/2) {
-        //     if (bossLaughSound != null) {
-        //         bossLaughSound.stop();
-        //         bossLaughSound.play();
-        //     }
-        // }
+
     }
     
     /**
@@ -156,15 +134,7 @@ public class BossPirate extends Boss {
     public void shoot(List<Shot> shots) {
         // Only shoot if cooldown is zero AND boss isn't exploding
         if (shootCooldown <= 0 && !exploding) {
-            // if (bossShootSound != null) {
-            //     bossShootSound.stop();
-            //     bossShootSound.play();
-            // }
-            
-            // We need the player reference to aim. Since shoot() doesn't take a player param,
-            // we'll need to store a reference or get it another way.
-            // For now, this shoots straight down. The BossScreen will need to pass player to shoot.
-            // TEMPORARY: Shoot straight down until we can pass player reference
+
             
             // Calculate shot starting position (center of boss)
             int shotX = posX + size / 2 - EnemyShot.getEnemyShotSize() / 2;
@@ -187,10 +157,7 @@ public class BossPirate extends Boss {
     public void shootAtPlayer(List<Shot> shots, Player player) {
         // Only shoot if cooldown is zero AND boss isn't exploding
         if (shootCooldown <= 0 && !exploding) {
-            // if (bossShootSound != null) {
-            //     bossShootSound.stop();
-            //     bossShootSound.play();
-            // }
+
             
             // Get player center position
             double playerCenterX = player.posX + player.size / 2;
@@ -230,22 +197,7 @@ public class BossPirate extends Boss {
             explode(); // Call Creature.java's explode() method to start death animation
 
         }
-        //if (health == 0) { health=0; }
-        //if (health == 0) { explode();} //I removed the health=0; since if the boss is gone, then the health would never go below 0
-        //Y U NO EXPLODE \(>~<)/
-        
-        // if (bossHitSound != null) {
-        //     bossHitSound.stop();
-        //     bossHitSound.play();
-        // }
-        
-        // Check if boss is defeated (health depleted)
-        //if (health == 0) {explode();}
-            // if (bossDefeatedSound != null) {// Call Creature.java's explode() method to start death animation
-            //     bossDefeatedSound.play();
-            // }
-            //; 
-            // ^^^ I think this is broken/bug
+
         
     }
 }

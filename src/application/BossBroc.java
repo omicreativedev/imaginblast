@@ -3,9 +3,6 @@ package application;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView; //new
 import java.util.List;
-// import java.io.File;
-// import javafx.scene.media.Media;
-// import javafx.scene.media.MediaPlayer;
 
 
 
@@ -23,10 +20,7 @@ public class BossBroc extends Boss {
     private int shootCooldown = 0; // Frames until boss can shoot again (prevents bullet spam)
     private int speed = 10; // Movement speed
     private static final int BULLET_SPEED = 21; // Speed of boss projectiles (slower than player shots)
-    // private MediaPlayer bossLaughSound;
-    // private MediaPlayer bossHitSound;
-    // private MediaPlayer bossDefeatedSound;
-    // private MediaPlayer bossShootSound;
+
     
     /**
      * BOSS BROC CONSTRUCTOR
@@ -40,18 +34,7 @@ public class BossBroc extends Boss {
         super(posX, posY, 256, new ImageView(new Image("boss_broc.png"))); //new - Pass ImageView instead of Image
         this.health = 300; // Set current health (inherited from Boss.java)
         this.maxHealth = 300; // Set max health for health bar (inherited from Boss.java)
-        // try {
-        //     Media laugh = new Media(new File("broc_laugh.wav").toURI().toString());
-        //     bossLaughSound = new MediaPlayer(laugh);
-        //     Media hit = new Media(new File("broc_hit.wav").toURI().toString());
-        //     bossHitSound = new MediaPlayer(hit);
-        //     Media defeated = new Media(new File("broc_defeated.wav").toURI().toString());
-        //     bossDefeatedSound = new MediaPlayer(defeated);
-        //     Media shoot = new Media(new File("broc_shoot.wav").toURI().toString());
-        //     bossShootSound = new MediaPlayer(shoot);
-        // } catch (Exception e) {
-        //     System.out.println("Broc sound effects aint loading dude!");
-        // }
+
     }
     
     /**
@@ -100,13 +83,7 @@ public class BossBroc extends Boss {
         // Counts down until boss can shoot again
         if (shootCooldown > 0) shootCooldown--;
         
-        // Phase transition sound when boss enters new phase i.e. evil mode when almost dead?
-        // if (phase == 1 && health < maxHealth/2) {
-        //     if (bossLaughSound != null) {
-        //         bossLaughSound.stop();
-        //         bossLaughSound.play();
-        //     }
-        // }
+
     }
     
     /**
@@ -154,10 +131,7 @@ public class BossBroc extends Boss {
     public void shoot(List<Shot> shots) {
         // Only shoot if cooldown is zero AND boss isn't exploding
         if (shootCooldown <= 0 && !exploding) {
-            // if (bossShootSound != null) {
-            //     bossShootSound.stop();
-            //     bossShootSound.play();
-            // }
+
             
             // Calculate shot starting position (center of boss)
             int shotX = posX + size / 2 - EnemyShot.getEnemyShotSize() / 2;
@@ -180,11 +154,7 @@ public class BossBroc extends Boss {
     public void shootAtPlayer(List<Shot> shots, Player player) {
         // Only shoot if cooldown is zero AND boss isn't exploding
         if (shootCooldown <= 0 && !exploding) {
-            // if (bossShootSound != null) {
-            //     bossShootSound.stop();
-            //     bossShootSound.play();
-            // }
-            
+
             // Get player center position
             double playerCenterX = player.posX + player.size / 2;
             double playerCenterY = player.posY + player.size / 2;
@@ -219,9 +189,6 @@ public class BossBroc extends Boss {
             explode(); // Call Creature.java's explode() method to start death animation
             
         }
-        // if (bossHitSound != null) {
-        //     bossHitSound.stop();
-        //     bossHitSound.play();
-        // }
+
     }
 }
