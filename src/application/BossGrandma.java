@@ -23,7 +23,7 @@ public class BossGrandma extends Boss {
     private int shootCooldown = 0; // Frames until boss can shoot again (prevents bullet spam)
     private int speed = 25; // Movement speed
     private static final int BULLET_SPEED = 30; // Speed of boss projectiles
-
+    private static final ImageView BULLET_IMG = new ImageView(new Image("item_yarn.png"));
     
     /**
      * BOSS GRANDMA CONSTRUCTOR
@@ -172,7 +172,7 @@ public class BossGrandma extends Boss {
             int shotY = posY + size / 2 - EnemyShot.getEnemyShotSize() / 2;
             
             // Create new aimed enemy shot
-            shots.add(new EnemyShot(shotX, shotY, velX, velY));
+            shots.add(new EnemyShot(shotX, shotY, velX, velY, BULLET_IMG));
             shootCooldown = 20; // Reset cooldown (20 frames between shots)
         }
     }

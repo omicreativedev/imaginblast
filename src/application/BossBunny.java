@@ -9,6 +9,7 @@ public class BossBunny extends Boss {
     private int shootCooldown = 0;
     private int speed = 8;
     private static final int BULLET_SPEED = 12;
+    private static final ImageView BULLET_IMG = new ImageView(new Image("item_carrot.png"));
     
     public BossBunny(int posX, int posY) {
         super(posX, posY, 256, new ImageView(new Image("boss_bunny.png")));
@@ -69,7 +70,7 @@ public class BossBunny extends Boss {
             double velY = direction[1] * BULLET_SPEED;
             int shotX = posX + size / 2 - EnemyShot.getEnemyShotSize() / 2;
             int shotY = posY + size / 2 - EnemyShot.getEnemyShotSize() / 2;
-            shots.add(new EnemyShot(shotX, shotY, velX, velY));
+            shots.add(new EnemyShot(shotX, shotY, velX, velY, BULLET_IMG));
             shootCooldown = 25;
         }
     }

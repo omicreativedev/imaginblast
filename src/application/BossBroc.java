@@ -4,8 +4,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView; //new
 import java.util.List;
 
-
-
 /**
  * BOSS BROC CLASS
  * Implementation of the Boss abstract class Boss.java
@@ -20,7 +18,7 @@ public class BossBroc extends Boss {
     private int shootCooldown = 0; // Frames until boss can shoot again (prevents bullet spam)
     private int speed = 10; // Movement speed
     private static final int BULLET_SPEED = 21; // Speed of boss projectiles (slower than player shots)
-
+    private static final ImageView BULLET_IMG = new ImageView(new Image("item_potato.png"));
     
     /**
      * BOSS BROC CONSTRUCTOR
@@ -169,7 +167,7 @@ public class BossBroc extends Boss {
             int shotY = posY + size / 2 - EnemyShot.getEnemyShotSize() / 2;
             
             // Create new aimed enemy shot
-            shots.add(new EnemyShot(shotX, shotY, velX, velY));
+            shots.add(new EnemyShot(shotX, shotY, velX, velY, BULLET_IMG));
             shootCooldown = 20; // Reset cooldown (20 frames between shots)
         }
     }

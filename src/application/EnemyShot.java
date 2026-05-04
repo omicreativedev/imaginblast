@@ -1,6 +1,7 @@
 package application;
 
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 
 /**
@@ -10,11 +11,15 @@ import javafx.scene.paint.Color;
  * Enemy shots are larger and move downward toward the player.
  * Later we should create different shot patterns for each boss or enemy.
  * NEW: Now supports directional aiming (enemies/boss can shoot at player)
+ * NEW: Supports custom bullet images per enemy/boss
  */
 public class EnemyShot extends Shot {
     
     // Override size for enemy shots
     private static final int ENEMY_SHOT_SIZE = 18;
+    
+    // Custom bullet image (can be null, then falls back to red oval)
+    private ImageView bulletImage;
     
     /**
      * Creates a new enemy shot (straight down, original behavior)
@@ -27,6 +32,7 @@ public class EnemyShot extends Shot {
         // Default direction: straight down
         this.velX = 0;
         this.velY = speed;
+        this.bulletImage = null; // Use default red oval
     }
     
     /**
@@ -50,6 +56,22 @@ public class EnemyShot extends Shot {
     public EnemyShot(int posX, int posY, double velX, double velY) {
         super(posX, posY, velX, velY);
         this.speed = 8; // Keep speed for reference
+        this.bulletImage = null; // Use default red oval
+    }
+    
+    /**
+     * NEW - Creates an aimed enemy shot with custom bullet image
+     * Used for bosses that have unique bullet images
+     * @param posX Starting X coordinate
+     * @param posY Starting Y coordinate
+     * @param velX Horizontal velocity component (negative = left, positive = right)
+     * @param velY Vertical velocity component (negative = up, positive = down)
+     * @param image Custom bullet image for this shot
+     */
+    public EnemyShot(int posX, int posY, double velX, double velY, ImageView image) {
+        super(posX, posY, velX, velY);
+        this.speed = 8;
+        this.bulletImage = image;
     }
     
     /**
@@ -66,15 +88,21 @@ public class EnemyShot extends Shot {
     /**
      * OVERRIDE DRAW METHOD
      * Renders the enemy shot on screen
-     * Enemy shots are drawn as red ovals (distinct from player shots)
+     * If custom bullet image is provided, draws that image
+     * Otherwise draws a red oval (default)
      * 
      * @param gc Graphics context for drawing
      */
     @Override
     public void draw(GraphicsContext gc) {
-        gc.setFill(Color.RED); // bullet color
-        // Use ENEMY_SHOT_SIZE instead of Shot.SIZE for larger projectiles
-        gc.fillOval(posX, posY, ENEMY_SHOT_SIZE, ENEMY_SHOT_SIZE);
+        if (bulletImage != null) {
+            // Draw custom bullet image
+            gc.drawImage(bulletImage.getImage(), posX, posY, ENEMY_SHOT_SIZE, ENEMY_SHOT_SIZE);
+        } else {
+            // Default: red oval
+            gc.setFill(Color.RED);
+            gc.fillOval(posX, posY, ENEMY_SHOT_SIZE, ENEMY_SHOT_SIZE);
+        }
     }
     
     /**

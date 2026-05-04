@@ -20,11 +20,8 @@ public class BossBeetle extends Boss {
     // Boss-specific attributes
     private int shootCooldown = 0; // Frames until boss can shoot again (prevents bullet spam)
     private int speed = 15; // Movement speed
-    private static final int BULLET_SPEED = 19; // Speed of boss projectiles (slower than player shots)
-    // private MediaPlayer bossLaughSound;
-    // private MediaPlayer bossHitSound;
-    // private MediaPlayer bossDefeatedSound;
-    // private MediaPlayer bossShootSound;
+    private static final int BULLET_SPEED = 20; // Speed of boss projectiles (slower than player shots)
+    private static final ImageView BULLET_IMG = new ImageView(new Image("item_rock.png"));
     
     /**
      * BOSS BEETLE CONSTRUCTOR
@@ -175,7 +172,7 @@ public class BossBeetle extends Boss {
             int shotY = posY + size / 2 - EnemyShot.getEnemyShotSize() / 2;
             
             // Create new aimed enemy shot
-            shots.add(new EnemyShot(shotX, shotY, velX, velY));
+            shots.add(new EnemyShot(shotX, shotY, velX, velY, BULLET_IMG));
             shootCooldown = 20; // Reset cooldown (20 frames between shots)
         }
     }

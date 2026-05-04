@@ -20,8 +20,8 @@ public class BossPirate extends Boss {
     // Boss-specific attributes
     private int shootCooldown = 0; // Frames until boss can shoot again (prevents bullet spam)
     private int speed = 10; // Movement speed
-    private static final int BULLET_SPEED = 17; // Speed of boss projectiles (slower than player shots)
-
+    private static final int BULLET_SPEED = 20; // Speed of boss projectiles (slower than player shots)
+    private static final ImageView BULLET_IMG = new ImageView(new Image("item_pizza.png"));
     
     /**
      * BOSS PIRATE CONSTRUCTOR
@@ -173,7 +173,7 @@ public class BossPirate extends Boss {
             int shotY = posY + size / 2 - EnemyShot.getEnemyShotSize() / 2;
             
             // Create new aimed enemy shot
-            shots.add(new EnemyShot(shotX, shotY, velX, velY));
+            shots.add(new EnemyShot(shotX, shotY, velX, velY, BULLET_IMG));
             shootCooldown = 30; // Reset cooldown (30 frames between shots)
         }
     }
