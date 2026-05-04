@@ -114,15 +114,20 @@ public class InputHandler {
             break;
                 
         case QUEST_SCREEN:
-            if(clickX >= WIDTH/2 - 100 && clickX <= WIDTH/2 + 100 &&
-               clickY >= HEIGHT/2 + 100 && clickY <= HEIGHT/2 + 150) {
+            if (clickX >= WIDTH/2 - 100 && clickX <= WIDTH/2 + 100 &&
+                clickY >= HEIGHT/2 + 100 && clickY <= HEIGHT/2 + 150) {
                 gameRenderer.playButtonClick();
-                //levelManager.resetForNewGame();
-                gameRenderer.playGameplayMusic(); //new - Start gameplay music
-                stateManager.setCurrentState(GameState.PLAYING);
+                
+                // Check if this is the final quest (no current level)
+                if (levelManager.getCurrentLevel() == null) {
+                    stateManager.setCurrentState(GameState.BOSS_FIGHT);
+                } else {
+                    gameRenderer.playGameplayMusic();
+                    stateManager.setCurrentState(GameState.PLAYING);
+                }
                 setupCallback.run();
             }
-            break;            
+            break;        
                 
         case PLAYING:
         	
@@ -154,11 +159,12 @@ public class InputHandler {
                     stateManager.setCurrentState(GameState.QUEST_SCREEN);
                     setupCallback.run();
                 } else if (levelManager.getCurrentLevelNum() == 4) {
-                    levelManager.advanceToNextLevel();
+                    // After Level 4, load final boss
+                    levelManager.loadFinalBoss();
                     stateManager.setCurrentState(GameState.QUEST_SCREEN);
                     setupCallback.run();
                 } else if (levelManager.getCurrentLevelNum() == 5) {
-                    // After final level, show EndScreen
+                    // After final boss, go to End Screen
                     stateManager.setCurrentState(GameState.END_SCREEN);
                     setupCallback.run();
                 }

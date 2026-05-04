@@ -11,7 +11,7 @@ public class Quest02 extends Quest {
     
     public Quest02() {
     	// Instructions on Quest Screen
-        super(2, "Collect 2 acorns, 2 donuts, defeat 2 squirrels, and defeat 2 pillbugs to go to the next level");
+        super(2, "Collect 2 acorns, 2 donuts, defeat 2 squirrels, and \ndefeat 2 pillbugs to go to the next level");
         // Background Image
         this.background = new Image("quest_bg_02.png");
     }

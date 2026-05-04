@@ -9,16 +9,16 @@ import javafx.scene.image.Image;
 public abstract class Quest {
     protected int levelNumber;
     protected String questText;
-    protected Image background; //new - Background image for quest screen
+    protected Image background;
     
     public Quest(int levelNumber, String questText) {
         this.levelNumber = levelNumber;
         this.questText = questText;
     }
     
-    public abstract void draw(); // Will be implemented in renderer
+    public abstract void draw();
     
     public String getQuestText() { return questText; }
     public int getLevelNumber() { return levelNumber; }
-    public Image getBackground() { return background; } //new - Getter for background
+    public Image getBackground() { return background; }
 }

@@ -49,10 +49,13 @@ public class LevelManager {
         currentLevelDoneScreen = new LevelDone04();
     }
     
+    
     // Load Final Boss (no level, just quest and boss screen)
     public void loadFinalBoss() {
+    	currentLevel = null;
         currentQuest = new QuestFinal();
         currentBossScreen = new BossScreenFinal();
+        // No level needed for final boss
         currentLevelDoneScreen = null; // Will use EndScreen instead
     }
     

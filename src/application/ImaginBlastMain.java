@@ -1,5 +1,7 @@
 package application;
 
+import javafx.scene.paint.Color;
+
 // Hello this is a test to see if pushing works or sinister shenanigans ensue -EV
 
 /* 
@@ -195,7 +197,16 @@ public class ImaginBlastMain extends Application {
 	            
 	        case PLAYING:
 	        	gameRenderer.stopQuestMusic();
-	            gc.drawImage(levelManager.getCurrentLevel().getBackground(), 0, 0, WIDTH, HEIGHT);     
+
+
+	        	if (levelManager.getCurrentLevel() != null) {
+	        	    gc.drawImage(levelManager.getCurrentLevel().getBackground(), 0, 0, WIDTH, HEIGHT);
+	        	} else {
+	        	    // Fallback background for when there's no level (shouldn't happen in PLAYING state)
+	        	    gc.setFill(Color.GREEN);
+	        	    gc.fillRect(0, 0, WIDTH, HEIGHT);
+	        	}
+	        	
 	            gameRenderer.drawHUD(entityManager.getScore(), entityManager.getShots().size(), MAX_SHOTS, levelManager.getCurrentLevel(), entityManager.getPlayer());
 	            
 	            // Draw background effects
@@ -271,9 +282,14 @@ public class ImaginBlastMain extends Application {
 	            }
 
 	            // Check if player entered portal
-	            if (levelManager.getBossScreen().isComplete()) { // If boss screen is complete
-	                stateManager.setCurrentState(GameState.LEVEL_DONE); // Set level done state
-	                gameRenderer.stopBossMusic(); //new - Stop boss music when level done
+	            if (levelManager.getBossScreen().isComplete()) {
+	                // Check if this is the final boss (no current level)
+	                if (levelManager.getCurrentLevel() == null) {
+	                    stateManager.setCurrentState(GameState.END_SCREEN);
+	                } else {
+	                    stateManager.setCurrentState(GameState.LEVEL_DONE);
+	                }
+	                gameRenderer.stopBossMusic();
 	                bossMusicStarted = false;
 	            }
 
