@@ -288,6 +288,7 @@ public class ImaginBlastMain extends Application {
 	            if (levelManager.getBossScreen().isComplete()) {
 	                // Check if this is the final boss (no current level)
 	                if (levelManager.getCurrentLevel() == null) {
+	                	gameRenderer.stopQuestMusic(); 
 	                    stateManager.setCurrentState(GameState.END_SCREEN);
 	                } else {
 	                    stateManager.setCurrentState(GameState.LEVEL_DONE);
@@ -310,6 +311,7 @@ public class ImaginBlastMain extends Application {
 	            
 	        case END_SCREEN:
 	        	gameRenderer.stopBossMusic();
+	            gameRenderer.stopGameplayMusic();
 	            uiManager.drawEndScreen(entityManager.getScore(), true); // true = game won
 	            break;
 	            
