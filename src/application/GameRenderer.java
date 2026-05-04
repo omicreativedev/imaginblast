@@ -25,7 +25,7 @@ public class GameRenderer {
     private AudioClip startScreenMusic;
     private AudioClip buttonClickSound;
     private AudioClip gameplayMusic;
-    // Media Player is working for some encoding better. We don't know why.
+    // Media Player is working for some encoding better.
     private MediaPlayer bossMusic;
     private MediaPlayer itemCollectSound;
     private MediaPlayer playerShootSound;
@@ -151,7 +151,6 @@ public class GameRenderer {
      * Clear the screen with forest green background
      * Called at the beginning of each frame in PLAYING state
      * This is the base layer that everything else draws on top of
-     * We want to change this set up for new levels going forward maybe
      */
     public void clearScreen() {
         gc.setFill(Color.FORESTGREEN);
@@ -356,7 +355,7 @@ public class GameRenderer {
     }
 
     /**
-     * DRAW BOSS HEADS-UP DISPLAY (HUD)
+     * DRAW BOSS HEADS-UP DISPLAY (HUD) -- this is the toolbar with scores
      * Special HUD for boss fights (no item count, includes boss health)
      * Called by drawBossScreen()
      * 
