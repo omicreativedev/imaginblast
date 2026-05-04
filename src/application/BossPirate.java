@@ -47,8 +47,6 @@ public class BossPirate extends Boss {
      * https://forum.jogamp.org/Can-JOGL-be-used-without-requiring-GLAutoDrawable-instances-tt4034953.html#a4034966
      * @param player Reference to player object (used for tracking/targeting)
      */
-    
-  
     @Override
     public void update(Player player) {
         super.update(); // Call Creature.java's update method to handle explosion animation

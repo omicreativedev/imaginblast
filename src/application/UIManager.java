@@ -64,9 +64,6 @@ public class UIManager {
         startScreen = new StartScreen();
     }
     
-   
-    
-    
     // For GameRenderer to access gc if needed
     public GraphicsContext getGc() {
         return gameRenderer.getGc();

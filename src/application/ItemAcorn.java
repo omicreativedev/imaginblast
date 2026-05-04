@@ -39,13 +39,7 @@ public class ItemAcorn extends Item {
 	    // Mark as collected
 	    this.collected = true;
 	    gameRenderer.playItemCollectSound(); //new - Play collect sound
-	    
-	    // FUTURE: Play sound here
-	    // FUTURE: Add visual effect
-	    // FUTURE: Give bonus points
-	    
-	    // For now, just mark as collected
-	    // The base Item class will handle setting gone = true in update()
+	  
 	}
 	
 	/**
