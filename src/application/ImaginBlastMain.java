@@ -18,6 +18,9 @@ package application;
  * Follow my own comment format. Do not change my code!!! DO NOT DELETE MY COMMENTS!
  * ---
  * Code comparison tool: https://www.diffchecker.com/
+ * ---
+ * Image resources for game elements
+ * Reference: https://docs.oracle.com/javase/8/javafx/api/javafx/scene/image/Image.html
  */
 
 import java.util.Random;
@@ -51,21 +54,19 @@ public class ImaginBlastMain extends Application {
 	public static final int HEIGHT = 720; // Game window height
 	private static final int PLAYER_SIZE = 60;
 	
-	// Image resources for game elements
-	// Reference: https://docs.oracle.com/javase/8/javafx/api/javafx/scene/image/Image.html
-	
-	static final ImageView PLAYER_IMG = new ImageView(new Image("player_frog_static.png")); //new - Converted to ImageView
-	
+	//Player images
+	static final ImageView PLAYER_IMG = new ImageView(new Image("player_frog_static.png"));
 	//Enemy images
-	static final ImageView PILLBUG_IMG = new ImageView(new Image("enemy_pillbug.png")); //new - Converted to ImageView
-	static final ImageView SQUIRREL_IMG = new ImageView(new Image("enemy_squirrel.png")); //new - Converted to ImageView
-	static final ImageView GARLIC_IMG = new ImageView(new Image("enemy_garlic.png")); //new - Converted to ImageView
+	static final ImageView PILLBUG_IMG = new ImageView(new Image("enemy_pillbug.png"));
+	static final ImageView SQUIRREL_IMG = new ImageView(new Image("enemy_squirrel.png"));
+	static final ImageView GARLIC_IMG = new ImageView(new Image("enemy_garlic.png"));
 	static final Image EXPLOSION_IMG = new Image("explosion.png");
-	static final ImageView ACORN_IMG = new ImageView(new Image("item_acorn.png")); //new - Converted to ImageView
-	static final ImageView DONUT_IMG = new ImageView(new Image("item_donut.png")); //new - Converted to ImageView
-	static final ImageView CUPCAKE_IMG = new ImageView(new Image("item_cupcake.png")); //new - Converted to ImageView
-	static final ImageView URCHIN_IMG = new ImageView(new Image("item_urchin.png")); //new
-	static final ImageView CASSETTE_IMG = new ImageView(new Image("item_cassette.png")); //new
+	static final ImageView ACORN_IMG = new ImageView(new Image("item_acorn.png"));
+	static final ImageView DONUT_IMG = new ImageView(new Image("item_donut.png"));
+	static final ImageView CUPCAKE_IMG = new ImageView(new Image("item_cupcake.png"));
+	static final ImageView URCHIN_IMG = new ImageView(new Image("item_urchin.png"));
+	static final ImageView CASSETTE_IMG = new ImageView(new Image("item_cassette.png"));
+	
 	// Explosion animation properties
 	static final int EXPLOSION_W = 128; // Width of explosion sprite
 	static final int EXPLOSION_ROWS = 3; // Rows in explosion sprite sheet
@@ -78,29 +79,21 @@ public class ImaginBlastMain extends Application {
 	final int MAX_SHOTS = MAX_BOMBS * 2; // Maximum number of player shots allowed
 	final int MAX_ITEMS = 6; // Maximum number of items
 	
-	public GraphicsContext gc; // Graphics context for drawing
+	public GraphicsContext gc;
 	
 	/**
 	 * GAME STATE MANAGEMENT
 	 * Moved to GameState.java and GameStateManager.java
 	 */
-	GameStateManager stateManager; // Manages game states i.e. what's the current state?
+	GameStateManager stateManager;
 	
 	// Game objects collections
 	EntityManager entityManager; // Manages game entities 
 	GameRenderer gameRenderer; // Draws game
 	UIManager uiManager; // What screen are we on?
-	boolean questConfirmed = false; // Has player read the quest???
-	LevelManager levelManager; // Moved to LevelManager.java
-	InputHandler inputHandler; // Handles user input like mouseclicks (later WASD)
-	
-	// Music -- for later
-	// MediaPlayer startMusicPlayer;
-	// MediaPlayer questMusicPlayer;
-	// MediaPlayer levelMusicPlayer;
-	// MediaPlayer bossMusicPlayer;
-	// MediaPlayer winMusicPlayer;
-	// MediaPlayer loseMusicPlayer;
+	boolean questConfirmed = false; // Has player read the quest?
+	LevelManager levelManager; // Manages levels
+	InputHandler inputHandler; // Handles user input
 
 	/**
 	 * START METHOD
@@ -114,17 +107,17 @@ public class ImaginBlastMain extends Application {
 		gc = canvas.getGraphicsContext2D(); // Get graphics context for drawing
 		gameRenderer = new GameRenderer(gc); // Initialize renderer with graphics context
 
-		// Other initializations
+		// Initializations
 		stateManager = new GameStateManager();
 		levelManager = new LevelManager();
 		entityManager = new EntityManager(MAX_SHOTS, WIDTH, HEIGHT, MAX_BOMBS, MAX_ITEMS);
 		uiManager = new UIManager(gameRenderer);
-		setup(); // setup will now use EntityManager.java
+		setup();
 		inputHandler = new InputHandler(stateManager, levelManager, entityManager, gameRenderer, uiManager, MAX_SHOTS, WIDTH, HEIGHT);
 		
-		// NEW: Connect input handler to entity manager so player can access key states
+		// Connect input handler to entity manager so player can access key states
 		entityManager.setInputHandler(inputHandler);
-		entityManager.setGameRenderer(gameRenderer); //new - Pass game renderer for sounds
+		entityManager.setGameRenderer(gameRenderer);
 		
 		// KEYBOARD INPUT for WASD movement
 		// Reference: https://docs.oracle.com/javase/8/javafx/api/javafx/scene/input/KeyEvent.html
@@ -146,10 +139,6 @@ public class ImaginBlastMain extends Application {
 		timeline.setCycleCount(Timeline.INDEFINITE); // Loop forever
 		timeline.play(); // Start the animation
 
-		//Media startMusic = new Media(new File("start.wav").toURI().toString());
-		//musicPlayer = new MediaPlayer(startMusic);
-		//musicPlayer.play();
-		
 		stage.setScene(new Scene(new StackPane(canvas))); // Add canvas to scene
 		stage.setTitle("ImaginBlast"); // Set window title
 		stage.show(); // Display the window
@@ -160,8 +149,8 @@ public class ImaginBlastMain extends Application {
 	 * Completely resets the game to Level 1 for a fresh start
 	 */
 	private void resetGame() {
-	    levelManager.reset(); // Reset to Level 1
-	    setup(); // Now setup will use the reset Level 1
+	    levelManager.reset();
+	    setup();
 	    bossMusicStarted = false;
 	}
 	
@@ -171,7 +160,6 @@ public class ImaginBlastMain extends Application {
 	 */
 	private void setup() {
 	    entityManager.resetAll();
-	    // NO levelManager.reset() here - preserves current level
 	    
 	    Player player = new Player(WIDTH / 2, HEIGHT - PLAYER_SIZE, PLAYER_SIZE, PLAYER_IMG);
 	    player.resetHealth();
@@ -201,28 +189,13 @@ public class ImaginBlastMain extends Application {
 	            break;
 	            
 	        case QUEST_SCREEN:
-	        	gameRenderer.playQuestMusic(); //new - Play quest music when entering quest screen
+	        	gameRenderer.playQuestMusic();
 	        	uiManager.drawQuestScreen(levelManager.getQuest());
 	            break;
 	            
-	            //Unsure where I would specifically implement the backgrounds for the levels
-	            //I thought maybe it would be a similar process to start screen or quest screen
-	        //case LEVEL1_SCREEN:
-	            //uiManager.drawLevel2Screen();
-	           // break;
-	        //case LEVEL2_SCREEN:
-	        	//uiManager.drawLevel2Screen();
-	            //break;
-	            
 	        case PLAYING:
-	        	gameRenderer.stopQuestMusic(); //new - Stop quest music when gameplay starts
-	            //gameRenderer.clearScreen();
-	            gc.drawImage(levelManager.getCurrentLevel().getBackground(), 0, 0, WIDTH, HEIGHT);
-	            
-	            // Get the first item goal's class to display
-	            // Class<? extends Item> itemType = levelManager.getCurrentLevel().getItemGoals().keySet().iterator().next();
-	            // int itemsSoFar = levelManager.getCurrentLevel().itemsCollected.getOrDefault(itemType, 0);
-	            
+	        	gameRenderer.stopQuestMusic();
+	            gc.drawImage(levelManager.getCurrentLevel().getBackground(), 0, 0, WIDTH, HEIGHT);     
 	            gameRenderer.drawHUD(entityManager.getScore(), entityManager.getShots().size(), MAX_SHOTS, levelManager.getCurrentLevel(), entityManager.getPlayer());
 	            
 	            // Draw background effects
@@ -232,7 +205,6 @@ public class ImaginBlastMain extends Application {
 	            // Update and draw player (WASD movement now handled inside player.update())
 	            entityManager.updatePlayer(); // Update player state (includes movement)
 	            entityManager.drawPlayer(gc); // Draw player
-	            // REMOVED: entityManager.movePlayer() - WASD replaces mouse movement
 	            
 	            // Update and draw enemies
 	            entityManager.updateEnemies(); // Update enemy states
@@ -269,14 +241,13 @@ public class ImaginBlastMain extends Application {
 	            break;
 	            
 	        case BOSS_FIGHT:
-	            gameRenderer.stopGameplayMusic(); //new - Stop gameplay music when boss fight starts
-	            if (!bossMusicStarted) { //new - Only play boss music once
+	            gameRenderer.stopGameplayMusic(); // Stop gameplay music when boss fight starts
+	            if (!bossMusicStarted) { // Only play boss music once
 	                gameRenderer.playBossMusic();
 	                bossMusicStarted = true;
 	            }
 	            // Update player movement (WASD handled inside player.update)
 	        	entityManager.updatePlayer(); // Update player state (includes movement)
-	        	// REMOVED: entityManager.movePlayer() - WASD replaces mouse movement
 
 	            // Update and check player shots
 	        	entityManager.updateShotsWithBossCollisions(levelManager.getBossScreen().boss);

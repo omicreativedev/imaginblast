@@ -1,14 +1,20 @@
 package application;
 
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.paint.Color;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 
 /**
- * STANDARD SHOT - Default blue oval shot that travels straight up
- * This is the same as the original Shot class
- * NEW: Now supports directional aiming (up, down, left, right, diagonal)
+ * STANDARD SHOT
+ * 
+ * This is the Players standard shot and bullet.
  */
 public class ShotStandard extends Shot {
+	
+	// This is the player's standard bullet
+    private static final ImageView SMILEY_BULLET = new ImageView(new Image("bullet_smiley.png"));
+    // This is the size of this standard shot
+    private static final int DRAW_SIZE = 20;
     
     public ShotStandard(int posX, int posY) {
         super(posX, posY);
@@ -36,13 +42,11 @@ public class ShotStandard extends Shot {
         // Use directional velocity instead of just moving up
         posX += velX;
         posY += velY;
-      //DEBUG REMOVE
-        System.out.println("Shot Y: " + posY); // DEBUG
     }
     
+    // Overrides Shot and uses a custom Bullet Image and Custom Size just for this Standard Shot
     @Override
     public void draw(GraphicsContext gc) {
-        gc.setFill(Color.LIGHTBLUE);
-        gc.fillOval(posX, posY, SIZE, SIZE);
+    	 gc.drawImage(SMILEY_BULLET.getImage(), posX, posY, DRAW_SIZE, DRAW_SIZE);
     }
 }

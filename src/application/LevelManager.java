@@ -49,11 +49,10 @@ public class LevelManager {
         currentLevelDoneScreen = new LevelDone04();
     }
     
- // Load Final Level
-    private void loadFinalLevel() {
-        currentLevel = new LevelFinal();
+    // Load Final Boss (no level, just quest and boss screen)
+    public void loadFinalBoss() {
         currentQuest = new QuestFinal();
-        currentBossScreen = new FinalBossScreen();
+        currentBossScreen = new BossScreenFinal();
         currentLevelDoneScreen = null; // Will use EndScreen instead
     }
     
@@ -80,7 +79,7 @@ public class LevelManager {
         bossDefeated = false;
     }
     
-    // Advance to next level
+    // Advance to next level (only for levels 1-4, not for final boss)
     public void advanceToNextLevel() {
         currentLevelNum++;
         
@@ -90,9 +89,8 @@ public class LevelManager {
             loadLevel3();
         } else if (currentLevelNum == 4) {
             loadLevel4();
-        } else if (currentLevelNum == 5) {
-            loadFinalLevel();
         }
+        // currentLevelNum never goes to 5 - final boss is handled separately
         
         bossDefeated = false;
     }
