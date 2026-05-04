@@ -119,7 +119,7 @@ public class BossScreenFinal extends BossScreen {
                 gameRenderer.playPortalSound();
             }
             levelComplete = true; // Mark level as complete when player enters portal
-        }
+  }
     }
     
     /**
@@ -159,7 +159,7 @@ public class BossScreenFinal extends BossScreen {
         
         // Draw player health display at top left of screen
         gc.setFill(Color.RED);
-        gc.fillText("Health: " + player.hp + "/" + player.maxHp, 50, 50);
+        gc.fillText("Health: " + player.hp + "/" + player.maxHp, 75, 50);
     }
     
     /**

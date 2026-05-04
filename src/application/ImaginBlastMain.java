@@ -167,12 +167,15 @@ public class ImaginBlastMain extends Application {
 	    player.resetHealth();
 	    entityManager.setPlayer(player);
 	    
-	    for (int i = 0; i < MAX_BOMBS; i++) {
-	        entityManager.addEnemy(createEnemyForCurrentLevel());
-	    }
-	    
-	    for (int i = 0; i < MAX_ITEMS; i++) {
-	        entityManager.addItem(createItemForCurrentLevel());
+	    // Only create enemies and items if there is a current level (not final boss)
+	    if (levelManager.getCurrentLevel() != null) {
+	        for (int i = 0; i < MAX_BOMBS; i++) {
+	            entityManager.addEnemy(createEnemyForCurrentLevel());
+	        }
+	        
+	        for (int i = 0; i < MAX_ITEMS; i++) {
+	            entityManager.addItem(createItemForCurrentLevel());
+	        }
 	    }
 	}
 
