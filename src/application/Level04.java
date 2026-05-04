@@ -24,26 +24,26 @@ public class Level04 extends Level{
 	
 	@Override
     public String getQuestText() {
-        return "Collect 10 acorns, 10 donuts, 10 cupcakes, 10 cassettes, defeat 10 squirrels, 10 pillbugs, 10 garlic, and 10 urchins to battle the Angry Grandma!";
+        return "Collect 2 acorns, 2 donuts, 2 cupcakes, 2 cassettes, defeat 2 squirrels, 2 pillbugs, and 2 garlic, 2 urchins to go to the next level";
     }
     
     @Override
     public Map<Class<? extends Enemy>, Integer> getEnemyGoals() {
         Map<Class<? extends Enemy>, Integer> goals = new HashMap<>();
-        goals.put(EnemySquirrel.class, 10);
-        goals.put(EnemyPillbug.class, 10);
-        goals.put(EnemyGarlic.class, 10);
-        goals.put(EnemyUrchin.class, 10);
+        goals.put(EnemySquirrel.class, 2);
+        goals.put(EnemyPillbug.class, 2);
+        goals.put(EnemyGarlic.class, 2);
+        goals.put(EnemyUrchin.class, 2);
         return goals;
     }
     
     @Override
     public Map<Class<? extends Item>, Integer> getItemGoals() {
         Map<Class<? extends Item>, Integer> goals = new HashMap<>();
-        goals.put(ItemAcorn.class, 10);
-        goals.put(ItemDonut.class, 10);
-        goals.put(ItemCupcake.class, 10);
-        goals.put(ItemCassette.class, 10);
+        goals.put(ItemAcorn.class, 2);
+        goals.put(ItemDonut.class, 2);
+        goals.put(ItemCupcake.class, 2);
+        goals.put(ItemCassette.class, 2);
         return goals;
     }
     
