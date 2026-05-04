@@ -29,7 +29,9 @@ public class ItemBubble extends Item {
 	public void onCollected() {
 	    // Mark as collected
 	    this.collected = true;
-	    gameRenderer.playItemCollectSound(); // Play collect sound
+	    if (gameRenderer != null) {
+	        gameRenderer.playItemCollectSound();
+	    }
 	}
 	
 	/**

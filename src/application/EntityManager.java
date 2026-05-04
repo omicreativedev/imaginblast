@@ -438,23 +438,24 @@ public class EntityManager {
                 levelManager.getCurrentLevel().registerItemCollected(i);
                 // Call specific item's collection effect
                 if (i instanceof ItemAcorn) {
-                	((ItemAcorn) i).setGameRenderer(gameRenderer); //new
+                	((ItemAcorn) i).setGameRenderer(gameRenderer); 
                     ((ItemAcorn) i).onCollected();
                 }
                 if (i instanceof ItemDonut) {
-                	((ItemDonut) i).setGameRenderer(gameRenderer); //new
+                	((ItemDonut) i).setGameRenderer(gameRenderer); 
                     ((ItemDonut) i).onCollected();
                 }
                 if (i instanceof ItemCupcake) {
-                	((ItemCupcake) i).setGameRenderer(gameRenderer); //new
+                	((ItemCupcake) i).setGameRenderer(gameRenderer); 
                     ((ItemCupcake) i).onCollected();
                 }
                 if (i instanceof ItemCassette) {
                     ((ItemCassette) i).onCollected();
                 }
                 if (i instanceof ItemBubble) {
-                    player.resetHealth(); // Full heal
+                    ((ItemBubble) i).setGameRenderer(gameRenderer); 
                     ((ItemBubble) i).onCollected();
+                    player.resetHealth(); // Full heal
                 }
                 // Future: add else-if for other item types
             }
