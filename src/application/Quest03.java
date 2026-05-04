@@ -7,7 +7,7 @@ package application;
 public class Quest03 extends Quest {
     
     public Quest03() {
-        super(3, "Collect 10 acorns, 10 donuts, 10 cupcakes, defeat 10 squirrels, 10 pillbugs, and 10 garlic to go to the next level");
+        super(3, "Collect 2 acorns, 2 donuts, 2 cupcakes, defeat 2 squirrels, 2 pillbugs, and 2 garlic to go to the next level");
     }
     
     @Override

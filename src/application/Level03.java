@@ -19,29 +19,29 @@ public class Level03 extends Level{
 	public Level03() {
 		super(3, "Broccoli Fields");
 		
-		this.background = new Image("level_bg_03.png"); // Use same background for now
+		this.background = new Image("level_bg_03.png");
 	}
 	
 	@Override
     public String getQuestText() {
-        return "Collect 10 acorns, 10 donuts, 10 cupcakes, defeat 10 squirrels, 10 pillbugs, and 10 garlic";
+        return "Collect 2 acorns, 2 donuts, 2 cupcakes, defeat 2 squirrels, 2 pillbugs, and 2 garlic";
     }
     
     @Override
     public Map<Class<? extends Enemy>, Integer> getEnemyGoals() {
         Map<Class<? extends Enemy>, Integer> goals = new HashMap<>();
-        goals.put(EnemySquirrel.class, 10);
-        goals.put(EnemyPillbug.class, 10);
-        goals.put(EnemyGarlic.class, 10);
+        goals.put(EnemySquirrel.class, 2);
+        goals.put(EnemyPillbug.class, 2);
+        goals.put(EnemyGarlic.class, 2);
         return goals;
     }
     
     @Override
     public Map<Class<? extends Item>, Integer> getItemGoals() {
         Map<Class<? extends Item>, Integer> goals = new HashMap<>();
-        goals.put(ItemAcorn.class, 10);
-        goals.put(ItemDonut.class, 10);
-        goals.put(ItemCupcake.class, 10);
+        goals.put(ItemAcorn.class, 2);
+        goals.put(ItemDonut.class, 2);
+        goals.put(ItemCupcake.class, 2);
         return goals;
     }
     
