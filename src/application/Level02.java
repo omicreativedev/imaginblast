@@ -9,36 +9,38 @@ import java.util.Arrays;
 import java.util.List;
 
 /* 
- * 03/29 - 9:25 PM
- * Every 'block' or required componets of the level are included here, 
- * I just need to update enemy images and background image
+ * Level 2 - Muddy Ponds
+ * Enemies: Squirrels, Pillbugs
+ * Items: Acorns, Donuts
+ * Boss: Beetle Chef
+ * Note: File adapted from level01.java. See comments for details.
  */
 public class Level02 extends Level{	
 	
 	public Level02() {
 		super(2, "Muddy Ponds");
-		
-		this.background = new Image("level_bg_02.png"); //TBD = To Be Done, what needs to be changed once I get files/info for these.
+		// Background Image
+		this.background = new Image("level_bg_02.png");
 	}
 	
 	@Override
     public String getQuestText() {
-        return "Collect 3 acorns, 3 donuts, defeat 3 squirrels, and defeat 3 pillbugs";
+        return "Collect 2 acorns, 2 donuts, defeat 2 squirrels, and defeat 2 pillbugs";
     }
     
     @Override
     public Map<Class<? extends Enemy>, Integer> getEnemyGoals() {
         Map<Class<? extends Enemy>, Integer> goals = new HashMap<>();
-        goals.put(EnemySquirrel.class, 3);
-        goals.put(EnemyPillbug.class, 3); 
+        goals.put(EnemySquirrel.class, 2);
+        goals.put(EnemyPillbug.class, 2); 
         return goals;
     }
     
     @Override
     public Map<Class<? extends Item>, Integer> getItemGoals() {
         Map<Class<? extends Item>, Integer> goals = new HashMap<>();
-        goals.put(ItemAcorn.class, 3);
-        goals.put(ItemDonut.class, 3);
+        goals.put(ItemAcorn.class, 2);
+        goals.put(ItemDonut.class, 2);
         return goals;
     }
     
@@ -75,7 +77,7 @@ public class Level02 extends Level{
     }
     
     @Override
-    public ImageView getEnemyImage(Class<? extends Enemy> enemyClass) { //new - Changed return type from Image to ImageView
+    public ImageView getEnemyImage(Class<? extends Enemy> enemyClass) {
         if (enemyClass == EnemySquirrel.class) {
             return ImaginBlastMain.SQUIRREL_IMG;
         }
@@ -86,12 +88,12 @@ public class Level02 extends Level{
     }
     
     @Override
-    public ImageView getItemImage(Class<? extends Item> itemClass) { //new - Changed return type from Image to ImageView
+    public ImageView getItemImage(Class<? extends Item> itemClass) {
         if (itemClass == ItemAcorn.class) {
             return ImaginBlastMain.ACORN_IMG;
         }
         if (itemClass == ItemDonut.class) {
-            return ImaginBlastMain.DONUT_IMG; // You'll need to add this to ImaginBlastMain
+            return ImaginBlastMain.DONUT_IMG;
         }
         return null;
     }

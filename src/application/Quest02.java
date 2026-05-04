@@ -1,13 +1,19 @@
 package application;
 
+import javafx.scene.image.Image;
+
 /**
  * QUEST 2
  * Instructions for Level 2
+ * Note: File adapted from Quest01.java. See comments for details.
  */
 public class Quest02 extends Quest {
     
     public Quest02() {
-        super(2, "Collect 3 acorns, 3 donuts, defeat 3 squirrels, and defeat 3 pillbugs to go to the next level");
+    	// Instructions on Quest Screen
+        super(2, "Collect 2 acorns, 2 donuts, defeat 2 squirrels, and defeat 2 pillbugs to go to the next level");
+        // Background Image
+        this.background = new Image("quest_bg_02.png");
     }
     
     @Override

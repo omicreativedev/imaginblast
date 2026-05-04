@@ -9,39 +9,40 @@ import java.util.Arrays;
 import java.util.List;
 
 /* 
- * Level 3 - Final Level
+ * Level 3 - Broccoli Fields
  * Enemies: Squirrels, Pillbugs, Garlic
  * Items: Acorns, Donuts, Cupcakes
- * Boss: Broc
+ * Boss: Broccoli King
+ * Note: File adapted from level01.java. See comments for details.
  */
 public class Level03 extends Level{	
 	
 	public Level03() {
 		super(3, "Broccoli Fields");
-		
+		// Background Image
 		this.background = new Image("level_bg_03.png");
 	}
 	
 	@Override
     public String getQuestText() {
-        return "Collect 2 acorns, 2 donuts, 2 cupcakes, defeat 2 squirrels, 2 pillbugs, and 2 garlic";
+        return "Collect 1 acorns, 1 donuts, 1 cupcakes, defeat 1 squirrels, 1 pillbugs, and 1 garlic";
     }
     
     @Override
     public Map<Class<? extends Enemy>, Integer> getEnemyGoals() {
         Map<Class<? extends Enemy>, Integer> goals = new HashMap<>();
-        goals.put(EnemySquirrel.class, 2);
-        goals.put(EnemyPillbug.class, 2);
-        goals.put(EnemyGarlic.class, 2);
+        goals.put(EnemySquirrel.class, 1);
+        goals.put(EnemyPillbug.class, 1);
+        goals.put(EnemyGarlic.class, 1);
         return goals;
     }
     
     @Override
     public Map<Class<? extends Item>, Integer> getItemGoals() {
         Map<Class<? extends Item>, Integer> goals = new HashMap<>();
-        goals.put(ItemAcorn.class, 2);
-        goals.put(ItemDonut.class, 2);
-        goals.put(ItemCupcake.class, 2);
+        goals.put(ItemAcorn.class, 1);
+        goals.put(ItemDonut.class, 1);
+        goals.put(ItemCupcake.class, 1);
         return goals;
     }
     
@@ -84,7 +85,7 @@ public class Level03 extends Level{
     }
     
     @Override
-    public ImageView getEnemyImage(Class<? extends Enemy> enemyClass) { //new - Changed return type from Image to ImageView
+    public ImageView getEnemyImage(Class<? extends Enemy> enemyClass) {
         if (enemyClass == EnemySquirrel.class) {
             return ImaginBlastMain.SQUIRREL_IMG;
         }
@@ -92,13 +93,13 @@ public class Level03 extends Level{
             return ImaginBlastMain.PILLBUG_IMG;
         }
         if (enemyClass == EnemyGarlic.class) {
-            return ImaginBlastMain.GARLIC_IMG; // You'll need to add this
+            return ImaginBlastMain.GARLIC_IMG; 
         }
         return null;
     }
     
     @Override
-    public ImageView getItemImage(Class<? extends Item> itemClass) { //new - Changed return type from Image to ImageView
+    public ImageView getItemImage(Class<? extends Item> itemClass) {
         if (itemClass == ItemAcorn.class) {
             return ImaginBlastMain.ACORN_IMG;
         }

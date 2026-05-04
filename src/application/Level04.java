@@ -13,37 +13,38 @@ import java.util.List;
  * Enemies: Squirrels, Pillbugs, Garlic, Urchins
  * Items: Acorns, Donuts, Cupcakes, Cassettes
  * Boss: Angry Grandma
+ * Note: File adapted from level01.java. See comments for details.
  */
 public class Level04 extends Level{	
 	
 	public Level04() {
 		super(4, "Old Timey Fields");
-		
+		// Background Image
 		this.background = new Image("level_bg_04.png");
 	}
 	
 	@Override
     public String getQuestText() {
-        return "Collect 2 acorns, 2 donuts, 2 cupcakes, 2 cassettes, defeat 2 squirrels, 2 pillbugs, and 2 garlic, 2 urchins to go to the next level";
+        return "Collect 1 acorns, 1 donuts, 1 cupcakes, 1 cassettes, defeat 1 squirrels, 1 pillbugs, and 1 garlic, 1 urchins to go to the next level";
     }
     
     @Override
     public Map<Class<? extends Enemy>, Integer> getEnemyGoals() {
         Map<Class<? extends Enemy>, Integer> goals = new HashMap<>();
-        goals.put(EnemySquirrel.class, 2);
-        goals.put(EnemyPillbug.class, 2);
-        goals.put(EnemyGarlic.class, 2);
-        goals.put(EnemyUrchin.class, 2);
+        goals.put(EnemySquirrel.class, 1);
+        goals.put(EnemyPillbug.class, 1);
+        goals.put(EnemyGarlic.class, 1);
+        goals.put(EnemyUrchin.class, 1);
         return goals;
     }
     
     @Override
     public Map<Class<? extends Item>, Integer> getItemGoals() {
         Map<Class<? extends Item>, Integer> goals = new HashMap<>();
-        goals.put(ItemAcorn.class, 2);
-        goals.put(ItemDonut.class, 2);
-        goals.put(ItemCupcake.class, 2);
-        goals.put(ItemCassette.class, 2);
+        goals.put(ItemAcorn.class, 1);
+        goals.put(ItemDonut.class, 1);
+        goals.put(ItemCupcake.class, 1);
+        goals.put(ItemCassette.class, 1);
         return goals;
     }
     

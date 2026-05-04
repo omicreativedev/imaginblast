@@ -13,11 +13,11 @@ import java.util.List;
  * Each level defines its own goals, enemies, and items
  */
 
-//Added image backgrounds
+//Added Image Backgrounds
 public abstract class Level {
     protected int levelNumber;
     protected String levelName;
-    //protected String background;
+    // Protected String background;
     protected Image background;
     
     // TRACKING MAPS
@@ -50,10 +50,10 @@ public abstract class Level {
     // Create a specific item type
     public abstract Item createItem(Random rand, int width, int playerSize, Class<? extends Item> itemClass);
     
-    // Get ImageView for a specific enemy type //new - Changed from Image to ImageView
+    // Get ImageView for a specific enemy type
     public abstract ImageView getEnemyImage(Class<? extends Enemy> enemyClass);
     
-    // Get ImageView for a specific item type //new - Changed from Image to ImageView
+    // Get ImageView for a specific item type
     public abstract ImageView getItemImage(Class<? extends Item> itemClass);
     
     // TRACKING METHODS
@@ -92,7 +92,9 @@ public abstract class Level {
     public abstract int getEnemySpawnRate();
     public abstract int getItemSpawnRate();
 
-    //public String getBackground() { return background; }
-    public Image getBackground() { return background; } // Already there
+    // Each level has it's own background
+    public Image getBackground() { return background; }
+    
+    // Return the level number for the level
     public int getLevelNumber() { return levelNumber; }
 }
