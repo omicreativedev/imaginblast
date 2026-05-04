@@ -1,6 +1,7 @@
 package application;
 
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 // import java.io.File;
@@ -15,13 +16,8 @@ import java.util.List;
  */
 public class BossScreen03 extends BossScreen {
     
-    // Background music for this boss fight
-    // private MediaPlayer bossMusicPlayer;
-	
-    // Background image specific to this boss screen
-    // private Image backgroundImage;
-	
-	private GameRenderer gameRenderer;
+    private Image background; 
+    private GameRenderer gameRenderer;
     
     /**
      * CONSTRUCTOR
@@ -33,19 +29,8 @@ public class BossScreen03 extends BossScreen {
         portal = new Portal(); // Create exit portal
         portalVisible = false; // Portal starts hidden until boss is defeated
         levelComplete = false; // Fight starts incomplete
+        background = new Image("boss_bg_03.png");
         
-        // Load the background image for this specific boss
-        // backgroundImage = new Image("boss_screen_03_background.png");
-        
-        // Load and play boss music when screen is created
-        // try {
-        //     Media music = new Media(new File("boss_music_3.mp3").toURI().toString());
-        //     bossMusicPlayer = new MediaPlayer(music);
-        //     bossMusicPlayer.setCycleCount(MediaPlayer.INDEFINITE); // Loop forever
-        //     bossMusicPlayer.play(); // Start playing
-        // } catch (Exception e) {
-        //     System.out.println("Could not load boss music");
-        // }
         
     }
     
@@ -149,12 +134,8 @@ public class BossScreen03 extends BossScreen {
     	
     	this.gameRenderer = gameRenderer;
     	
-        // Draw background image first so everything else appears on top
-        // gc.drawImage(backgroundImage, 0, 0, ImaginBlastMain.WIDTH, ImaginBlastMain.HEIGHT);
-        
-        // Clear screen with dark background for boss fight atmosphere
-        gc.setFill(Color.DARKSLATEBLUE);
-        gc.fillRect(0, 0, ImaginBlastMain.WIDTH, ImaginBlastMain.HEIGHT);
+        // Draw background image
+        gc.drawImage(background, 0, 0, ImaginBlastMain.WIDTH, ImaginBlastMain.HEIGHT);
         
         // Draw boss (uses Creature's draw method)
         boss.draw(gc);

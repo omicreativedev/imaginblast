@@ -16,13 +16,8 @@ import java.util.List;
  */
 public class BossScreen01 extends BossScreen {
     
-    // Background music for this boss fight
-    // private MediaPlayer bossMusicPlayer;
-	
-    // Background image specific to this boss screen
-    private Image background; //new - Background image for boss screen
-    
-    private GameRenderer gameRenderer; //new - Store gameRenderer for sound effects
+    private Image background; 
+    private GameRenderer gameRenderer;
     
     /**
      * Initializes the boss fight with a new BossPirate instance
@@ -33,7 +28,7 @@ public class BossScreen01 extends BossScreen {
         portal = new Portal(); // Create exit portal
         portalVisible = false; // Portal starts hidden until boss is defeated
         levelComplete = false; // Fight starts incomplete
-        background = new Image("boss_bg_01.png"); //new - Load background
+        background = new Image("boss_bg_01.png");
     }
     
     /**
@@ -135,7 +130,7 @@ public class BossScreen01 extends BossScreen {
     	this.gameRenderer = gameRenderer; //new - Store gameRenderer reference
     	
         // Draw background image
-        gc.drawImage(background, 0, 0, ImaginBlastMain.WIDTH, ImaginBlastMain.HEIGHT); //new - Draw background instead of solid color
+        gc.drawImage(background, 0, 0, ImaginBlastMain.WIDTH, ImaginBlastMain.HEIGHT);
         
         // Draw boss (uses Creature's draw method)
         boss.draw(gc);
