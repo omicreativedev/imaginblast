@@ -37,21 +37,10 @@ public class BossGrandma extends Boss {
      * @param posY Starting Y coordinate
      */
     public BossGrandma(int posX, int posY) {
-        super(posX, posY, 256, new ImageView(new Image("boss_beetle.png"))); //new - Pass ImageView instead of Image
+        super(posX, posY, 256, new ImageView(new Image("boss_gma.png")));
         this.health = 550; // Set current health (inherited from Boss.java)
         this.maxHealth = 550; // Set max health for health bar (inherited from Boss.java)
-        // try {
-        //     Media laugh = new Media(new File("grandma_laugh.wav").toURI().toString());
-        //     bossLaughSound = new MediaPlayer(laugh);
-        //     Media hit = new Media(new File("grandma_hit.wav").toURI().toString());
-        //     bossHitSound = new MediaPlayer(hit);
-        //     Media defeated = new Media(new File("grandma_defeated.wav").toURI().toString());
-        //     bossDefeatedSound = new MediaPlayer(defeated);
-        //     Media shoot = new Media(new File("grandma_shoot.wav").toURI().toString());
-        //     bossShootSound = new MediaPlayer(shoot);
-        // } catch (Exception e) {
-        //     System.out.println("Grandma sound effects aint loading dude!");
-        // }
+      
     }
     
     /**

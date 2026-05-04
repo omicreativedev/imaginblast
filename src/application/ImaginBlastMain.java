@@ -309,13 +309,14 @@ public class ImaginBlastMain extends Application {
 	            break;
 	            
 	        case END_SCREEN:
+	        	gameRenderer.stopBossMusic();
 	            uiManager.drawEndScreen(entityManager.getScore(), true); // true = game won
 	            break;
 	            
 	        case GAME_OVER:
-	        	gameRenderer.stopGameplayMusic(); //new - Stop gameplay music when game over
-	        	gameRenderer.stopQuestMusic(); //new - Stop quest music if playing
-	        	gameRenderer.stopBossMusic(); //new - Stop boss music if playing
+	        	gameRenderer.stopGameplayMusic();
+	        	gameRenderer.stopQuestMusic();
+	        	gameRenderer.stopBossMusic();
 	        	uiManager.drawGameOverScreen(entityManager.getScore());
 	            break;
 	            

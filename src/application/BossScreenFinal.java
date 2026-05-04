@@ -155,11 +155,11 @@ public class BossScreenFinal extends BossScreen {
         gc.setFill(Color.WHITE);
         gc.setFont(Font.font(24));
         gc.fillText("Boss: " + boss.getHealth() + "/" + boss.getMaxHealth(), 
-                    ImaginBlastMain.WIDTH/2 - 80, 50);
+                    ImaginBlastMain.WIDTH/2 - 180, 50);
         
         // Draw player health display at top left of screen
         gc.setFill(Color.RED);
-        gc.fillText("Health: " + player.hp + "/" + player.maxHp, 75, 50);
+        gc.fillText("Health: " + player.hp + "/" + player.maxHp, 150, 50);
     }
     
     /**

@@ -144,31 +144,32 @@ public class InputHandler {
         
         
         case LEVEL_DONE:
-            levelManager.getLevelDoneScreen().handleClick(clickX, clickY);
-            if (levelManager.getLevelDoneScreen().isOkPressed()) {
-                if (levelManager.getCurrentLevelNum() == 1) {
-                    levelManager.advanceToNextLevel();
-                    stateManager.setCurrentState(GameState.QUEST_SCREEN);
-                    setupCallback.run();
-                } else if (levelManager.getCurrentLevelNum() == 2) {
-                    levelManager.advanceToNextLevel();
-                    stateManager.setCurrentState(GameState.QUEST_SCREEN);
-                    setupCallback.run();
-                } else if (levelManager.getCurrentLevelNum() == 3) {
-                    levelManager.advanceToNextLevel();
-                    stateManager.setCurrentState(GameState.QUEST_SCREEN);
-                    setupCallback.run();
-                } else if (levelManager.getCurrentLevelNum() == 4) {
-                    // After Level 4, load final boss
-                    levelManager.loadFinalBoss();
-                    stateManager.setCurrentState(GameState.QUEST_SCREEN);
-                    setupCallback.run();
-                } else if (levelManager.getCurrentLevelNum() == 5) {
-                    // After final boss, go to End Screen
-                    stateManager.setCurrentState(GameState.END_SCREEN);
-                    setupCallback.run();
+            LevelDone doneScreen = levelManager.getLevelDoneScreen();
+            if (doneScreen != null) {
+                doneScreen.handleClick(clickX, clickY);
+                if (doneScreen.isOkPressed()) {
+                    if (levelManager.getCurrentLevelNum() == 1) {
+                        levelManager.advanceToNextLevel();
+                        stateManager.setCurrentState(GameState.QUEST_SCREEN);
+                        setupCallback.run();
+                    } else if (levelManager.getCurrentLevelNum() == 2) {
+                        levelManager.advanceToNextLevel();
+                        stateManager.setCurrentState(GameState.QUEST_SCREEN);
+                        setupCallback.run();
+                    } else if (levelManager.getCurrentLevelNum() == 3) {
+                        levelManager.advanceToNextLevel();
+                        stateManager.setCurrentState(GameState.QUEST_SCREEN);
+                        setupCallback.run();
+                    } else if (levelManager.getCurrentLevelNum() == 4) {
+                        levelManager.advanceToNextLevel();
+                        stateManager.setCurrentState(GameState.QUEST_SCREEN);
+                        setupCallback.run();
+                    }
+                    doneScreen.setOkPressed(false);
                 }
-                levelManager.getLevelDoneScreen().setOkPressed(false);
+            } else {
+                // No level done screen (final boss went directly to END_SCREEN)
+                // This should not happen, but if it does, do nothing
             }
             break;
             
