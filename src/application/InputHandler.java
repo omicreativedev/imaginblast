@@ -137,7 +137,7 @@ public class InputHandler {
                 Shot newShot = entityManager.getPlayer().shoot();
                 if (newShot != null) {
                     entityManager.addShot(newShot);
-                    gameRenderer.playPlayerShootSound(); //new - Play shoot sound
+                    gameRenderer.playPlayerShootSound();
                 }
             }
             break;
