@@ -27,14 +27,14 @@ public class Level01 extends Level {
     @Override
     public Map<Class<? extends Enemy>, Integer> getEnemyGoals() {
         Map<Class<? extends Enemy>, Integer> goals = new HashMap<>();
-        goals.put(EnemySquirrel.class, 10);
+        goals.put(EnemySquirrel.class, 5);
         return goals;
     }
     
     @Override
     public Map<Class<? extends Item>, Integer> getItemGoals() {
         Map<Class<? extends Item>, Integer> goals = new HashMap<>();
-        goals.put(ItemAcorn.class, 10);
+        goals.put(ItemAcorn.class, 5);
         return goals;
     }
     
