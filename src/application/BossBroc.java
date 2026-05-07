@@ -1,5 +1,7 @@
 package application;
 
+//Adapted from BossPirate.java
+
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import java.util.List;
