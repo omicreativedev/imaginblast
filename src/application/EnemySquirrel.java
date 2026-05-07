@@ -1,7 +1,6 @@
 package application;
 
-// import javafx.scene.image.Image;
-import javafx.scene.image.ImageView; //new
+import javafx.scene.image.ImageView;
 
 /**
  * SQUIRREL ENEMY CLASS
@@ -12,7 +11,7 @@ import javafx.scene.image.ImageView; //new
 public class EnemySquirrel extends Enemy {
     
     // Squirrel-specific speed
-    int SPEED = 7; // Pixels per frame - controls how fast squirrel falls
+    int SPEED = 7; // Pixels per frame. Controls how fast squirrel falls
     
     /**
      * CONSTRUCTOR - Creates a new squirrel enemy
@@ -21,8 +20,8 @@ public class EnemySquirrel extends Enemy {
      * @param size Size of the enemy (typically PLAYER_SIZE = 60)
      * @param imageView The squirrel ImageView (SQUIRREL_IMG)
      */
-    public EnemySquirrel(int posX, int posY, int size, ImageView imageView) { 
-        super(posX, posY, size, imageView); // Call Enemy.java constructor
+    public EnemySquirrel(int posX, int posY, int size, ImageView imageView) {
+        super(posX, posY, size, imageView);
     }
     
     /**
