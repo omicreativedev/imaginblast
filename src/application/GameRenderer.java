@@ -10,22 +10,29 @@ import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import java.util.Map;
 
+// "Take care of the sense, 
+// and the sounds will take care of themselves."
+// ~ The Duchess, Alice's Adventures in Wonderland
 
 /**
  * GAME RENDERER CLASS
  * Separates rendering logic from game logic
  * Handles all drawing operations for different game states
+ * Also manages all sound effects and music playback
+ * Reference: https://textbooks.cs.ksu.edu/cc210/13-inheritance/06-java/06-abstract-classes/
  */
 public class GameRenderer {
-   
+    
+    // Graphics context for drawing
     private GraphicsContext gc;
     private Image startupBgGif;
     
-    // AudioClip works for Music but some isn't working
+    // AudioClip works for some music but not all (encoding issues)
     private AudioClip startScreenMusic;
     private AudioClip buttonClickSound;
     private AudioClip gameplayMusic;
-    // Media Player is working for some encoding better. We don't know why.
+    
+    // MediaPlayer works better for some encodings
     private MediaPlayer bossMusic;
     private MediaPlayer itemCollectSound;
     private MediaPlayer playerShootSound;
@@ -34,105 +41,108 @@ public class GameRenderer {
     private MediaPlayer playerDamageSound;
     private MediaPlayer explodeSound;
     
-    private boolean isHoveringPlayButton = false;  
+    // UI state tracking
+    private boolean isHoveringPlayButton = false;
     
     /**
-     * CONSTRUCTOR
+     * GAME RENDERER CONSTRUCTOR
+     * Initializes graphics context, background images, and all sound effects
+     * 
      * @param gc GraphicsContext from the Canvas - all drawing goes through this
      */
     public GameRenderer(GraphicsContext gc) {
         this.gc = gc;
         this.startupBgGif = new Image("bg_blinking_startup.gif");
         
-      
-    // Music for start up screen
-    String musicUrl = getClass().getResource("/wav_start_screen_music.wav").toString();
-    this.startScreenMusic = new AudioClip(musicUrl);
-    this.startScreenMusic.setCycleCount(1);
-    this.startScreenMusic.play();
-    
-    // Sound effect for clicking buttons
-    String clickUrl = getClass().getResource("/wav_button_click.wav").toString();
-    this.buttonClickSound = new AudioClip(clickUrl);
-    
-    // Music for the play screens (all screens currently using the same music)
-    String gameplayUrl = getClass().getResource("/wav_play_screen_music.wav").toString();
-    this.gameplayMusic = new AudioClip(gameplayUrl);
-    this.gameplayMusic.setCycleCount(AudioClip.INDEFINITE);
-    
-    // Music for the boss screens
-    try {
-        String bossMusicUrl = getClass().getResource("/mp3_boss_music.mp3").toString();
-        Media bossMedia = new Media(bossMusicUrl);
-        this.bossMusic = new MediaPlayer(bossMedia);
-        this.bossMusic.setCycleCount(MediaPlayer.INDEFINITE);
-        this.bossMusic.setRate(1.0);
-        // Preload the audio
-        this.bossMusic.play();
-        this.bossMusic.pause();
-        this.bossMusic.seek(javafx.util.Duration.ZERO);
-    } catch (Exception e) {
-        System.out.println("Could not load boss music: " + e.getMessage());
+        // Music for start up screen
+        String musicUrl = getClass().getResource("/wav_start_screen_music.wav").toString();
+        this.startScreenMusic = new AudioClip(musicUrl);
+        this.startScreenMusic.setCycleCount(1);
+        this.startScreenMusic.play();
+        
+        // Sound effect for clicking buttons
+        String clickUrl = getClass().getResource("/wav_button_click.wav").toString();
+        this.buttonClickSound = new AudioClip(clickUrl);
+        
+        // Music for the play screens (all screens currently using the same music)
+        String gameplayUrl = getClass().getResource("/wav_play_screen_music.wav").toString();
+        this.gameplayMusic = new AudioClip(gameplayUrl);
+        this.gameplayMusic.setCycleCount(AudioClip.INDEFINITE);
+        
+        // Music for the boss screens
+        try {
+            String bossMusicUrl = getClass().getResource("/mp3_boss_music.mp3").toString();
+            Media bossMedia = new Media(bossMusicUrl);
+            this.bossMusic = new MediaPlayer(bossMedia);
+            this.bossMusic.setCycleCount(MediaPlayer.INDEFINITE);
+            this.bossMusic.setRate(1.0);
+            // Preload the audio
+            this.bossMusic.play();
+            this.bossMusic.pause();
+            this.bossMusic.seek(javafx.util.Duration.ZERO);
+        } catch (Exception e) {
+            System.out.println("Could not load boss music: " + e.getMessage());
+        }
+        
+        // Collecting item sound effect
+        try {
+            String itemCollectUrl = getClass().getResource("/wav_item_collect.wav").toString();
+            Media itemCollectMedia = new Media(itemCollectUrl);
+            this.itemCollectSound = new MediaPlayer(itemCollectMedia);
+        } catch (Exception e) {
+            System.out.println("Could not load item collect sound: " + e.getMessage());
+        }
+        
+        // Player shooting sound
+        try {
+            String playerShootUrl = getClass().getResource("/wav_player_shoot.wav").toString();
+            Media playerShootMedia = new Media(playerShootUrl);
+            this.playerShootSound = new MediaPlayer(playerShootMedia);
+        } catch (Exception e) {
+            System.out.println("Could not load player shoot sound: " + e.getMessage());
+        }
+        
+        // Quest background music
+        try {
+            String questMusicUrl = getClass().getResource("/wav_quest_music_fixed.wav").toString();
+            Media questMedia = new Media(questMusicUrl);
+            this.questMusic = new MediaPlayer(questMedia);
+            this.questMusic.setCycleCount(MediaPlayer.INDEFINITE);
+        } catch (Exception e) {
+            System.out.println("Could not load quest music: " + e.getMessage());
+        }
+        
+        // Explosion sound
+        try {
+            String explodeUrl = getClass().getResource("/wav_explode.wav").toString();
+            Media explodeMedia = new Media(explodeUrl);
+            this.explodeSound = new MediaPlayer(explodeMedia);
+        } catch (Exception e) {
+            System.out.println("Could not load explosion sound: " + e.getMessage());
+        }
+        
+        // Portal sound
+        try {
+            String portalSoundUrl = getClass().getResource("/wav_going_through_portal.wav").toString();
+            Media portalMedia = new Media(portalSoundUrl);
+            this.portalSound = new MediaPlayer(portalMedia);
+        } catch (Exception e) {
+            System.out.println("Could not load portal sound: " + e.getMessage());
+        }
+        
+        // Player damage sound
+        try {
+            String playerDamageUrl = getClass().getResource("/wav_player_take_damage.wav").toString();
+            Media playerDamageMedia = new Media(playerDamageUrl);
+            this.playerDamageSound = new MediaPlayer(playerDamageMedia);
+        } catch (Exception e) {
+            System.out.println("Could not load player damage sound: " + e.getMessage());
+        }
     }
-    
-    // Collecting item sound effects
-    try {
-        String itemCollectUrl = getClass().getResource("/wav_item_collect.wav").toString();
-        Media itemCollectMedia = new Media(itemCollectUrl);
-        this.itemCollectSound = new MediaPlayer(itemCollectMedia);
-    } catch (Exception e) {
-        System.out.println("Could not load item collect sound: " + e.getMessage());
-    }
-    
-    // Player shooting sound
-    try {
-        String playerShootUrl = getClass().getResource("/wav_player_shoot.wav").toString();
-        Media playerShootMedia = new Media(playerShootUrl);
-        this.playerShootSound = new MediaPlayer(playerShootMedia);
-    } catch (Exception e) {
-        System.out.println("Could not load player shoot sound: " + e.getMessage());
-    }
-    
-    // Quest background music
-    try {
-        String questMusicUrl = getClass().getResource("/wav_quest_music_fixed.wav").toString();
-        Media questMedia = new Media(questMusicUrl);
-        this.questMusic = new MediaPlayer(questMedia);
-        this.questMusic.setCycleCount(MediaPlayer.INDEFINITE);
-    } catch (Exception e) {
-        System.out.println("Could not load quest music: " + e.getMessage());
-    }
-    
-    // Explosion sound
-    try {
-        String explodeUrl = getClass().getResource("/wav_explode.wav").toString();
-        Media explodeMedia = new Media(explodeUrl);
-        this.explodeSound = new MediaPlayer(explodeMedia);
-    } catch (Exception e) {
-        System.out.println("Could not load explosion sound: " + e.getMessage());
-    }
-    
-    // Portal sound
-    try {
-        String portalSoundUrl = getClass().getResource("/wav_going_through_portal.wav").toString();
-        Media portalMedia = new Media(portalSoundUrl);
-        this.portalSound = new MediaPlayer(portalMedia);
-    } catch (Exception e) {
-        System.out.println("Could not load portal sound: " + e.getMessage());
-    }
-    
-    // Player damage sound
-    try {
-        String playerDamageUrl = getClass().getResource("/wav_player_take_damage.wav").toString();
-        Media playerDamageMedia = new Media(playerDamageUrl);
-        this.playerDamageSound = new MediaPlayer(playerDamageMedia);
-    } catch (Exception e) {
-        System.out.println("Could not load player damage sound: " + e.getMessage());
-    }
-} 
     
     /**
-     * Change the button color of the button when hover
+     * UPDATE BUTTON HOVER METHOD
+     * Changes button appearance when mouse hovers over it
      * 
      * @param mouseX Current mouse X coordinate
      * @param mouseY Current mouse Y coordinate
@@ -148,10 +158,10 @@ public class GameRenderer {
     }
     
     /**
-     * Clear the screen with forest green background
+     * CLEAR SCREEN METHOD
+     * Clears the screen with forest green background
      * Called at the beginning of each frame in PLAYING state
      * This is the base layer that everything else draws on top of
-     * We want to change this set up for new levels going forward maybe
      */
     public void clearScreen() {
         gc.setFill(Color.FORESTGREEN);
@@ -159,8 +169,9 @@ public class GameRenderer {
     }
     
     /**
-     * GETTER
+     * GET GRAPHICS CONTEXT METHOD
      * Provides access to the GraphicsContext for other classes
+     * 
      * @return The GraphicsContext instance
      */
     public GraphicsContext getGc() {
@@ -168,13 +179,14 @@ public class GameRenderer {
     }
     
     /**
-     * drawHUD
-     * Shows player information during normal gameplay PLAYING state
+     * DRAW HUD METHOD
+     * Shows player information during normal gameplay (PLAYING state)
+     * Displays score, ammo, health, item goals, and enemy goals
      * 
      * @param score Current player score
      * @param shotsSize Number of active player shots on screen
      * @param maxShots Maximum allowed player shots
-     * @param acornCount Number of acorns collected in current level
+     * @param level Current level (for item and enemy goals)
      * @param player Player object (for health display)
      */
     public void drawHUD(int score, int shotsSize, int maxShots, Level level, Player player) {
@@ -183,22 +195,22 @@ public class GameRenderer {
         
         // SCORE (top left)
         gc.setFill(Color.WHITE);
-        gc.fillText("Score: " + score, 10, 45); // Halfway between 20 and 70
+        gc.fillText("Score: " + score, 10, 45);
         
-        // AMMO
-        gc.fillText("Ammo: " + (maxShots - shotsSize) + "/" + maxShots, 150, 45); // Halfway between 20 and 70
+        // AMMO (top left, next to score)
+        gc.fillText("Ammo: " + (maxShots - shotsSize) + "/" + maxShots, 150, 45);
         
-        // PLAYER HEALTH
+        // PLAYER HEALTH BAR
         gc.setFill(Color.RED);
-        gc.fillRect(300, 30, 200, 20); // Halfway between 5 and 55
+        gc.fillRect(300, 30, 200, 20);
         gc.setFill(Color.LIMEGREEN);
-        double healthPercent = (double)player.hp / player.maxHp;
-        gc.fillRect(300, 30, 200 * healthPercent, 20); // Halfway between 5 and 55
+        double healthPercent = (double) player.hp / player.maxHp;
+        gc.fillRect(300, 30, 200 * healthPercent, 20);
         gc.setFill(Color.WHITE);
-        gc.fillText("HP: " + player.hp + "/" + player.maxHp, 400, 47); // Halfway between 22 and 72
+        gc.fillText("HP: " + player.hp + "/" + player.maxHp, 400, 47);
         
         // ITEM GOALS (top center-right)
-        int yOffset = 45; // Halfway between 20 and 70
+        int yOffset = 45;
         gc.setFill(Color.GOLD);
         gc.fillText("ITEMS:", 550, yOffset);
         yOffset += 20;
@@ -211,7 +223,7 @@ public class GameRenderer {
         }
         
         // ENEMY GOALS (top right)
-        yOffset = 45; // Halfway between 20 and 70
+        yOffset = 45;
         gc.setFill(Color.RED);
         gc.fillText("ENEMIES:", 750, yOffset);
         yOffset += 20;
@@ -224,17 +236,15 @@ public class GameRenderer {
         }
     }
     
-    
     /**
-     * drawStartScreen
+     * DRAW START SCREEN METHOD
      * Draws the start screen with PLAY button
      * 
-     * @param startScreen The StartScreen object-not heavily used yet...
+     * @param startScreen The StartScreen object (not heavily used yet)
      */
     public void drawStartScreen(StartScreen startScreen) {
-
-    	gc.drawImage(startupBgGif, 0, 0, ImaginBlastMain.WIDTH, ImaginBlastMain.HEIGHT);
-    	
+        gc.drawImage(startupBgGif, 0, 0, ImaginBlastMain.WIDTH, ImaginBlastMain.HEIGHT);
+        
         // Center text alignment for menu elements
         gc.setTextAlign(TextAlignment.CENTER);
         
@@ -246,13 +256,13 @@ public class GameRenderer {
         // Calculate center positions for easier reference
         double centerX = ImaginBlastMain.WIDTH / 2;
         double boxTop = ImaginBlastMain.HEIGHT / 4;
-       
+        
         // Load and resize the logo
         final Image logo = new Image("logo_black_bg.png");
         double logoWidth = 400; // Desired width - adjust as needed
         double logoHeight = logoWidth * (logo.getHeight() / logo.getWidth()); // Maintain aspect ratio
         double logoX = centerX - (logoWidth / 2);
-        double logoY = boxTop + 40; // Position from top of black box
+        double logoY = boxTop + 40;
         gc.drawImage(logo, logoX, logoY, logoWidth, logoHeight);
         
         // FrogArmy text below the logo
@@ -266,23 +276,19 @@ public class GameRenderer {
         gc.fillText("Instructions: Move your mouse cursor to move, left-click on mouse to shoot!", 
                     centerX, ImaginBlastMain.HEIGHT/2 + 40);
         
-        // PLAY GAME button - green rectangle
-        gc.setFill(Color.GREEN);
-        gc.fillRect(ImaginBlastMain.WIDTH/2 - 100, ImaginBlastMain.HEIGHT/2 + 100, 200, 50);
-        
-        // On Mouse over Button
+        // PLAY GAME button with hover effect
         if (isHoveringPlayButton) {
             gc.setFill(Color.LIMEGREEN);
         } else {
             gc.setFill(Color.GREEN);
         }
-        gc.fillRect(ImaginBlastMain.WIDTH/2 - 100, ImaginBlastMain.HEIGHT/2 + 100, 200, 50);  
-                
+        gc.fillRect(ImaginBlastMain.WIDTH/2 - 100, ImaginBlastMain.HEIGHT/2 + 100, 200, 50);
+        
         // Button text
         gc.setFill(Color.BLACK);
         gc.setFont(Font.font(18));
         gc.fillText("PLAY", ImaginBlastMain.WIDTH/2, ImaginBlastMain.HEIGHT/2 + 130);
-
+        
         // Button border to make it visually distinct
         gc.setStroke(Color.WHITE);
         gc.setLineWidth(1);
@@ -290,13 +296,13 @@ public class GameRenderer {
     }
     
     /**
-     * drawQuestScreen
+     * DRAW QUEST SCREEN METHOD
      * Shows the level objective/quest text before gameplay begins
      * 
-     * @param quest The Quest01 object containing quest text
+     * @param quest The Quest object containing quest text and background
      */
     public void drawQuestScreen(Quest quest) {
-        // Draw quest background - ADD THIS LINE
+        // Draw quest background
         gc.drawImage(quest.getBackground(), 0, 0, ImaginBlastMain.WIDTH, ImaginBlastMain.HEIGHT);
         
         // Center text alignment
@@ -330,9 +336,9 @@ public class GameRenderer {
     }
     
     /**
-     * DRAW BOSS SCREEN (COMPLETE)
+     * DRAW BOSS SCREEN METHOD
      * Renders the entire boss fight scene
-     * This method is called from BossScreen classes
+     * Called from BossScreen classes
      * 
      * @param boss The boss entity
      * @param score Current player score
@@ -342,10 +348,9 @@ public class GameRenderer {
      * @param portal The exit portal
      */
     public void drawBossScreen(Boss boss, int score, int shotsSize, int maxShots, Player player, Portal portal) {
-        // Clear screen (background can be different for boss)
         clearScreen(); // Or use a different background for each boss
         
-        // Draw HUD elements (simplified for boss - no acorn count)
+        // Draw HUD elements (simplified for boss - no item count)
         drawBossHUD(score, shotsSize, maxShots, player, boss);
         
         // Draw boss (delegates to Boss's own draw method)
@@ -354,9 +359,9 @@ public class GameRenderer {
         // Draw portal if visible (delegates to Portal's draw method)
         portal.draw(gc);
     }
-
+    
     /**
-     * DRAW BOSS HEADS-UP DISPLAY (HUD)
+     * DRAW BOSS HUD METHOD
      * Special HUD for boss fights (no item count, includes boss health)
      * Called by drawBossScreen()
      * 
@@ -379,17 +384,14 @@ public class GameRenderer {
         gc.fillText("Ammo: " + (maxShots - shotsSize) + "/" + maxShots, 200, 20);
         
         // Player Health Bar (below score)
-        // Background
         gc.setFill(Color.RED);
         gc.fillRect(60, 40, 200, 20);
         
-        // Foreground (current health percentage)
         gc.setFill(Color.LIMEGREEN);
-        double playerHealthPercent = (double)player.hp / player.maxHp;
+        double playerHealthPercent = (double) player.hp / player.maxHp;
         playerHealthPercent = Math.max(0, Math.min(1, playerHealthPercent));
         gc.fillRect(60, 40, 200 * playerHealthPercent, 20);
         
-        // Player health text
         gc.setFill(Color.WHITE);
         gc.fillText("Player: " + player.hp + "/" + player.maxHp, 160, 57);
         
@@ -400,7 +402,7 @@ public class GameRenderer {
         
         // Boss Health Bar foreground (current health percentage)
         gc.setFill(Color.CRIMSON);
-        double bossHealthPercent = (double)boss.getHealth() / boss.getMaxHealth();
+        double bossHealthPercent = (double) boss.getHealth() / boss.getMaxHealth();
         bossHealthPercent = Math.max(0, Math.min(1, bossHealthPercent));
         gc.fillRect(ImaginBlastMain.WIDTH/2 - 200, 20, 400 * bossHealthPercent, 30);
         
@@ -410,9 +412,9 @@ public class GameRenderer {
         gc.fillText("BOSS", ImaginBlastMain.WIDTH/2, 40);
         gc.fillText(boss.getHealth() + "/" + boss.getMaxHealth(), ImaginBlastMain.WIDTH/2, 60);
     }
-
+    
     /**
-     * DRAW LEVEL COMPLETE SCREEN
+     * DRAW LEVEL COMPLETE SCREEN METHOD
      * Renders the screen shown after boss is defeated and portal is entered
      * Delegates drawing to the LevelDone object
      * 
@@ -421,9 +423,9 @@ public class GameRenderer {
     public void drawLevelDoneScreen(LevelDone levelDone) {
         levelDone.draw(gc); // Let LevelDone handle its own drawing
     }
-
+    
     /**
-     * DRAW PORTAL (UTILITY METHOD)
+     * DRAW PORTAL METHOD (UTILITY)
      * Separate method for drawing just the portal if needed
      * Currently not heavily used - portal draws itself in most cases
      * 
@@ -433,9 +435,10 @@ public class GameRenderer {
         portal.draw(gc);
     }
     
+    // ===== MUSIC AND SOUND CONTROL METHODS =====
     
     /**
-     * STOP MUSIC ON START SCREEN
+     * STOP START SCREEN MUSIC METHOD
      */
     public void stopStartScreenMusic() {
         if (startScreenMusic != null) {
@@ -444,7 +447,7 @@ public class GameRenderer {
     }
     
     /**
-     * PLAY BUTTON CLICK SOUND
+     * PLAY BUTTON CLICK SOUND METHOD
      */
     public void playButtonClick() {
         if (buttonClickSound != null) {
@@ -452,42 +455,46 @@ public class GameRenderer {
         }
     }
     
-    //new - Play gameplay music
+    /**
+     * PLAY GAMEPLAY MUSIC METHOD
+     */
     public void playGameplayMusic() {
         if (gameplayMusic != null) {
             gameplayMusic.play();
         }
     }
     
-    //new - Stop gameplay music
+    /**
+     * STOP GAMEPLAY MUSIC METHOD
+     */
     public void stopGameplayMusic() {
         if (gameplayMusic != null) {
             gameplayMusic.stop();
         }
     }
     
-  //new - Play boss music (MediaPlayer version)
+    /**
+     * PLAY BOSS MUSIC METHOD (MediaPlayer version)
+     */
     public void playBossMusic() {
-        System.out.println("playBossMusic called, bossMusic = " + bossMusic); // DEBUG
         if (bossMusic != null) {
-            System.out.println("Boss music status: " + bossMusic.getStatus()); // DEBUG
             bossMusic.stop();
             bossMusic.play();
-            System.out.println("After play, status: " + bossMusic.getStatus()); // DEBUG
-        } else {
-            System.out.println("bossMusic is NULL!"); // DEBUG
         }
     }
     
-    //new - Stop boss music
+    /**
+     * STOP BOSS MUSIC METHOD
+     */
     public void stopBossMusic() {
         if (bossMusic != null) {
             bossMusic.stop();
         }
     }
     
-    
-  //new - Play explosion sound
+    /**
+     * PLAY EXPLOSION SOUND METHOD
+     */
     public void playExplodeSound() {
         if (explodeSound != null) {
             explodeSound.stop(); // Reset to beginning
@@ -495,54 +502,66 @@ public class GameRenderer {
         }
     }
     
-    //new - Play item collect sound (MediaPlayer version)
+    /**
+     * PLAY ITEM COLLECT SOUND METHOD (MediaPlayer version)
+     */
     public void playItemCollectSound() {
         if (itemCollectSound != null) {
-            itemCollectSound.stop(); //new - Reset to beginning
+            itemCollectSound.stop();
             itemCollectSound.play();
         }
     }
     
-    //new - Play player shoot sound (MediaPlayer version)
+    /**
+     * PLAY PLAYER SHOOT SOUND METHOD (MediaPlayer version)
+     */
     public void playPlayerShootSound() {
         if (playerShootSound != null) {
-            playerShootSound.stop(); //new - Reset to beginning
+            playerShootSound.stop();
             playerShootSound.play();
         }
     }
     
-    //new - Play quest music (MediaPlayer version)
+    /**
+     * PLAY QUEST MUSIC METHOD (MediaPlayer version)
+     */
     public void playQuestMusic() {
         if (questMusic != null) {
             questMusic.play();
         }
     }
     
-    //new - Stop quest music
+    /**
+     * STOP QUEST MUSIC METHOD
+     */
     public void stopQuestMusic() {
         if (questMusic != null) {
             questMusic.stop();
         }
     }
     
-    //new - Play portal sound (MediaPlayer version)
+    /**
+     * PLAY PORTAL SOUND METHOD (MediaPlayer version)
+     */
     public void playPortalSound() {
         if (portalSound != null) {
-            portalSound.stop(); //new - Reset to beginning
+            portalSound.stop();
             portalSound.play();
         }
     }
     
-    //new - Play player damage sound (MediaPlayer version)
+    /**
+     * PLAY PLAYER DAMAGE SOUND METHOD (MediaPlayer version)
+     */
     public void playPlayerDamageSound() {
         if (playerDamageSound != null) {
-            playerDamageSound.stop(); //new - Reset to beginning
+            playerDamageSound.stop();
             playerDamageSound.play();
         }
     }
     
     /**
-     * DRAW GAME OVER SCREEN
+     * DRAW GAME OVER SCREEN METHOD
      * Renders the game over screen with final score
      * Called when player health reaches zero
      * 

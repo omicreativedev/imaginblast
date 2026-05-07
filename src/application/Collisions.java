@@ -1,19 +1,23 @@
 package application;
 
+// "Everything's got a moral, if only you can find it."
+// ~ The Duchess, Alice's Adventures in Wonderland
+
 /**
  * COLLISIONS CLASS
  * Handles collision detection between game objects
- * Contains static methods that can be called from
- * anywhere in the game.
+ * Contains static methods that can be called from anywhere in the game
+ * Reference: https://textbooks.cs.ksu.edu/cc210/13-inheritance/06-java/06-abstract-classes/
  */
 public class Collisions {
     
     /**
-     * SHOT COLLISION DETECTION
-     * Check if a shot has hit an enemy
+     * SHOT COLLISION DETECTION METHOD
+     * Checks if a shot has hit an enemy creature
+     * 
      * @param shot The shot projectile
      * @param target The enemy creature
-     * @return true if shot hits enemy
+     * @return true if shot collides with enemy, false otherwise
      */
     public static boolean shotCollides(Shot shot, Creature target) {
         
@@ -33,11 +37,12 @@ public class Collisions {
     } 
     
     /**
-     * PLAYER COLLISION DETECTION
-     * Check if player has collided with an enemy
+     * PLAYER COLLISION DETECTION METHOD
+     * Checks if player has collided with an enemy creature
+     * 
      * @param player The player creature
      * @param other The enemy creature
-     * @return true if they collide
+     * @return true if player collides with enemy, false otherwise
      */
     public static boolean playerCollides(Creature player, Creature other) {
         
@@ -54,11 +59,12 @@ public class Collisions {
     }
     
     /**
-     * ITEM COLLISION DETECTION
-     * Check if player has collected an item (acorn)
+     * ITEM COLLISION DETECTION METHOD
+     * Checks if player has collected an item
+     * 
      * @param player The player creature
      * @param item The collectible item
-     * @return true if player collects item
+     * @return true if player collects item, false otherwise
      */
     public static boolean itemCollides(Creature player, Item item) {
         
@@ -75,14 +81,15 @@ public class Collisions {
     }
     
     /**
-     * DISTANCE CALCULATION
-     * Calculates distance between two points
-     * Private helper used only by collision methods
-     * @param x1 First point X
-     * @param y1 First point Y
-     * @param x2 Second point X
-     * @param y2 Second point Y
-     * @return Distance rounded to integer
+     * DISTANCE CALCULATION METHOD
+     * Calculates Euclidean distance between two points
+     * Private helper used only by collision detection methods
+     * 
+     * @param x1 First point X coordinate
+     * @param y1 First point Y coordinate
+     * @param x2 Second point X coordinate
+     * @param y2 Second point Y coordinate
+     * @return Distance rounded to nearest integer
      */
     private static int distance(int x1, int y1, int x2, int y2) {
         return (int) Math.sqrt(Math.pow((x1 - x2), 2) + Math.pow((y1 - y2), 2));

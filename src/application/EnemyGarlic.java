@@ -1,7 +1,6 @@
 package application;
 
-// import javafx.scene.image.Image;
-import javafx.scene.image.ImageView; //new
+import javafx.scene.image.ImageView;
 
 /**
  * GARLIC ENEMY CLASS
@@ -12,7 +11,7 @@ import javafx.scene.image.ImageView; //new
 public class EnemyGarlic extends Enemy {
     
     // Garlic-specific speed
-    int SPEED = 10; // Pixels per frame - controls how fast garlic falls
+    int SPEED = 10; // Pixels per frame. Controls how fast garlic falls
     
     /**
      * CONSTRUCTOR - Creates a new garlic enemy
@@ -21,8 +20,8 @@ public class EnemyGarlic extends Enemy {
      * @param size Size of the enemy (typically PLAYER_SIZE = 60)
      * @param imageView The garlic ImageView (GARLIC_IMG)
      */
-    public EnemyGarlic(int posX, int posY, int size, ImageView imageView) { //new - Changed parameter from Image to ImageView
-        super(posX, posY, size, imageView); // Call Enemy.java constructor
+    public EnemyGarlic(int posX, int posY, int size, ImageView imageView) {
+        super(posX, posY, size, imageView);
     }
     
     /**

@@ -1,83 +1,92 @@
 package application;
 
-// "A dream is not reality but who's to say which is which?"
-// ~ Mad Hatter, Alice's Adventures in Wonderland
+// "Mine is a long and a sad tale!" said the Mouse, 
+// turning to Alice, and sighing. 
+// ~ The Mouse, Alice's Adventures in Wonderland
 
-// import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 /**
  * PLAYER CLASS
- * Represents the player character in the game
+ * Represents the player character in the game (the frog)
  * Extends Creature to inherit basic creature properties and behaviors
- * Adds player-specific attributes like health and item collection
+ * Adds player-specific attributes like health, invincibility, and item collection
  * 
- * Source(s)
- * Help with Math for WASD
- * https://gamedev.stackexchange.com/questions/122374
- * Help with Mouse Aiming
- * - Getting coordinates relative to the canvas
- * - Calculation for the angle and vector from player>mouse
- * - Division by 0 issues
- * https://stackoverflow.com/questions/42806538
- * Math without LibGDX
- * https://docs.oracle.com/javase/8/docs/api/java/lang/Math.html
+ * Reference: https://textbooks.cs.ksu.edu/cc210/13-inheritance/06-java/06-abstract-classes/
  * 
+ * Source(s) for WASD and Mouse Aiming:
+ * Help with Math for WASD - https://gamedev.stackexchange.com/questions/122374
+ * Help with Mouse Aiming - Getting coordinates relative to the canvas
+ * Calculation for the angle and vector from player to mouse
+ * Division by zero issues - https://stackoverflow.com/questions/42806538
+ * Math without LibGDX - https://docs.oracle.com/javase/8/docs/api/java/lang/Math.html
  */
-
 public class Player extends Creature {
-	
-	// PLAYER STATS
-	public int hp = 100;        // Player starting health points
-	public int maxHp = 100;     // Maximum possible health points
-	                            // Starting at 50 gives player multiple hits before game over
-	
-	public int col_items = 0;   // Counter for collected items (power-ups, points, etc.)
-	                            // "col_items" = "collected items" - tracks total pickups
-								// Can we change this to collectedItems?
-	
-	// These stop rapid health point loss
-	private int invincibilityFrames = 0;
-    private static final int INVINCIBILITY_DURATION = 10;
-    private boolean isShielded = false;
+    
+    // PLAYER STATS
+    public int hp = 100;            // Player current health points
+    public int maxHp = 100;         // Maximum possible health points
+    public int col_items = 0;       // Counter for collected items (power-ups, points, etc.)
+                                    // TODO: Rename to collectedItems for clarity
+    
+    // INVINCIBILITY PROPERTIES
+    private int invincibilityFrames = 0;              // Frames remaining of invincibility after taking damage
+    private static final int INVINCIBILITY_DURATION = 10; // How many frames invincibility lasts
+    private boolean isShielded = false;               // Shielded status (prevents damage)
     
     // WASD MOVEMENT PROPERTIES
-    private int speed = 18;              // Movement speed in pixels per frame
-    private InputHandler inputHandler;  // Reference to input handler for key states
-    private GameRenderer gameRenderer; //new - Reference to game renderer for sounds
+    private int speed = 24;              // Movement speed in pixels per frame
+    private InputHandler inputHandler;   // Handles keyboard input for WASD movement
+    private GameRenderer gameRenderer;   // Reference for playing sound effects
     
     // SHOOTING PROPERTIES
-    private static final int BULLET_SPEED = 12; // Speed of fired projectiles (pixels per frame)
+    private static final int BULLET_SPEED = 28; // Speed of fired projectiles (pixels per frame)
     
-	 /**
-     * Take damage from enemy collision, projectile, etc.
-     * @param amount Amount of damage to take
-     * @return true if player still alive, false if dead
+    /**
+     * PLAYER CONSTRUCTOR
+     * Creates a new player at the specified position with given size and image
+     * 
+     * @param posX Initial X coordinate (typically center of screen)
+     * @param posY Initial Y coordinate (near bottom of screen)
+     * @param size Size of the player sprite (width and height, square)
+     * @param imageView The player's ImageView (the frog) - Note: We should name him.
      */
-    public boolean takeDamage(int amount) {
-
-    	if (invincibilityFrames > 0 || isShielded) {
-            return true; // Still alive, but no damage
-        }
-        
-        hp -= amount;
-        gameRenderer.playPlayerDamageSound(); //new omi
-        
-        // Future: Trigger hit animation or sound
-        
-        if (hp <= 0) {
-            hp = 0;
-            explode();
-            return false;  // Player is dead
-        }
-        
-        invincibilityFrames = INVINCIBILITY_DURATION;
-        
-        return true;  // Still alive
+    public Player(int posX, int posY, int size, ImageView imageView) {
+        super(posX, posY, size, imageView);
     }
     
     /**
-     * Shield the player
+     * TAKE DAMAGE METHOD
+     * Reduces player health when hit by enemies, boss, or projectiles
+     * Invincibility frames prevent rapid consecutive damage
+     * 
+     * @param amount Amount of damage to inflict
+     * @return true if player still alive, false if dead
+     */
+    public boolean takeDamage(int amount) {
+        if (invincibilityFrames > 0 || isShielded) {
+            return true; // Still alive, no damage taken
+        }
+        
+        hp -= amount;
+        if (gameRenderer != null) {
+            gameRenderer.playPlayerDamageSound();
+        }
+        
+        if (hp <= 0) {
+            hp = 0;
+            explode(); // Start death explosion animation
+            return false; // Player is dead
+        }
+        
+        invincibilityFrames = INVINCIBILITY_DURATION;
+        return true; // Still alive
+    }
+    
+    /**
+     * UPDATE INVINCIBILITY METHOD
+     * Decrements invincibility frames counter each frame
+     * Called every frame from update()
      */
     public void updateInvincibility() {
         if (invincibilityFrames > 0) {
@@ -86,8 +95,11 @@ public class Player extends Creature {
     }
     
     /**
-     * Heal the player
-     * @param amount Amount to heal
+     * HEAL METHOD
+     * Restores player health by the specified amount
+     * Cannot exceed maximum health
+     * 
+     * @param amount Amount of health to restore
      */
     public void heal(int amount) {
         hp += amount;
@@ -97,40 +109,67 @@ public class Player extends Creature {
     }
     
     /**
-     * Increase max health (for power-ups)
+     * INCREASE MAX HEALTH METHOD
+     * Permanently increases maximum health (for power-ups)
+     * Also heals player by the same amount
+     * 
+     * @param amount Amount to increase max health by
      */
     public void increaseMaxHp(int amount) {
         maxHp += amount;
-        hp += amount;  // Also heal by same amount
+        hp += amount; // Also heal by same amount
     }
     
     /**
-     * Reset health for new game
+     * RESET HEALTH METHOD
+     * Restores health to maximum for new game
      */
     public void resetHealth() {
-        hp = maxHp;  // Reset to max (might be increased due to power-up. Must debug.
+        hp = maxHp;
     }
     
-
-	
+    /**
+     * SET INPUT HANDLER METHOD
+     * Called by EntityManager after player creation
+     * Connects keyboard input handler for WASD movement
+     * 
+     * @param handler The InputHandler instance
+     */
+    public void setInputHandler(InputHandler handler) {
+        this.inputHandler = handler;
+    }
+    
+    /**
+     * SET GAME RENDERER METHOD
+     * Connects game renderer for playing sound effects
+     * 
+     * @param renderer The GameRenderer instance
+     */
+    public void setGameRenderer(GameRenderer renderer) {
+        this.gameRenderer = renderer;
+    }
+    
     /**
      * UPDATE METHOD
      * Called every frame to update player state
-     * Overrides Creature.update() to add invincibility countdown
-     * NEW: Also handles WASD movement
+     * Overrides Creature.update() to add invincibility countdown and WASD movement
      */
     @Override
     public void update() {
-        super.update(); // Call Creature's update (handles explosion)
+        super.update(); // Call Creature's update (handles explosion animation)
         updateInvincibility(); // Count down invincibility frames
-        handleMovement(); // NEW: Handle WASD key movement
+        handleMovement(); // Handle WASD key movement
     }
     
     /**
-     * HANDLE MOVEMENT
-     * Reads input handler for WASD
+     * HANDLE MOVEMENT METHOD
+     * Reads input handler for WASD keys
      * Moves player in the corresponding direction each frame
+     * Sprint key ('F') increases movement speed
+     * 
      * Source: https://gamedev.stackexchange.com/questions/122374
+     * Note: 'Shift' key wouldn't work (Oracle, 2015)
+     * https://docs.oracle.com/javase/8/javafx/api/javafx/scene/input/KeyEvent.html
      */
     private void handleMovement() {
         // Skip movement if player is exploding
@@ -146,11 +185,13 @@ public class Player extends Creature {
             if (inputHandler.isDownPressed())  newY += speed;
             if (inputHandler.isLeftPressed())  newX -= speed;
             if (inputHandler.isRightPressed()) newX += speed;
-            //Sprint movement based on 'f' key
-            	//Learned that 'shift' key wouldn't work by: Oracle 2015), https://docs.oracle.com/javase/8/javafx/api/javafx/scene/input/KeyEvent.html
-            if (inputHandler.isFPressed()) {speed = 30;}else{speed=18;};
-           
-           
+            
+            // Sprint movement based on 'F' key
+            if (inputHandler.isFPressed()) {
+                speed = 30;
+            } else {
+                speed = 18;
+            }
         }
         
         // Apply boundary constraints (keep player within screen)
@@ -165,23 +206,12 @@ public class Player extends Creature {
     }
     
     /**
-     * SET INPUT HANDLER
-     * Called by EntityManager after player creation
-     * @param handler The InputHandler instance
-     */
-    public void setInputHandler(InputHandler handler) {
-        this.inputHandler = handler;
-    }
-  //new - Set game renderer for sound effects
-    public void setGameRenderer(GameRenderer renderer) {
-        this.gameRenderer = renderer;
-    }
-    
-    /**
-     * CALCULATE DIRECTION VECTOR
-     * Computes normal direction from player to target (mouse cursor)
+     * CALCULATE DIRECTION VECTOR METHOD
+     * Computes normalized direction from player center to target (mouse cursor)
      * Used for aiming shots
+     * 
      * Source: Vector math from https://gamedev.stackexchange.com/questions/122374
+     * 
      * @param targetX Target X coordinate (mouse cursor)
      * @param targetY Target Y coordinate (mouse cursor)
      * @return double array where [0] = normalized X direction, [1] = normalized Y direction
@@ -210,54 +240,35 @@ public class Player extends Creature {
         
         return new double[]{dx, dy};
     }
-	
-	
-	
-	/**
-	 * CONSTRUCTOR
-	 * Creates a new player
-	 * @param posX Initial X position (typically center of screen)
-	 * @param posY Initial Y position (near bottom of screen)
-	 * @param size Size of the player sprite
-	 * @param imageView The player's ImageView (thee frogboy) Note: We should name him.
-	 */
-	public Player(int posX, int posY, int size, ImageView imageView) { //new - Changed parameter from Image to ImageView
-		// Call parent Creature constructor to set up position, size, and imageView
-		super(posX, posY, size, imageView); //new - Pass ImageView instead of Image
-		// hp and col_items keep their default values
-		// inputHandler will be set later via setInputHandler()
-		 // gameRenderer will be set later via setGameRenderer() //new
-	}
-	
-	
-	
-	/**
-	 * SHOOT METHOD
-	 * Creates a projectile fired by the player
-	 * Overrides the Creature.shoot() method to customize shot position
-	 * NEW: Shoots toward mouse cursor position instead of straight up
-	 * @return A new Shot object positioned at the player's center, aimed at cursor
-	 */
-	@Override
-	public Shot shoot() {
-		// Get mouse position from input handler (for aiming)
-		double mouseX = 0;
-		double mouseY = 0;
-		if (inputHandler != null) {
-			mouseX = inputHandler.getMouseX();
-			mouseY = inputHandler.getMouseY();
-		}
-		
-		// Calculate direction from player center to mouse cursor
-		double[] direction = calculateDirection(mouseX, mouseY);
-		double velX = direction[0] * BULLET_SPEED;
-		double velY = direction[1] * BULLET_SPEED;
-		
-		// Calculate shot starting position (center of player)
-		int shotX = posX + size / 2 - Shot.SIZE / 2;
-		int shotY = posY + size / 2 - Shot.SIZE / 2;
-		
-		// Create and return a new directional shot
-		return new ShotStandard(shotX, shotY, velX, velY);
-	}
+    
+    /**
+     * SHOOT METHOD
+     * Creates a projectile fired by the player
+     * Overrides Creature.shoot() to customize shot position and aiming
+     * Shoots toward mouse cursor position instead of straight up
+     * 
+     * @return A new Shot object positioned at the player's center, aimed at cursor
+     */
+    @Override
+    public Shot shoot() {
+        // Get mouse position from input handler (for aiming)
+        double mouseX = 0;
+        double mouseY = 0;
+        if (inputHandler != null) {
+            mouseX = inputHandler.getMouseX();
+            mouseY = inputHandler.getMouseY();
+        }
+        
+        // Calculate direction from player center to mouse cursor
+        double[] direction = calculateDirection(mouseX, mouseY);
+        double velX = direction[0] * BULLET_SPEED;
+        double velY = direction[1] * BULLET_SPEED;
+        
+        // Calculate shot starting position (center of player)
+        int shotX = posX + size / 2 - Shot.SIZE / 2;
+        int shotY = posY + size / 2 - Shot.SIZE / 2;
+        
+        // Create and return a new directional shot
+        return new ShotStandard(shotX, shotY, velX, velY);
+    }
 }

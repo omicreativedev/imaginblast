@@ -1,29 +1,47 @@
 package application;
 
-import javafx.scene.image.ImageView; //new - Use ImageView instead of Image
+import javafx.scene.image.ImageView;
 
 /**
  * URCHIN ENEMY CLASS
+ * Specific type of enemy
  * Moves straight down at a set speed
+ * Extends the Enemy class to inherit basic enemy properties
  */
 public class EnemyUrchin extends Enemy {
     
-    int SPEED = 8;
+    // Urchin-specific speed
+    int SPEED = 8; // Pixels per frame. Controls how fast urchin falls
     
+    /**
+     * CONSTRUCTOR - Creates a new urchin enemy
+     * @param posX Initial X position (random across screen width)
+     * @param posY Initial Y position (usually 0 at top of screen)
+     * @param size Size of the enemy (typically PLAYER_SIZE = 60)
+     * @param imageView The urchin ImageView (URCHIN_IMG)
+     */
     public EnemyUrchin(int posX, int posY, int size, ImageView imageView) {
         super(posX, posY, size, imageView);
     }
     
+    /**
+     * UPDATE METHOD - Urchin-specific movement
+     * Called every frame by EntityManager
+     * Moves straight down until it goes off screen
+     * Overrides Enemy.update() which overrides Creature.update()
+     */
     @Override
     public void update() {
-        super.update();
+        super.update(); // Handle explosion animation from Creature
         
+        // Move down if not exploding
         if(!exploding && !destroyed) {
-            posY += SPEED;
+            posY += SPEED; // Move downward at constant speed
         }
         
+        // Screen boundary check - destroy when off screen
         if(posY > ImaginBlastMain.HEIGHT) {
-            destroyed = true;
+            destroyed = true; // Mark for removal by EntityManager
         }
     }
 }

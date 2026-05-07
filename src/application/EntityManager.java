@@ -11,35 +11,41 @@ import java.util.Random;
 import javafx.scene.canvas.GraphicsContext;
 
 /**
+ * ENTITY MANAGER CLASS
  * Manages all game entities (player, shots, enemies, items, particles)
+ * Central hub for updating, drawing, and storing every object in the game world
+ * Reference: https://textbooks.cs.ksu.edu/cc210/13-inheritance/06-java/06-abstract-classes/
  */
 public class EntityManager {
     private static final Random RAND = new Random(); // Random generator for particle effects
     
     // Game objects collections
-    private Player player;              // The player character
-    private List<Shot> shots;            // Player-fired projectiles
-    private List<Shot> enemyShots;       // Enemy-fired projectiles
-    private List<Particles> particles;    // Visual effect particles
-    private List<Enemy> enemies;          // Active enemy entities
-    private List<Item> items;             // Active item entities (acorns, power-ups, etc.)
+    private Player player;                 // The player character (frog)
+    private List<Shot> shots;              // Player-fired projectiles
+    private List<Shot> enemyShots;         // Enemy and boss-fired projectiles
+    private List<Particles> particles;     // Visual effect particles (floating dust, etc.)
+    private List<Enemy> enemies;           // Active enemy entities
+    private List<Item> items;              // Active item entities (acorns, donuts, bubbles, etc.)
     
-    // Other constants
-    private int MAX_SHOTS;    // Maximum number of player shots allowed on screen at once
-    private int score;         // Player's current score
+    // Game settings
+    private int MAX_SHOTS;                 // Maximum number of player shots allowed on screen at once
+    private int score;                     // Player's current score
     
-    // Width and height for off-screen checks
-    private int WIDTH;  // Game screen width
-    private int HEIGHT; // Game screen height
+    // Screen dimensions
+    private int WIDTH;                     // Game screen width (for off-screen checks)
+    private int HEIGHT;                    // Game screen height (for off-screen checks)
     
-    // Reference to input handler for player movement (WASD)
-    private InputHandler inputHandler; // NEW: Store input handler reference
-    private GameRenderer gameRenderer; //new - Store game renderer reference for sounds
+    // External references
+    private InputHandler inputHandler;     // For WASD player movement
+    private GameRenderer gameRenderer;     // For playing sound effects
+    
     /**
-     * CONSTRUCTOR
-     * @param MAX_SHOTS Maximum allowed player shots
-     * @param WIDTH Screen width
-     * @param HEIGHT Screen height
+     * ENTITY MANAGER CONSTRUCTOR
+     * Sets up empty collections and stores game configuration
+     * 
+     * @param MAX_SHOTS Maximum allowed player shots on screen at once
+     * @param WIDTH Screen width (for off-screen boundary checks)
+     * @param HEIGHT Screen height (for off-screen boundary checks)
      * @param MAX_BOMBS Maximum enemies (passed from main but not directly used)
      * @param MAX_ITEMS Maximum items (passed from main but not directly used)
      */
@@ -51,7 +57,7 @@ public class EntityManager {
     }
     
     /**
-     * INITIALIZE
+     * INITIALIZE METHOD
      * Creates fresh empty collections and resets score
      * Called by constructor and resetAll()
      */
@@ -68,28 +74,29 @@ public class EntityManager {
     // ===== PLAYER METHODS =====
     
     /**
-     * Sets the player instance
-     * @param player The player object
+     * SET PLAYER METHOD
+     * Sets the player instance and connects external references
+     * 
+     * @param player The player object (frog)
      */
     public void setPlayer(Player player) {
         this.player = player;
-        // NEW: If we have an input handler, connect it to the player right away
+        // Connect input handler to player if both exist
         if (this.player != null && inputHandler != null) {
             this.player.setInputHandler(inputHandler);
         }
-        //new - Connect game renderer for sound effects
+        // Connect game renderer to player for sound effects
         if (this.player != null && gameRenderer != null) {
             this.player.setGameRenderer(gameRenderer);
         }
     }
     
-
-
-    
     /**
-     * NEW: Sets the input handler for WASD movement
+     * SET INPUT HANDLER METHOD
+     * Sets the input handler for WASD movement
      * Called by ImaginBlastMain after creating EntityManager
-     * @param handler The InputHandler instance
+     * 
+     * @param handler The InputHandler instance (for keyboard input)
      */
     public void setInputHandler(InputHandler handler) {
         this.inputHandler = handler;
@@ -99,7 +106,12 @@ public class EntityManager {
         }
     }
     
-    //new - Sets the game renderer for sound effects
+    /**
+     * SET GAME RENDERER METHOD
+     * Sets the game renderer reference for playing sound effects
+     * 
+     * @param renderer The GameRenderer instance (for sounds)
+     */
     public void setGameRenderer(GameRenderer renderer) {
         this.gameRenderer = renderer;
         if (player != null) {
@@ -108,6 +120,8 @@ public class EntityManager {
     }
     
     /**
+     * GET PLAYER METHOD
+     * 
      * @return The current player instance
      */
     public Player getPlayer() {
@@ -115,6 +129,7 @@ public class EntityManager {
     }
     
     /**
+     * UPDATE PLAYER METHOD
      * Updates player state (called every frame)
      */
     public void updatePlayer() {
@@ -124,8 +139,10 @@ public class EntityManager {
     }
     
     /**
+     * DRAW PLAYER METHOD
      * Draws the player on screen
-     * @param gc Graphics context
+     * 
+     * @param gc Graphics context for drawing to the canvas
      */
     public void drawPlayer(GraphicsContext gc) {
         if (player != null) {
@@ -134,23 +151,25 @@ public class EntityManager {
     }
     
     /**
-     * Moves player horizontally based on mouse position
-     * @param mouseX Current mouse X coordinate
+     * MOVE PLAYER METHOD (DEPRECATED)
+     * WASD movement has replaced mouse movement.
+     * This method is intentionally empty but kept for backward compatibility.
+     * 
+     * @param mouseX Current mouse X coordinate (unused)
      * 
      * DEPRECATED: WASD movement now handles player positioning.
-     * Keeping this method for backward compatibility but it is no longer called.
-     * We might remove it later if nothing breaks.
+     * TODO: Remove this method entirely after confirming ImaginBlastMain no longer calls it.
      */
     public void movePlayer(int mouseX) {
         // WASD movement has replaced mouse movement.
         // This method is intentionally left empty but not deleted.
         // If called, it does nothing. The player now moves via handleMovement() in Player.java.
         // Keeping the method signature so existing code that calls it doesn't break.
-        // TODO: Remove this method entirely after confirming ImaginBlastMain no longer calls it.
     }
     
     /**
-     * Resets player health to maximum
+     * RESET PLAYER HEALTH METHOD
+     * Restores player health to maximum
      */
     public void resetPlayerHealth() {
         if (player != null) {
@@ -159,7 +178,9 @@ public class EntityManager {
     }
     
     /**
-     * @return true if player is destroyed (dead)
+     * IS PLAYER DESTROYED CHECK
+     * 
+     * @return true if player is destroyed (dead), false otherwise
      */
     public boolean isPlayerDestroyed() {
         return player != null && player.destroyed;
@@ -168,6 +189,8 @@ public class EntityManager {
     // ===== PLAYER SHOTS METHODS =====
     
     /**
+     * GET SHOTS METHOD
+     * 
      * @return List of active player shots
      */
     public List<Shot> getShots() {
@@ -175,8 +198,10 @@ public class EntityManager {
     }
     
     /**
+     * ADD SHOT METHOD
      * Adds a new player shot if under the maximum limit
-     * @param shot The shot to add
+     * 
+     * @param shot The shot to add (created by Player.shoot())
      */
     public void addShot(Shot shot) {
         if (shot != null && shots.size() < MAX_SHOTS) {
@@ -185,6 +210,7 @@ public class EntityManager {
     }
     
     /**
+     * UPDATE SHOTS METHOD
      * Updates all player shots and removes off-screen ones
      */
     public void updateShots() {
@@ -202,8 +228,10 @@ public class EntityManager {
     }
     
     /**
-     * Updates shots and checks for collisions with enemies
-     * @param levelManager For registering defeated enemies
+     * UPDATE SHOTS WITH ENEMY COLLISIONS METHOD
+     * Updates player shots and checks for collisions with enemies
+     * 
+     * @param levelManager For registering defeated enemies to the current level
      */
     public void updateShotsWithEnemyCollisions(LevelManager levelManager) {
         for (int i = shots.size() - 1; i >= 0; i--) {
@@ -219,23 +247,24 @@ public class EntityManager {
             // Check collision with each enemy
             for (Enemy enemy : enemies) {
                 if (Collisions.shotCollides(shot, enemy) && !enemy.exploding) {
-                    score++;
+                    score++; // Increase score for defeating enemy
                     levelManager.getCurrentLevel().registerEnemyDefeated(enemy);
-                    enemy.explode();
-                    gameRenderer.playExplodeSound();
+                    enemy.explode(); // Start explosion animation
+                    if (gameRenderer != null) {
+                        gameRenderer.playExplodeSound();
+                    }
                     shot.toRemove = true;
                     break;
                 }
             }
-            
-            
         }
-        
     }
     
     /**
-     * Updates shots and checks for collisions with boss
-     * @param boss The current boss
+     * UPDATE SHOTS WITH BOSS COLLISIONS METHOD
+     * Updates player shots and checks for collisions with boss
+     * 
+     * @param boss The current boss (any class extending Boss)
      */
     public void updateShotsWithBossCollisions(Boss boss) {
         for (int i = shots.size() - 1; i >= 0; i--) {
@@ -250,15 +279,17 @@ public class EntityManager {
             }
             // Check collision with boss
             if (Collisions.shotCollides(shot, boss) && !boss.exploding) {
-                boss.takeDamage(10);
+                boss.takeDamage(10); // Each player shot does 10 damage to boss
                 shots.remove(i);
             }
         }
     }
     
     /**
-     * Draws all player shots
-     * @param gc Graphics context
+     * DRAW SHOTS METHOD
+     * Draws all player shots on screen
+     * 
+     * @param gc Graphics context for drawing to the canvas
      */
     public void drawShots(GraphicsContext gc) {
         for (Shot shot : shots) {
@@ -268,9 +299,10 @@ public class EntityManager {
     
     // ===== ENEMY SHOTS METHODS =====
     // Currently customized in EnemyShot.java
-    // Eventually we should move to have each Boss/Enemy have its own shot types
     
     /**
+     * GET ENEMY SHOTS METHOD
+     * 
      * @return List of enemy projectiles
      */
     public List<Shot> getEnemyShots() {
@@ -278,29 +310,31 @@ public class EntityManager {
     }
     
     /**
+     * UPDATE ENEMY SHOTS METHOD
      * Updates enemy shots and checks for player collisions
      */
     public void updateEnemyShots() {
         for (int i = enemyShots.size() - 1; i >= 0; i--) {
             Shot shot = enemyShots.get(i);
             shot.update();
-            // Remove if off bottom of screen or marked
+            // Remove if off bottom of screen or marked for removal
             if (shot.posY > HEIGHT || shot.toRemove) {
                 enemyShots.remove(i);
                 continue;
             }
             // Check if shot hits player
             if (Collisions.shotCollides(shot, player) && !player.exploding) {
-            	System.out.println("Enemy shot hit player!"); // DEBUG
-            	player.takeDamage(5); // Player takes damage
-                enemyShots.remove(i); // Remove the shot
+                player.takeDamage(5); // Player takes 5 damage from enemy shots
+                enemyShots.remove(i); // Remove the shot after it hits
             }
         }
     }
     
     /**
-     * Draws all enemy shots
-     * @param gc Graphics context
+     * DRAW ENEMY SHOTS METHOD
+     * Draws all enemy shots on screen
+     * 
+     * @param gc Graphics context for drawing to the canvas
      */
     public void drawEnemyShots(GraphicsContext gc) {
         for (Shot shot : enemyShots) {
@@ -311,6 +345,8 @@ public class EntityManager {
     // ===== ENEMIES METHODS =====
     
     /**
+     * GET ENEMIES METHOD
+     * 
      * @return List of all active enemies
      */
     public List<Enemy> getEnemies() {
@@ -318,42 +354,50 @@ public class EntityManager {
     }
     
     /**
-     * Adds a new enemy
-     * @param enemy The enemy to add
+     * ADD ENEMY METHOD
+     * Adds a new enemy to the game world
+     * 
+     * @param enemy The enemy to add (Garlic, Pillbug, Squirrel, Urchin, etc.)
      */
     public void addEnemy(Enemy enemy) {
         enemies.add(enemy);
     }
     
     /**
-     * Updates all enemies
+     * UPDATE ENEMIES METHOD
+     * Updates all enemies (movement, state, etc.)
      */
     public void updateEnemies() {
         enemies.forEach(e -> e.update());
     }
     
     /**
-     * Draws all enemies
-     * @param gc Graphics context
+     * DRAW ENEMIES METHOD
+     * Draws all enemies on screen
+     * 
+     * @param gc Graphics context for drawing to the canvas
      */
     public void drawEnemies(GraphicsContext gc) {
         enemies.forEach(e -> e.draw(gc));
     }
     
     /**
+     * CHECK ENEMY COLLISIONS METHOD
      * Checks for collisions between player and enemies
-     * @param stateManager For game over state if player dies
+     * Pushes player away and applies damage on collision
+     * 
+     * @param stateManager For triggering GAME_OVER state if player dies
      */
     public void checkEnemyCollisions(GameStateManager stateManager) {
         for (Enemy e : enemies) {
             if (Collisions.playerCollides(player, e) && !player.exploding && !player.destroyed) {
-                boolean stillAlive = player.takeDamage(5); // Enemy does 10 damage
+                boolean stillAlive = player.takeDamage(5); // Enemy does 5 damage on contact
                 if (!stillAlive) {
                     stateManager.setCurrentState(GameState.GAME_OVER);
                     return;
                 }
                 
-                // Push player away from enemy (same as boss)
+                // Push player away from enemy (same knockback as boss)
                 int enemyCenterX = e.posX + e.size / 2;
                 int enemyCenterY = e.posY + e.size / 2;
                 int playerCenterX = player.posX + player.size / 2;
@@ -363,7 +407,7 @@ public class EntityManager {
                 int pushX = playerCenterX - enemyCenterX;
                 int pushY = playerCenterY - enemyCenterY;
                 
-                // Normalize direction (just use sign)
+                // Normalize direction to just the sign
                 if (pushX > 0) pushX = 1;
                 else if (pushX < 0) pushX = -1;
                 else pushX = 0;
@@ -372,11 +416,11 @@ public class EntityManager {
                 else if (pushY < 0) pushY = -1;
                 else pushY = 0;
                 
-                // Push player 80 pixels away
+                // Push player 80 pixels away from enemy
                 int newX = player.posX + (pushX * 80);
                 int newY = player.posY + (pushY * 80);
                 
-                // Apply boundary constraints
+                // Apply boundary constraints (keep player on screen)
                 if (newX < 0) newX = 0;
                 if (newX + player.size > ImaginBlastMain.WIDTH) newX = ImaginBlastMain.WIDTH - player.size;
                 if (newY < 0) newY = 0;
@@ -391,7 +435,10 @@ public class EntityManager {
     }
     
     /**
-     * Replaces destroyed enemies with new ones
+     * REPLACE DESTROYED ENEMIES METHOD
+     * Replaces destroyed enemies with fresh ones
+     * Used for infinite enemy spawning during normal gameplay
+     * 
      * @param newEnemySupplier Function that creates new enemies
      */
     public void replaceDestroyedEnemies(java.util.function.Supplier<Enemy> newEnemySupplier) {
@@ -403,7 +450,8 @@ public class EntityManager {
     }
     
     /**
-     * Removes all enemies
+     * CLEAR ENEMIES METHOD
+     * Removes all enemies from the game world
      */
     public void clearEnemies() {
         enemies.clear();
@@ -412,6 +460,8 @@ public class EntityManager {
     // ===== ITEMS METHODS =====
     
     /**
+     * GET ITEMS METHOD
+     * 
      * @return List of all active items
      */
     public List<Item> getItems() {
@@ -419,38 +469,46 @@ public class EntityManager {
     }
     
     /**
-     * Adds a new item
-     * @param item The item to add
+     * ADD ITEM METHOD
+     * Adds a new item to the game world
+     * 
+     * @param item The item to add (acorn, donut, cupcake, cassette, bubble)
      */
     public void addItem(Item item) {
         items.add(item);
     }
     
     /**
+     * UPDATE ITEMS METHOD
      * Updates all items and checks for player collection
-     * @param levelManager For registering collected items
+     * 
+     * @param levelManager For registering collected items to the current level
      */
     public void updateItems(LevelManager levelManager) {
         items.forEach(i -> {
             i.update(null);
             if (Collisions.itemCollides(player, i) && !i.collected) {
-            	 System.out.println("Collected: " + i.getClass().getSimpleName());
                 levelManager.getCurrentLevel().registerItemCollected(i);
-                // Call specific item's collection effect
+                // Call specific item's collection effect based on type
                 if (i instanceof ItemAcorn) {
-                	((ItemAcorn) i).setGameRenderer(gameRenderer); //new
+                    ((ItemAcorn) i).setGameRenderer(gameRenderer); 
                     ((ItemAcorn) i).onCollected();
                 }
                 if (i instanceof ItemDonut) {
-                	((ItemDonut) i).setGameRenderer(gameRenderer); //new
+                    ((ItemDonut) i).setGameRenderer(gameRenderer); 
                     ((ItemDonut) i).onCollected();
                 }
                 if (i instanceof ItemCupcake) {
-                	((ItemCupcake) i).setGameRenderer(gameRenderer); //new
+                    ((ItemCupcake) i).setGameRenderer(gameRenderer); 
                     ((ItemCupcake) i).onCollected();
                 }
                 if (i instanceof ItemCassette) {
                     ((ItemCassette) i).onCollected();
+                }
+                if (i instanceof ItemBubble) {
+                    ((ItemBubble) i).setGameRenderer(gameRenderer); 
+                    ((ItemBubble) i).onCollected();
+                    player.resetHealth(); // Bubble gives full health restore
                 }
                 // Future: add else-if for other item types
             }
@@ -458,15 +516,20 @@ public class EntityManager {
     }
     
     /**
-     * Draws all items
-     * @param gc Graphics context
+     * DRAW ITEMS METHOD
+     * Draws all items on screen
+     * 
+     * @param gc Graphics context for drawing to the canvas
      */
     public void drawItems(GraphicsContext gc) {
         items.forEach(i -> i.draw(gc));
     }
     
     /**
-     * Replaces collected items with new ones
+     * REPLACE COLLECTED ITEMS METHOD
+     * Replaces collected items with fresh ones
+     * Used for infinite item spawning during normal gameplay
+     * 
      * @param newItemSupplier Function that creates new items
      */
     public void replaceCollectedItems(java.util.function.Supplier<Item> newItemSupplier) {
@@ -478,7 +541,8 @@ public class EntityManager {
     }
     
     /**
-     * Removes all items
+     * CLEAR ITEMS METHOD
+     * Removes all items from the game world
      */
     public void clearItems() {
         items.clear();
@@ -487,15 +551,17 @@ public class EntityManager {
     // ===== PARTICLES METHODS =====
     
     /**
-     * Updates particle effects - creates new ones and removes old ones
-     * @param gc Graphics context
+     * UPDATE PARTICLES METHOD
+     * Creates new particle effects and removes off-screen ones
+     * 
+     * @param gc Graphics context for drawing (passed to new Particles)
      */
     public void updateParticles(GraphicsContext gc) {
-        // Randomly create new particles
+        // Randomly create new particles (about 80% of frames)
         if (RAND.nextInt(10) > 2) {
             particles.add(new Particles(gc));
         }
-        // Remove particles that are off screen
+        // Remove particles that have floated off screen
         for (int i = 0; i < particles.size(); i++) {
             if (particles.get(i).isOffScreen()) {
                 particles.remove(i);
@@ -505,8 +571,10 @@ public class EntityManager {
     }
     
     /**
-     * Draws all particle effects
-     * @param gc Graphics context
+     * DRAW PARTICLES METHOD
+     * Draws all particle effects on screen
+     * 
+     * @param gc Graphics context for drawing to the canvas
      */
     public void drawParticles(GraphicsContext gc) {
         particles.forEach(Particles::draw);
@@ -515,6 +583,8 @@ public class EntityManager {
     // ===== SCORE METHODS =====
     
     /**
+     * GET SCORE METHOD
+     * 
      * @return Current player score
      */
     public int getScore() {
@@ -522,21 +592,24 @@ public class EntityManager {
     }
     
     /**
-     * Resets score to zero
+     * RESET SCORE METHOD
+     * Resets player score to zero
      */
     public void resetScore() {
         score = 0;
     }
     
     /**
-     * Increases score by 1
+     * INCREMENT SCORE METHOD
+     * Increases player score by 1 (called when enemy is defeated)
      */
     public void incrementScore() {
         score++;
     }
     
     /**
-     * Reset all entities and score for a new game
+     * RESET ALL METHOD
+     * Reset all entities and score for a brand new game
      */
     public void resetAll() {
         initialize();

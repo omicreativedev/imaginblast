@@ -8,30 +8,31 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import java.util.List;
 
-// "Every adventure requires a first step." ~ Cheshire Cat
+// "It's no use going back to yesterday,
+// because I was a different person then." ~ Alice, Through the Looking Glass
 
 /**
- * BOSS SCREEN 03
+ * BOSS SCREEN FINAL
  * Implementation of the BossScreen abstract class (BossScreen.java)
- * Manages the third boss fight (BossBroc.java) - BROC BOSS
+ * Manages the final boss fight (BossBunny.java) - BUNNY BOSS
  * Reference: https://textbooks.cs.ksu.edu/cc210/13-inheritance/06-java/06-abstract-classes/
  */
-public class BossScreen03 extends BossScreen {
+public class BossScreenFinal extends BossScreen {
     
-    private Image background; 
+    private Image background;
     private GameRenderer gameRenderer;
     
     /**
-     * BOSS SCREEN 03 CONSTRUCTOR
-     * Initializes the boss fight with a new BossBroc instance
+     * BOSS SCREEN FINAL CONSTRUCTOR
+     * Initializes the boss fight with a new BossBunny instance
      * Creates invisible portal and sets up the arena
      */
-    public BossScreen03() {
-        boss = new BossBroc(ImaginBlastMain.WIDTH/2 - 128, 100); // Create boss centered near top of screen
+    public BossScreenFinal() {
+        boss = new BossBunny(ImaginBlastMain.WIDTH/2 - 128, 100); // Create boss centered near top of screen
         portal = new Portal(); // Create exit portal
         portalVisible = false; // Portal starts hidden until boss is defeated
         levelComplete = false; // Fight starts incomplete
-        background = new Image("boss_bg_03.png");
+        background = new Image("boss_bg_final.png");
     }
     
     /**
@@ -58,7 +59,7 @@ public class BossScreen03 extends BossScreen {
         // Update boss position and behavior (called every frame regardless of defeat status)
         boss.update(player);
         
-        // Prevents shooting after death. No Zombie Broc (or maybe??? LOL!)
+        // Prevents shooting after death. No Zombie Bunny (or maybe??? LOL!)
         if (!boss.isDefeated()) {
             boss.shootAtPlayer(enemyShots, player); // Boss aims aimed shots at player
         }

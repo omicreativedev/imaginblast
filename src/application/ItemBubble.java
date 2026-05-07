@@ -3,18 +3,18 @@ package application;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.ImageView;
 
-// "No room! No room!" they cried out when they saw 
-// Alice coming. ~ The Hatter, Alice's Adventures in Wonderland
+// "I can't help it," said the Flamingo, "it's my nature."
+// ~ The Flamingo, Alice's Adventures in Wonderland
 
 // Adapted from ItemAcorn.java
 
 /**
- * CUPCAKE ITEM CLASS
- * Cupcakes fall straight down and give points when collected
+ * BUBBLE ITEM CLASS
+ * Bubbles fall straight down and restore player health when collected
  * Extends the Item base class
  * Reference: https://textbooks.cs.ksu.edu/cc210/13-inheritance/06-java/06-abstract-classes/
  */
-public class ItemCupcake extends Item {
+public class ItemBubble extends Item {
     
     private GameRenderer gameRenderer; // Reference for playing collection sound effect
     
@@ -22,23 +22,21 @@ public class ItemCupcake extends Item {
     int speed = 8; // Falling speed (pixels per frame)
     
     /**
-     * CUPCAKE ITEM CONSTRUCTOR
-     * Creates a new cupcake item at the specified position
+     * BUBBLE ITEM CONSTRUCTOR
+     * Creates a new bubble item at the specified position
      * 
      * @param posX Initial X coordinate (random across screen width)
      * @param posY Initial Y coordinate (usually 0 at top of screen)
-     * @param size Width and height of the cupcake (square)
-     * @param imageView The cupcake's visual representation
+     * @param size Width and height of the bubble (square)
+     * @param imageView The bubble's visual representation
      */
-    public ItemCupcake(int posX, int posY, int size, ImageView imageView) {
+    public ItemBubble(int posX, int posY, int size, ImageView imageView) {
         super(posX, posY, size, imageView);
-        // Cupcake-specific initialization can go here later
-        // gameRenderer will be set later via setGameRenderer()
     }
     
     /**
      * ON COLLECTED METHOD
-     * Called when player collects this cupcake
+     * Called when player collects this bubble
      * Marks item as collected and plays collection sound
      */
     public void onCollected() {
@@ -46,13 +44,11 @@ public class ItemCupcake extends Item {
         if (gameRenderer != null) {
             gameRenderer.playItemCollectSound(); // Play collection sound effect
         }
-        
-        // FUTURE: Add visual effect or bonus points here
     }
     
     /**
      * OVERRIDE UPDATE METHOD
-     * Cupcake-specific falling behavior
+     * Bubble-specific falling behavior
      * Moves straight down until collected or off screen
      * 
      * @param gc Graphics context for drawing (passed but not used here)

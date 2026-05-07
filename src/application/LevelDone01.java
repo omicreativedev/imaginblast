@@ -5,43 +5,76 @@ import javafx.scene.text.TextAlignment;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
+// "Pepper mostly," said the Cook.
+// ~ The Cook, Alice's Adventures in Wonderland
+
+/**
+ * LEVEL DONE 01 CLASS
+ * Level completion screen for Level 1
+ * Extends LevelDone base class
+ * Displays after defeating the Cheshire Cat Pirate boss
+ * Reference: https://textbooks.cs.ksu.edu/cc210/13-inheritance/06-java/06-abstract-classes/
+ */
 public class LevelDone01 extends LevelDone {
     
+    /**
+     * LEVEL DONE 01 CONSTRUCTOR
+     * Calls parent constructor with level number 1
+     */
     public LevelDone01() {
         super(1);
     }
     
+    /**
+     * OVERRIDE DRAW METHOD
+     * Renders the level completion screen for Level 1
+     * Displays a black overlay box, completion message, and OK button
+     * 
+     * @param gc Graphics context for drawing to the canvas
+     */
     @Override
     public void draw(GraphicsContext gc) {
-        gc.setTextAlign(TextAlignment.CENTER); 
-        // Draw black box overlay
+        gc.setTextAlign(TextAlignment.CENTER);
+        
+        // Draw black box overlay (centered, half screen size)
         gc.setFill(Color.BLACK);
         gc.fillRect(ImaginBlastMain.WIDTH/4, ImaginBlastMain.HEIGHT/4, 
                     ImaginBlastMain.WIDTH/2, ImaginBlastMain.HEIGHT/2);
         
-        // Draw completion text
+        // Draw completion message
         gc.setFill(Color.YELLOW);
         gc.setFont(Font.font(24));
         gc.fillText("Level 1 Complete!", ImaginBlastMain.WIDTH/2, ImaginBlastMain.HEIGHT/2 - 100);
         
+        // Draw instruction text
         gc.setFill(Color.WHITE);
         gc.setFont(Font.font(18));
-        gc.fillText("Do you want to go to Level 2?", ImaginBlastMain.WIDTH/2, ImaginBlastMain.HEIGHT/2 - 50);
+        gc.fillText("Click OK to go to Level 2.", ImaginBlastMain.WIDTH/2, ImaginBlastMain.HEIGHT/2 - 50);
         
         // Draw OK button
         gc.setFill(Color.GREEN);
         gc.fillRect(ImaginBlastMain.WIDTH/2 - 100, ImaginBlastMain.HEIGHT/2 + 50, 200, 50);
         
+        // Draw OK button text
         gc.setFill(Color.BLACK);
         gc.fillText("OK", ImaginBlastMain.WIDTH/2, ImaginBlastMain.HEIGHT/2 + 80);
         
-        // Button border
+        // Draw button border for visibility
         gc.setStroke(Color.WHITE);
         gc.strokeRect(ImaginBlastMain.WIDTH/2 - 100, ImaginBlastMain.HEIGHT/2 + 50, 200, 50);
     }
     
+    /**
+     * OVERRIDE HANDLE CLICK METHOD
+     * Checks if the player clicked the OK button
+     * Sets okPressed to true if click is within button bounds
+     * 
+     * @param x Mouse click X coordinate
+     * @param y Mouse click Y coordinate
+     */
     @Override
     public void handleClick(double x, double y) {
+        // Check if click is within OK button bounds (centered, 200x50)
         if (x >= ImaginBlastMain.WIDTH/2 - 100 && x <= ImaginBlastMain.WIDTH/2 + 100 &&
             y >= ImaginBlastMain.HEIGHT/2 + 50 && y <= ImaginBlastMain.HEIGHT/2 + 100) {
             okPressed = true;

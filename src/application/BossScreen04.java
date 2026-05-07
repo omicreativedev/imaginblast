@@ -1,55 +1,41 @@
 package application;
 
+//Adapted from BossScreen01.java
+
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-// import java.io.File;
-// import javafx.scene.media.Media;
-// import javafx.scene.media.MediaPlayer;
 import java.util.List;
-//Redo of push comment
+
+// "I'll have no arguing, I'll have no answering back!" ~ The Queen of Hearts
+
 /**
- * BOSS SCREEN Level 3
- * Implementation of the BossScreen abstract class BossScreen.java
- * Manages the third boss fight (BossBroc.java)
+ * BOSS SCREEN 04
+ * Implementation of the BossScreen abstract class (BossScreen.java)
+ * Manages the fourth boss fight (BossGrandma.java) - GRANDMA BOSS
+ * Reference: https://textbooks.cs.ksu.edu/cc210/13-inheritance/06-java/06-abstract-classes/
  */
 public class BossScreen04 extends BossScreen {
     
-    // Background music for this boss fight
-    // private MediaPlayer bossMusicPlayer;
-	
-    // Background image specific to this boss screen
-    // private Image backgroundImage;
+    private Image background; 
+    private GameRenderer gameRenderer;
     
     /**
-     * CONSTRUCTOR
-     * Initializes the boss fight with a new BossBroc instance
+     * BOSS SCREEN 04 CONSTRUCTOR
+     * Initializes the boss fight with a new BossGrandma instance
      * Creates invisible portal and sets up the arena
      */
     public BossScreen04() {
-    	///TODO add boss sprites and make new boss class
-        boss = new BossBroc(ImaginBlastMain.WIDTH/2 - 128, 100); // Create boss centered near top of screen
+        boss = new BossGrandma(ImaginBlastMain.WIDTH/2 - 128, 100); // Create boss centered near top of screen
         portal = new Portal(); // Create exit portal
         portalVisible = false; // Portal starts hidden until boss is defeated
         levelComplete = false; // Fight starts incomplete
-        
-        // Load the background image for this specific boss
-        // backgroundImage = new Image("boss_screen_03_background.png");
-        
-        // Load and play boss music when screen is created
-        // try {
-        //     Media music = new Media(new File("boss_music_3.mp3").toURI().toString());
-        //     bossMusicPlayer = new MediaPlayer(music);
-        //     bossMusicPlayer.setCycleCount(MediaPlayer.INDEFINITE); // Loop forever
-        //     bossMusicPlayer.play(); // Start playing
-        // } catch (Exception e) {
-        //     System.out.println("Could not load boss music");
-        // }
-        
+        background = new Image("boss_bg_04.png");
     }
     
     /**
-     * OVERRIDE UPDATE
+     * OVERRIDE UPDATE METHOD
      * Required by BossScreen.java's abstract update() method
      * Called every frame during boss fight
      * Updates boss behavior, checks collisions, and manages portal spawning
@@ -64,19 +50,17 @@ public class BossScreen04 extends BossScreen {
         // Check if boss is defeated and portal hasn't been spawned yet
         if (boss.isDefeated() && !portalVisible) {
             portalVisible = true; // Make portal appear when boss dies
-            
-            // Stop boss music when defeated
-            // if (bossMusicPlayer != null) {
-            //     bossMusicPlayer.stop();
-            // }
+            if (gameRenderer != null) {
+                gameRenderer.playExplodeSound();
+            }
         }
         
-        // Always update boss to advance explosion animation
-        boss.update(player); // Update boss position and behavior
+        // Update boss position and behavior (called every frame regardless of defeat status)
+        boss.update(player);
         
-        // Prevents movement after death. No Zombie Broc (or maybe??? LOL!)
+        // Prevents shooting after death. No Zombie Grandma (or maybe??? LOL!)
         if (!boss.isDefeated()) {
-            boss.shootAtPlayer(enemyShots, player); // Boss aims at player
+            boss.shootAtPlayer(enemyShots, player); // Boss aims aimed shots at player
         }
         
         // Check player shots hitting boss (iterate backwards to safely remove)
@@ -92,67 +76,63 @@ public class BossScreen04 extends BossScreen {
         if (Collisions.playerCollides(player, boss) && !player.exploding) {
             player.takeDamage(10); // Player takes damage when touching boss
             
-            // Push player away from boss (fly off)
-            // Determine which direction to push based on player position relative to boss center
+            // Calculate push direction to stop boss and player from overlapping
             int bossCenterX = boss.posX + boss.size / 2;
             int bossCenterY = boss.posY + boss.size / 2;
             int playerCenterX = player.posX + player.size / 2;
             int playerCenterY = player.posY + player.size / 2;
             
-            // Calculate push direction (away from boss center)
+            // Calculate direction to push the player (away from boss center)
             int pushX = playerCenterX - bossCenterX;
             int pushY = playerCenterY - bossCenterY;
-            
-            // Normalize direction (simplified - just use sign)
             if (pushX > 0) pushX = 1;
             else if (pushX < 0) pushX = -1;
             else pushX = 0;
-            
             if (pushY > 0) pushY = 1;
             else if (pushY < 0) pushY = -1;
             else pushY = 0;
             
-            // Push player 100 pixels away
+            // Send the frog flying 100 pixels away from boss
             int newX = player.posX + (pushX * 100);
             int newY = player.posY + (pushY * 100);
             
-            // Apply boundary constraints
+            // Don't let the player fly off the screen (boundary checking)
             if (newX < 0) newX = 0;
             if (newX + player.size > ImaginBlastMain.WIDTH) newX = ImaginBlastMain.WIDTH - player.size;
             if (newY < 0) newY = 0;
             if (newY + player.size > ImaginBlastMain.HEIGHT) newY = ImaginBlastMain.HEIGHT - player.size;
-            
             player.posX = newX;
             player.posY = newY;
         }
         
         // Check if player reached portal (only if portal is visible)
         if (portalVisible && portal.checkCollision(player)) {
+            if (gameRenderer != null) {
+                gameRenderer.playPortalSound();
+            }
             levelComplete = true; // Mark level as complete when player enters portal
         }
     }
     
     /**
-     * OVERRIDE DRAW
+     * OVERRIDE DRAW METHOD
      * Required by BossScreen.java's abstract draw() method
      * Renders all boss fight elements to the screen
      * 
-     * @param gc Graphics context for drawing
-     * @param gameRenderer Game renderer (not heavily used here but available)
+     * @param gc Graphics context for drawing to the canvas
+     * @param gameRenderer Game renderer reference (used for playing sounds)
      * @param player The player entity (drawn at current position)
-     * @param score Current player score (can be displayed if needed)
+     * @param score Current player score (displayed if needed)
      */
     @Override
     public void draw(GraphicsContext gc, GameRenderer gameRenderer, Player player, int score) {
-    	
-        // Draw background image first so everything else appears on top
-        // gc.drawImage(backgroundImage, 0, 0, ImaginBlastMain.WIDTH, ImaginBlastMain.HEIGHT);
         
-        // Clear screen with dark background for boss fight atmosphere
-        gc.setFill(Color.DARKSLATEBLUE);
-        gc.fillRect(0, 0, ImaginBlastMain.WIDTH, ImaginBlastMain.HEIGHT);
+        this.gameRenderer = gameRenderer; // Store gameRenderer reference for sound effects
         
-        // Draw boss (uses Creature's draw method)
+        // Draw background image
+        gc.drawImage(background, 0, 0, ImaginBlastMain.WIDTH, ImaginBlastMain.HEIGHT);
+        
+        // Draw boss (uses Creature's draw method which handles normal sprite + explosion animation)
         boss.draw(gc);
         
         // Draw player (must be explicitly drawn in boss screens)
@@ -175,7 +155,7 @@ public class BossScreen04 extends BossScreen {
     }
     
     /**
-     * OVERRIDE COMPLETION CHECK
+     * OVERRIDE COMPLETION CHECK METHOD
      * Required by BossScreen.java's abstract isComplete() method
      * Returns whether the boss fight has been completed
      * Used by ImaginBlastMain to transition to LEVEL_DONE state
@@ -185,4 +165,5 @@ public class BossScreen04 extends BossScreen {
     @Override
     public boolean isComplete() {
         return levelComplete;
-    } }
+    }
+}
