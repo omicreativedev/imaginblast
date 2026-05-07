@@ -4,8 +4,8 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
-//"The question is,' said Alice, 'whether you can make words mean so many different things.'"
-//~ Alice, Through the Looking-Glass
+// "The question is,' said Alice, 'whether you can make words mean so many different things.'"
+// ~ Alice, Through the Looking-Glass
 
 /**
  * CREATURE CLASS
