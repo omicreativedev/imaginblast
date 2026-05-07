@@ -3,6 +3,9 @@ package application;
 import javafx.scene.image.ImageView;
 import java.util.List;
 
+// "Sentence first—verdict afterwards!"
+// ~ The Queen of Hearts, Alice's Adventures in Wonderland
+
 /**
  * ABSTRACT BOSS CLASS
  * Defines the base structure for all boss enemies in the game
@@ -12,11 +15,11 @@ import java.util.List;
 public abstract class Boss extends Creature {
     
     // Boss-specific attributes
-    protected int health;           // Current health of the boss
+    protected int health;            // Current health of the boss
     protected int maxHealth;         // Maximum health for health bar display
-    protected int phase;             // Current battle phase 1, 2, etc. - changes boss behavior
+    protected int phase;             // Current battle phase 1, 2, etc. Changes boss behavior
     protected boolean portalSpawned; // Has the exit portal been created?
-    protected boolean portalActive;  // Is the portal currently active/collidable?
+    protected boolean portalActive;  // Is the portal currently active?
     
     /**
      * Creates a new boss at specified position with given size and image
@@ -29,8 +32,9 @@ public abstract class Boss extends Creature {
      * @param size  Width/height of boss sprite (assumed square)
      * @param imageView Visual representation of the boss (ImageView)
      */
-    public Boss(int posX, int posY, int size, ImageView imageView) { //new - Changed parameter from Image to ImageView
-        super(posX, posY, size, imageView); // Pass parameters to Creature constructor
+    public Boss(int posX, int posY, int size, ImageView imageView) {
+    	// Pass parameters to Creature constructor
+        super(posX, posY, size, imageView);
     }
     
     /**
@@ -50,7 +54,7 @@ public abstract class Boss extends Creature {
      * 
      * @param player Reference to player object (bosses track player for targeting)
      */
-    public abstract void update(Player player); // Track player
+    public abstract void update(Player player);
     
     /**
      * ABSTRACT SHOOT METHOD
@@ -59,11 +63,11 @@ public abstract class Boss extends Creature {
      * 
      * @param shots List of enemy shots to add new projectiles to
      */
-    public abstract void shoot(List<Shot> shots); // Add boss shots
+    public abstract void shoot(List<Shot> shots);
     
     /**
      * ABSTRACT DAMAGE METHOD
-     * Each boss type handles damage differently (may have invincibility phases, etc.)
+     * Each boss type handles damage differently (may be invincible, etc.)
      * Reduces health and potentially triggers phase changes
      * 
      * @param amount Amount of damage to inflict
@@ -81,7 +85,7 @@ public abstract class Boss extends Creature {
     
     /**
      * HEALTH GETTER
-     * Returns current boss health for UI display (health bars)
+     * Returns current boss health for UI display (health bar)
      * 
      * @return Current health value
      */
@@ -89,7 +93,7 @@ public abstract class Boss extends Creature {
     
     /**
      * MAX HEALTH GETTER
-     * Returns maximum boss health for UI display (health bar scaling)
+     * Returns maximum boss health for UI display (health bar)
      * 
      * @return Maximum health value
      */
