@@ -34,7 +34,7 @@ public abstract class Quest {
     /**
      * ABSTRACT DRAW METHOD
      * Each quest type implements its own drawing logic
-     * Currently not heavily used - rendering is handled by GameRenderer
+     * Currently not heavily used. Rendering is handled by GameRenderer
      */
     public abstract void draw();
     
