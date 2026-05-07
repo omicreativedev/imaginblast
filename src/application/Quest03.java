@@ -2,6 +2,8 @@ package application;
 
 import javafx.scene.image.Image;
 
+//Adapted from Quest01.java
+
 /**
  * QUEST 3
  * Instructions for Level 3
