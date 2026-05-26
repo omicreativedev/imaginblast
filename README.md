@@ -81,7 +81,7 @@ ImaginBlast/
 
 | Author | GitHub |
 |--------|--------|
-| Ev | [@wholekatandkaboodle](https://github.com/wholekatandkaboodle) |
+| Katie | [@wholekatandkaboodle](https://github.com/wholekatandkaboodle) |
 | Nyx | [@Nyx-Bigler](https://github.com/Nyx-Bigler) |
 | Omi | [@omicreativedev](https://github.com/omicreativedev) |
 
